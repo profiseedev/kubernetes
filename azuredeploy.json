@@ -209,7 +209,7 @@
             ]
         },
         {
-            "name": "[variables('AKSStorageName')]",
+            "name": "AKSStorageName",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
