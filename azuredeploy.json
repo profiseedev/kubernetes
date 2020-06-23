@@ -32,6 +32,21 @@
         },
         "SQLServerAdminLoginPassword": {
             "type": "securestring"
+        },
+        "StorageAccountName": {
+            "defaultValue": "",
+            "type": "String"
+        }, 
+        "AKSStorageType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_ZRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Premium_LRS"
+            ]
         }
     },
     "variables": {},
@@ -192,6 +207,19 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "[variables('AKSStorageName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [],
+            "tags": {
+                "displayName": "AKSStorage"
+            },
+            "properties": {
+                "accountType": "[parameters('AKSStorageType')]"
+            }
         }
     ]
 }
