@@ -10,9 +10,6 @@
     },
     "publicIPAddresses_AKSStaticOutIP_externalid": {
       "value": "/subscriptions/73814551-37dd-4143-a149-df9c2a2c97b6/resourceGroups/MC_ChuckAKS_MyAKSCluster_eastus2/providers/Microsoft.Network/publicIPAddresses/AKSStaticOutIP"
-    },
-    "My Value": {
-      "value": null
     }
   }
 }
