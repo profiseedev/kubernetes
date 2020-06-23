@@ -6,8 +6,12 @@
             "defaultValue": "MyAKSCluster",
             "type": "String"
         },
-        "Linux vm size": {
+        "Linux VM size": {
             "defaultValue": "Standard_B2s",
+            "type": "String"
+        },
+        "Windows VM size": {
+            "defaultValue": "Standard_B4ms",
             "type": "String"
         },
         "workspaces_defaultworkspace_73814551_37dd_4143_a149_df9c2a2c97b6_eus2_externalid": {
@@ -37,7 +41,7 @@
                     {
                         "name": "nodepool1",
                         "count": 1,
-                        "vmSize": "[parameters('Linux vm size')]",
+                        "vmSize": "[parameters('Linux VM size')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
@@ -50,7 +54,7 @@
                     {
                         "name": "npwin1",
                         "count": 1,
-                        "vmSize": "Standard_B4ms",
+                        "vmSize": "[parameters('Windows VM size')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
