@@ -1,9 +1,13 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "Cluster name": {
             "defaultValue": "MyAKSCluster",
+            "type": "String"
+        },
+        "Linux vm size": {
+            "defaultValue": "Standard_B2s",
             "type": "String"
         },
         "workspaces_defaultworkspace_73814551_37dd_4143_a149_df9c2a2c97b6_eus2_externalid": {
@@ -12,10 +16,6 @@
         },
         "publicIPAddresses_AKSStaticOutIP_externalid": {
             "defaultValue": "/subscriptions/73814551-37dd-4143-a149-df9c2a2c97b6/resourceGroups/MC_ChuckAKS_MyAKSCluster_eastus2/providers/Microsoft.Network/publicIPAddresses/AKSStaticOutIP",
-            "type": "String"
-        },
-		 "My Value": {
-            "defaultValue": "",
             "type": "String"
         }
     },
@@ -37,7 +37,7 @@
                     {
                         "name": "nodepool1",
                         "count": 1,
-                        "vmSize": "Standard_B2s",
+                        "vmSize": "[parameters('Linux vm size')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
