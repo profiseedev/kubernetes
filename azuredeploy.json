@@ -18,6 +18,10 @@
             "defaultValue": "Standard_B4ms",
             "type": "String"
         },
+        "CreateNewSqlServer": {
+            "defaultValue": "",
+            "type": "bool"
+        },   
         "SQLServerName": {
             "defaultValue": "",
             "type": "String"
