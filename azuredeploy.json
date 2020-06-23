@@ -18,6 +18,10 @@
             "defaultValue": "Standard_B4ms",
             "type": "String"
         },
+        "SQL Server Address": {
+            "defaultValue": "",
+            "type": "String"
+        },
         "workspaces_defaultworkspace_73814551_37dd_4143_a149_df9c2a2c97b6_eus2_externalid": {
             "defaultValue": "/subscriptions/73814551-37dd-4143-a149-df9c2a2c97b6/resourceGroups/defaultresourcegroup-eus2/providers/microsoft.operationalinsights/workspaces/defaultworkspace-73814551-37dd-4143-a149-df9c2a2c97b6-eus2",
             "type": "String"
