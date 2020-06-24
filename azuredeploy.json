@@ -1,22 +1,28 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "metadata": {
-    "comments": "This template was developed for demonstration purposes.",
-    "author": "Example Name"
-    },
     "parameters": {
-        "Cluster name": {
+        "ClusterName": {
             "defaultValue": "MyAKSCluster",
             "type": "String"
         },
-        "Linux VM size": {
+        "LinuxVMSize": {
             "defaultValue": "Standard_B2s",
             "type": "String"
         },
-        "Windows VM size": {
+        "WindowsVMSize": {
             "defaultValue": "Standard_B4ms",
             "type": "String"
+        },
+        "KubernetesVersion": {
+            "defaultValue": "1.18.2",
+            "type": "String"
+        },
+        "dnsPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+            }
         },
         "CreateNewSqlServer": {
             "defaultValue": "",
@@ -54,24 +60,24 @@
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-03-01",
-            "name": "[parameters('Cluster name')]",
+            "name": "[parameters('ClusterName')]",
             "location": "eastus2",
             "sku": {
                 "name": "Basic",
                 "tier": "Free"
             },
             "properties": {
-                "kubernetesVersion": "1.18.2",
-                "dnsPrefix": "MyAKSClust-ChuckAKS-738145",
+                "kubernetesVersion": "[parameters('KubernetesVersion')]",
+                "dnsPrefix": "[parameters('dnsPrefix')]",
                 "agentPoolProfiles": [
                     {
-                        "name": "nodepool1",
+                        "name": "nplinux1",
                         "count": 1,
-                        "vmSize": "[parameters('Linux VM size')]",
+                        "vmSize": "[parameters('LinuxVMSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
-                        "orchestratorVersion": "1.18.2",
+                        "orchestratorVersion": "[parameters('KubernetesVersion')]",
                         "enableNodePublicIP": false,
                         "nodeLabels": {},
                         "mode": "System",
@@ -80,11 +86,11 @@
                     {
                         "name": "npwin1",
                         "count": 1,
-                        "vmSize": "[parameters('Windows VM size')]",
+                        "vmSize": "[parameters('WindowsVMSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
-                        "orchestratorVersion": "1.18.2",
+                        "orchestratorVersion": "[parameters('KubernetesVersion')]",
                         "enableNodePublicIP": false,
                         "mode": "User",
                         "osType": "Windows"
@@ -105,34 +111,12 @@
                 },
                 "servicePrincipalProfile": {
                     "clientId": "5ce025b9-c5ec-4bf1-aef7-fe759f5bac18"
-                },
-                "addonProfiles": {
-                    "omsagent": {
-                        "enabled": true,
-                        "config": {
-                            "logAnalyticsWorkspaceResourceID": "[parameters('workspaces_defaultworkspace_73814551_37dd_4143_a149_df9c2a2c97b6_eus2_externalid')]"
-                        }
-                    }
-                },
-                "nodeResourceGroup": "[concat('MC_ChuckAKS_', parameters('Cluster name'), '_eastus2')]",
+                },                
+                "nodeResourceGroup": "[concat('MC_ChuckAKS_', parameters('ClusterName'), '_eastus2')]",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "azure",
                     "loadBalancerSku": "Standard",
-                    "loadBalancerProfile": {
-                        "outboundIPs": {
-                            "publicIPs": [
-                                {
-                                    "id": "[parameters('publicIPAddresses_AKSStaticOutIP_externalid')]"
-                                }
-                            ]
-                        },
-                        "effectiveOutboundIPs": [
-                            {
-                                "id": "[parameters('publicIPAddresses_AKSStaticOutIP_externalid')]"
-                            }
-                        ]
-                    },
                     "serviceCidr": "10.0.0.0/16",
                     "dnsServiceIP": "10.0.0.10",
                     "dockerBridgeCidr": "172.17.0.1/16",
@@ -143,13 +127,13 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-03-01",
-            "name": "[concat(parameters('Cluster name'), '/nodepool1')]",
+            "name": "[concat(parameters('ClusterName'), '/nodepool1')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('Cluster name'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('ClusterName'))]"
             ],
             "properties": {
                 "count": 1,
-                "vmSize": "Standard_B2s",
+                "vmSize": "[parameters('LinuxVMSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
                 "type": "VirtualMachineScaleSets",
@@ -163,13 +147,13 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-03-01",
-            "name": "[concat(parameters('Cluster name'), '/npwin1')]",
+            "name": "[concat(parameters('ClusterName'), '/npwin1')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('Cluster name'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('ClusterName'))]"
             ],
             "properties": {
                 "count": 1,
-                "vmSize": "Standard_B4ms",
+                "vmSize": "[parameters('WindowsVMSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
                 "type": "VirtualMachineScaleSets",
@@ -183,7 +167,7 @@
             "name": "[parameters('SQLServerName')]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2014-04-01-preview",
+            "apiVersion": "2019-06-01-preview",
             "dependsOn": [],
             "tags": {
                 "displayName": "SQLServer"
@@ -197,9 +181,9 @@
                     "name": "AllowAllWindowsAzureIps",
                     "type": "firewallrules",
                     "location": "[resourceGroup().location]",
-                    "apiVersion": "2014-04-01-preview",
+                    "apiVersion": "2014-04-01",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', variables('SQLServerName'))]"
+                        "[concat('Microsoft.Sql/servers/', parameters('SQLServerName'))]"
                     ],
                     "properties": {
                         "startIpAddress": "0.0.0.0",
