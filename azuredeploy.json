@@ -61,7 +61,7 @@
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-03-01",
             "name": "[parameters('ClusterName')]",
-            "location": "eastus2",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Basic",
                 "tier": "Free"
@@ -107,13 +107,14 @@
                     }
                 },
                 "windowsProfile": {
-                    "adminUsername": "winadmin"
+                    "adminUsername": "winadmin",
+                    "adminPassword": "Ple@seCh@ngeMe1234!"
                 },
                 "servicePrincipalProfile": {
                     "clientId": "9f79b1ec-0762-495a-86a0-185fa604f028",
                     "secret": "deaea826-7e51-47e8-a850-3fa4c0a5f9bb"
                 },                
-                "nodeResourceGroup": "[concat('MC_ChuckAKS_', parameters('ClusterName'), '_eastus2')]",
+                "nodeResourceGroup": "[concat('MC_',resourceGroup().name,'_', parameters('ClusterName'), '_',resourceGroup().location)]",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "azure",
