@@ -110,8 +110,8 @@
                     "adminUsername": "winadmin"
                 },
                 "servicePrincipalProfile": {
-                    "clientId": "5ce025b9-c5ec-4bf1-aef7-fe759f5bac18",
-                    "secret": ""
+                    "clientId": "9f79b1ec-0762-495a-86a0-185fa604f028",
+                    "secret": "deaea826-7e51-47e8-a850-3fa4c0a5f9bb"
                 },                
                 "nodeResourceGroup": "[concat('MC_ChuckAKS_', parameters('ClusterName'), '_eastus2')]",
                 "enableRBAC": true,
