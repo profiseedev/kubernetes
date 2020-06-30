@@ -19,28 +19,28 @@
             "type": "String"
         },
         "dnsPrefix": {
-            "type": "string",
-            "metadata": {
-                "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
-            }
+            "defaultValue": "myprefix",
+            "type": "string"
         },
-        "CreateNewSqlServer": {
-            "defaultValue": "",
-            "type": "bool"
-        },   
         "SQLServerName": {
-            "defaultValue": "",
+            "defaultValue": "chuckaks2sql",
             "type": "String"
         },        
         "SQLServerAdminLogin": {
+            "defaultValue":"sqladmin",
             "type": "string",
             "minLength": 1
         },
         "SQLServerAdminLoginPassword": {
+            "defaultValue":"!Profisee1!",
             "type": "securestring"
         },
+        "SQLDatabaseName": {
+            "defaultValue": "Profisee",
+            "type": "String"
+        },
         "StorageAccountName": {
-            "defaultValue": "",
+            "defaultValue": "chuckaksstorage",
             "type": "String"
         }, 
         "AKSStorageType": {
@@ -53,6 +53,50 @@
                 "Standard_RAGRS",
                 "Premium_LRS"
             ]
+        },
+         "FileShareName": {
+            "defaultValue": "files",
+            "type": "String"
+        },        
+        "TennantId": {
+            "defaultValue": "e4ba15d0-7fe2-4bd4-a3ef-a97a4378231e",
+            "type": "String"
+        },
+        "OIDCClientID": {
+            "defaultValue": "df9221dd-a1d3-42f7-87ba-a02150e3bc2e",
+            "type": "String"
+        },
+        "OIDCClientSecret": {
+            "defaultValue": "",
+            "type": "String"
+        },
+         "AdminUserAccountName": {
+            "defaultValue": "chuck.thompson@profisee.com",
+            "type": "String"
+        },
+         "ExternalDNSUrl": {
+            "defaultValue": "chuck2.profiseecontainerdev.com",
+            "type": "String"
+        },
+        "LicenseData": {
+            "defaultValue": "",
+            "type": "String"
+        },
+       "AcrUser": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "AcrUserPassword": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "tlsCert": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "tlsKey": {
+            "defaultValue": "",
+            "type": "String"
         }
     },
     "variables": {},
@@ -129,7 +173,7 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-03-01",
-            "name": "[concat(parameters('ClusterName'), '/nodepool1')]",
+            "name": "[concat(parameters('ClusterName'), '/nplinux1')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ContainerService/managedClusters', parameters('ClusterName'))]"
             ],
@@ -195,7 +239,7 @@
             ]
         },
         {
-            "name": "AKSStorageName",
+            "name": "[parameters('StorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
@@ -206,6 +250,119 @@
             "properties": {
                 "accountType": "[parameters('AKSStorageType')]"
             }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('StorageAccountName'), '/default/', parameters('fileShareName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('StorageAccountName'))]"
+            ]
+        },
+        {
+        "type": "Microsoft.Resources/deploymentScripts",
+        "apiVersion": "2019-10-01-preview",
+        "name": "InstallNginxFromPowershellInline",
+        "location": "[resourceGroup().location]",
+        "kind": "AzureCLI",
+        "identity": {
+            "type": "userAssigned",
+            "userAssignedIdentities": {
+            "/subscriptions/73814551-37dd-4143-a149-df9c2a2c97b6/resourcegroups/ChuckAKS/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ChuckUserIdentity": {}
+            }
+        },
+        "properties": {
+            "forceUpdateTag": "1",
+            "azPowerShellVersion": "2.0.80",
+            "environmentVariables": [
+                {
+                    "name": "RESOURCEGROUPNAME",
+                    "secureValue": "[resourceGroup().name]"
+                },
+                {
+                    "name": "CLUSTERNAME",
+                    "secureValue": "[parameters('ClusterName')]"
+                },
+                {
+                    "name": "SQLNAME",
+                    "secureValue": "[concat(parameters('SQLServerName'),'.database.windows.net')]"
+                },
+                {
+                    "name": "SQLUSERNAME",
+                    "secureValue": "[parameters('SQLServerAdminLogin')]"
+                },
+                {
+                    "name": "SQLUSERPASSWORD",
+                    "secureValue": "[parameters('SQLServerAdminLoginPassword')]"
+                },
+                {
+                    "name": "SQLDBNAME",
+                    "secureValue": "[parameters('SQLDatabaseName')]"
+                },
+                {
+                    "name": "STORAGEACCOUNTNAME",
+                    "secureValue": "[parameters('StorageAccountName')]"
+                },
+                {
+                    "name": "FILEREPOUSERNAME",
+                    "secureValue": "[concat('Azure\\',parameters('StorageAccountName'))]"
+                },
+                {
+                    "name": "FILEREPOURL",
+                    "secureValue": "[concat('\\\\',parameters('StorageAccountName'),'.file.core.windows.net\\',parameters('FileShareName'))]"
+                },
+                {
+                    "name": "OIDCCLIENTID",
+                    "secureValue": "[parameters('OIDCClientID')]"
+                },
+                {
+                    "name": "OIDCCLIENTSECRET",
+                    "secureValue": "[parameters('OIDCClientSecret')]"
+                },
+                {
+                    "name": "ADMINACCOUNTNAME",
+                    "secureValue": "[parameters('AdminUserAccountName')]"
+                },
+                {
+                    "name": "EXTERNALDNSNAME",
+                    "secureValue": "[parameters('ExternalDNSUrl')]"
+                },
+                {
+                    "name": "EXTERNALDNSURL",
+                    "secureValue": "[concat('https://',parameters('ExternalDNSUrl'))]"
+                },                
+                {
+                    "name": "OIDCURL",
+                    "secureValue": "[concat('https://login.microsoftonline.com/',parameters('TennantId'))]"
+                },
+                {
+                    "name": "LICENSEDATA",
+                    "secureValue": "[parameters('LicenseData')]"
+                },
+                {
+                    "name": "ACRUSER",
+                    "secureValue": "[parameters('AcrUser')]"
+                },
+                {
+                    "name": "ACRUSERPASSWORD",
+                    "secureValue": "[parameters('AcrUserPassword')]"
+                },
+                {
+                    "name": "TLSCERT",
+                    "secureValue": "[parameters('tlsCert')]"
+                },
+                {
+                    "name": "TLSKEY",
+                    "secureValue": "[parameters('tlsKey')]"
+                }
+
+            ],
+            "scriptContent": "az aks install-cli;az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3;chmod 700 get_helm.sh;./get_helm.sh;helm repo add stable https://kubernetes-charts.storage.googleapis.com/;curl -fsSL -o n.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/scripts/nginxSettings.yaml;helm install nginx stable/nginx-ingress --values n.yaml;storageAccountPassword=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');helm install profiseeplatform2020r1 profisee/profisee-platform --values .s.yaml --set sqlServer.name=$SQLNAME --set sqlServer.databaseName=$SQLDBNAME --set sqlServer.userName=$SQLUSERNAME --set sqlServer.password=$SQLUSERPASSWORD --set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME --set profiseeRunTime.fileRepository.password=$storageAccountPassword --set profiseeRunTime.fileRepository.location=$FILEREPOURL --set profiseeRunTime.oidc.authority=$OIDCURL --set profiseeRunTime.oidc.clientId=$OIDCCLIENTID --set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET --set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME --set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL --set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME --set licenseFileData=$LICENSEDATA --set image.auth=$ACRAUTH --set tlsCert=$TLSCERT --set tlsKey=$TLSKEY",
+            "timeout": "PT1H",
+            "cleanupPreference": "OnSuccess",
+            "retentionInterval": "P1D"
         }
+        }
+        
     ]
 }
