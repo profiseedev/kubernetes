@@ -59,11 +59,11 @@
             "type": "String"
         },        
         "TennantId": {
-            "defaultValue": "e4ba15d0-7fe2-4bd4-a3ef-a97a4378231e",
+            "defaultValue": "",
             "type": "String"
         },
         "OIDCClientID": {
-            "defaultValue": "df9221dd-a1d3-42f7-87ba-a02150e3bc2e",
+            "defaultValue": "",
             "type": "String"
         },
         "OIDCClientSecret": {
@@ -71,11 +71,11 @@
             "type": "String"
         },
          "AdminUserAccountName": {
-            "defaultValue": "chuck.thompson@profisee.com",
+            "defaultValue": "",
             "type": "String"
         },
          "ExternalDNSUrl": {
-            "defaultValue": "chuck2.profiseecontainerdev.com",
+            "defaultValue": "",
             "type": "String"
         },
         "LicenseData": {
