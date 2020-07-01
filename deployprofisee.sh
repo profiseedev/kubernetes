@@ -19,6 +19,10 @@ helm install nginx stable/nginx-ingress --values n.yaml --set controller.service
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 echo $nginxip
 
+#set dns
+#az network dns record-set a delete -g $domainNameResourceGroup -z $domainName -n $hostName --yes
+#az network dns record-set a add-record -g $domainNameResourceGroup -z $domainName -n $hostName -a $publicInIP --ttl 5
+
 #fix tls variables
 #cert
 printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert
@@ -27,8 +31,6 @@ sed -e 's/^/    /' a.cert > afinal.cert
 #key
 printf '%s\n' "$TLSKEY" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/PRIVATE/! s/ /\n/g' >> a.key
 sed -e 's/^/    /' a.key > afinal.key
-
-#set dns
 
 #install profisee platform
 #get profisee helm chart settings
