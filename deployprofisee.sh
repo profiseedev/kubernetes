@@ -29,8 +29,8 @@ printf '%s\n' "$TLSKEY" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/PRIVATE/! s/ /\n/
 sed -e 's/^/    /' a.key > afinal.key
 
 #set dns
-#az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes
-#az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5
+az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes
+az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5
 
 #install profisee platform
 #get profisee helm chart settings
@@ -43,8 +43,14 @@ sed -i -e 's/AUTH_AUTH/'"$auth"'/g' s.yaml
 sed -e '/TLSCERT_DATA/ {' -e 'r afinal.cert' -e 'd' -e '}' -i s.yaml
 sed -e '/TLSKEY_DATA/ {' -e 'r afinal.key' -e 'd' -e '}' -i s.yaml
 
+#create the azure app id (clientid)
+azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
+azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
+az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl
+azureClientId=$(az ad app list --filter "displayname eq '$azureClientName'" --query '[0].appId');
+
 #get storage account pw
 storageAccountPassword=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
 
 helm repo add profisee https://profisee.github.io/kubernetes
-helm install profiseeplatform2020r1 profisee/profisee-platform --values s.yaml --set sqlServer.name=$SQLNAME --set sqlServer.databaseName=$SQLDBNAME --set sqlServer.userName=$SQLUSERNAME --set sqlServer.password=$SQLUSERPASSWORD --set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME --set profiseeRunTime.fileRepository.password=$storageAccountPassword --set profiseeRunTime.fileRepository.location=$FILEREPOURL --set profiseeRunTime.oidc.authority=$OIDCURL --set profiseeRunTime.oidc.clientId=$OIDCCLIENTID --set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET --set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME --set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL --set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME --set licenseFileData=$LICENSEDATA
+helm install profiseeplatform2020r1 profisee/profisee-platform --values s.yaml --set sqlServer.name=$SQLNAME --set sqlServer.databaseName=$SQLDBNAME --set sqlServer.userName=$SQLUSERNAME --set sqlServer.password=$SQLUSERPASSWORD --set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME --set profiseeRunTime.fileRepository.password=$storageAccountPassword --set profiseeRunTime.fileRepository.location=$FILEREPOURL --set profiseeRunTime.oidc.authority=$OIDCURL --set profiseeRunTime.oidc.clientId=$azureClientId --set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET --set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME --set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL --set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME --set licenseFileData=$LICENSEDATA
