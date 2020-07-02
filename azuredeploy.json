@@ -712,7 +712,7 @@
             ]
         },
         "dnsPrefix": {
-            "defaultValue": "myprefix",
+            "defaultValue": "profiseeaks",
             "type": "string"
         },
         "SQLServerName": {
