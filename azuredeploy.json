@@ -727,6 +727,17 @@
                 "1.16.9"
             ]
         },
+        "SQLServerCreateNew": {
+            "defaultValue": "Yes",
+            "type": "String",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If not new, enter the FQDN of the sql server"
+            }
+        },
         "SQLServerName": {
             "defaultValue": "chuckaksarmsql",
             "type": "String"
@@ -743,6 +754,14 @@
         "SQLServerDatabaseName": {
             "defaultValue": "Profisee",
             "type": "String"
+        },
+        "StorageAccountCreateNew": {
+            "defaultValue": "Yes",
+            "type": "String",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
         },
         "StorageAccountName": {
             "defaultValue": "chuckaksarmstorage",
@@ -763,7 +782,18 @@
             "defaultValue": "files",
             "type": "String"
         },
-         "DNSHostName": {
+        "DNSUpdate": {
+            "defaultValue": "Yes",
+            "type": "String",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If No then you have to update the dns record yourself"
+            }
+        },
+        "DNSHostName": {
             "defaultValue": "chuck2",
             "type": "String"
         },
@@ -906,6 +936,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('SQLServerCreateNew'),'New')]",
             "name": "[parameters('SQLServerName')]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
@@ -935,6 +966,7 @@
             ]
         },
         {
+            "condition": "[equals(parameters('StorageAccountCreateNew'),'New')]",
             "name": "[parameters('StorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourceGroup().location]",
