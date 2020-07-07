@@ -53,3 +53,8 @@ storageAccountPassword=$(az storage account keys list --resource-group $RESOURCE
 
 helm repo add profisee https://profisee.github.io/kubernetes
 helm install profiseeplatform2020r1 profisee/profisee-platform --values s.yaml --set sqlServer.name=$SQLNAME --set sqlServer.databaseName=$SQLDBNAME --set sqlServer.userName=$SQLUSERNAME --set sqlServer.password=$SQLUSERPASSWORD --set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME --set profiseeRunTime.fileRepository.password=$storageAccountPassword --set profiseeRunTime.fileRepository.location=$FILEREPOURL --set profiseeRunTime.oidc.authority=$OIDCURL --set profiseeRunTime.oidc.clientId=$azureClientId --set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET --set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME --set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL --set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME --set licenseFileData=$LICENSEDATA
+
+echo $nginxip > $AZ_SCRIPTS_OUTPUT_PATH
+echo $azureAppReplyUrl > $AZ_SCRIPTS_OUTPUT_PATH
+echo $azureClientName > $AZ_SCRIPTS_OUTPUT_PATH
+echo $azureClientId > $AZ_SCRIPTS_OUTPUT_PATH
