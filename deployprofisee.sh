@@ -46,8 +46,7 @@ sed -e '/TLSKEY_DATA/ {' -e 'r afinal.key' -e 'd' -e '}' -i s.yaml
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
 azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
-az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl
-azureClientId=$(az ad app list --filter "displayname eq '$azureClientName'" --query '[0].appId');
+azureClientId=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
 
 #get storage account pw
 storageAccountPassword=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
