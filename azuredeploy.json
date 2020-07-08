@@ -812,14 +812,19 @@
         "HttpsCertificatePrivateKey": {
             "defaultValue": "-----BEGIN PRIVATE KEY----- MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCsxzwsTaZaUFb+ ywHLeuArKaSHUtJyy6yMfofPWyskE9etw8awfBxh6W+zwpec2lxrRt+KC01mKON1 IvLn77sfJ2VEwOYRaJKXerEtFj69QrA3WliWFTQkVXLDvtyrx5mb9bdvmZeBJFjv 9gxRmTHRT21falQ8c6pH+VS6+RE6QvwDWc2jMuPW/jFbXLlH3sxqnJ41Hhs7psxw vg23GPXLZDnKujmSy8vPSaLUFDKDfdRzek/m4kb4GWZ7O9xWilzsSXiMnsUep4O9 Ll0wPjjEpr2Qx6eqJkrCcugWGD/yE3zpJKlF+YToKowGkx6kuCPQyJIyvA1I+Wbt IgjwDTSnAgMBAAECggEATm9uBjDEBbj2HVocePrRvFZ9vf8f0YRb0zX3wm8BYTHu 1hAL6X+WRO67ym/a8xaAISU+AsWJwAhs5fbVLey7VnPEeddWOm3uKn1E5JJ2LeYR 6DcIAy4iCyKNZIaHWCZXOiFswmmICVTuWRUqV3rDzmEP5mJ3VjAuC9mJGQ5Lv1X9 RGeAujtryegkAlPQ/3lbN0dHdmV0brxpNHA1QeDOGxLiNfkJopTEdq74bHMzHTJ+ mIY0dSWG6Jv6lHpntb3BVzudH+J5gx31s4jFdnK9RuMkIui/mKVINA26etEU88/7 JfdGlvz+r+GDhDOXEhoWQR7zwa29vEfzv50AmELqcQKBgQDbHlz6cG5TL61GyDWR /jCUFJiMI8Xq9aQ9ngkSDcANF2zayGjjqxLr7P+ebtenwTgpm3Lal04rTMXIxp11 gmkgvTQhDb7cSVhkfNthTumqAG70cC4SOzo7YBPvBIIyMEhmgftIV/9ng7yZhGt/ py9ggOxp/93Fj0hS8ohDChlx1wKBgQDJ3Br2JNcJ+cmdJpySzd/YcwsooKV2tqVJ 7EfWElB7HaGHc7LQ9Wm2NlXQK6P27aSKDBfQ1cWXu84v4qLmd9dl82b2RsWRQB0v 0coi4PIWwt87KwebQ4nptdyxzyqpX0wD1sgBDOw5uED8G/uUkHGTIyPbIWI8pHZo Qq8B5nSZsQKBgQC8lveDfT0XT9OdNjgVPWfmK4vYIfn4bg88EUbRSRBgtCa2bwMH 4HfaoxKm89OcyMpj1S0XQl6/GcapNXjUaLe+u9mgEUqSInZ3lpbiu56U+OaGb/7X Ji7KZ7kAYSsFs1S9FWaHL2XdXB75KmWzatt1/cB8wwHHRbkD20a4HHsl5QKBgGfW AUh8yuEmzL86DXC21l7RTvwnJvZaHcxY7tr/sMakB2NV8LXsh+RjLuFWkZGDzQ/2 CIo0bOAQi4+2VXWYUATxoBUvcpG1GU5v7Drk26M5uvsEt3T22QqPsmcE2j0l+ERB R8DClQFb9pG5E0DozIOTn+4ozg/DyeT36G5hzbkBAoGBAJwU40T1iAt5i570NlPX ocf3j5spQ7daZ0zcQencjXfPcEmMY93qOVHJ8iQ4athTJQDDGkvbSsHJApuUC3zm 4ZpQwhFIwrsKAOnkVVZ7cMYkz+DqpDnhaS7HrogayOd1hLzlhyrnwKTQO+JNaX36 IzljrS0zvM5AukHWxYYNRw6b -----END PRIVATE KEY-----",
             "type": "String"
-        }
+        },
+        "utcValue": {
+      "type": "string",
+      "defaultValue": "[utcNow()]"
+    }
     },
     "variables": 
     {
         "domainResourceGroupId": "[concat(subscription().id, '/resourceGroups/', parameters('DNSDomainNameResourceGroup'))]",
         "resourceGroupRoleAssignmentId": "[guid(concat(variables('domainResourceGroupId'), 'contributor'))]",
         "domainResourceGroupRoleAssignmentId": "[guid(concat(resourceGroup().id, 'contributor'))]",
-        "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"        
+        "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "IdentityName":"ProfiseePlatformDeploymentIdentity"
         
     },
     "resources": [
@@ -875,10 +880,6 @@
                 "windowsProfile": {
                     "adminUsername": "winadmin",
                     "adminPassword": "Ple@seCh@ngeMe1234!"
-                },
-                "servicePrincipalProfile": {
-                    "clientId": "9f79b1ec-0762-495a-86a0-185fa604f028",
-                    "secret": "deaea826-7e51-47e8-a850-3fa4c0a5f9bb"
                 },                
                 "nodeResourceGroup": "[concat('MC_',resourceGroup().name,'_', parameters('KubernetesClusterName'), '_',resourceGroup().location)]",
                 "enableRBAC": true,
@@ -890,6 +891,9 @@
                     "dockerBridgeCidr": "172.17.0.1/16",
                     "outboundType": "loadBalancer"
                 }
+            },
+            "identity": {
+                "type": "SystemAssigned"
             }
         },
         {
@@ -932,7 +936,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('SQLServerCreateNew'),'New')]",
+            "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
             "name": "[parameters('SQLServerName')]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
@@ -947,6 +951,7 @@
             },
             "resources": [
                 {
+                    "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
                     "name": "AllowAllWindowsAzureIps",
                     "type": "firewallrules",
                     "location": "[resourceGroup().location]",
@@ -962,7 +967,7 @@
             ]
         },
         {
-            "condition": "[equals(parameters('StorageAccountCreateNew'),'New')]",
+            "condition": "[equals(tolower(parameters('StorageAccountCreateNew')),tolower('Yes'))]",
             "name": "[parameters('StorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourceGroup().location]",
@@ -976,6 +981,7 @@
             }
         },
         {
+            "condition": "[equals(tolower(parameters('StorageAccountCreateNew')),tolower('Yes'))]",
             "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
             "apiVersion": "2019-06-01",
             "name": "[concat(parameters('StorageAccountName'), '/default/', parameters('StorageAccountFileShareName'))]",
@@ -986,18 +992,18 @@
         {
         "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
         "apiVersion": "2018-11-30",
-        "name": "[parameters('IdentityName')]",
+        "name": "[variables('IdentityName')]",
         "location": "[resourceGroup().location]"
         },
         {
         "type": "Microsoft.Authorization/roleAssignments",
         "apiVersion": "2018-09-01-preview",
         "name": "[variables('resourceGroupRoleAssignmentId')]",
-        "dependsOn": ["[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('IdentityName'))]"],
+        "dependsOn": ["[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('IdentityName'))]"],
         "properties": 
             {
             "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
-            "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('IdentityName')), '2018-11-30').principalId]",
+            "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('IdentityName')), '2018-11-30').principalId]",
             "principalType": "ServicePrincipal"
             }
         },
@@ -1013,12 +1019,15 @@
         "identity": {
             "type": "userAssigned",
             "userAssignedIdentities": {
-                "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',resourceGroup().name,'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ProfiseeDeploymentManagedIdentity')]":{}
+                "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',resourceGroup().name,'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',variables('IdentityName'))]":{}
             }
         },
         "properties": {
-            "forceUpdateTag": "1",
+            "forceUpdateTag": "[parameters('utcValue')]",
             "azCliVersion": "2.0.80",
+            "timeout": "PT1H",
+            "cleanupPreference": "OnSuccess",
+            "retentionInterval": "P1D",
             "environmentVariables": [
                 {
                     "name": "RESOURCEGROUPNAME",
@@ -1110,12 +1119,20 @@
                 }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofisee.sh",
-            "timeout": "PT1H",
-            "cleanupPreference": "OnSuccess",
-            "retentionInterval": "P1D"
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofisee.sh"            
         }
         }       
         
-    ]
+    ],
+    "outputs": 
+    {
+    "InstallProfiseePlatformOutputs": {
+      "value": "[reference('InstallProfiseePlatform').outputs]",
+      "type": "object"
+    },
+    "InstallProfiseePlatformContainerSettings": {
+      "value": "[reference('InstallProfiseePlatform').containerSettings]",
+      "type": "object"
+    }
+  }
 }
