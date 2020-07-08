@@ -13,6 +13,7 @@ chmod 700 get_helm.sh;
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
 curl -fsSL -o n.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/scripts/nginxSettings.yaml;
+helm uninstall nginx
 helm install nginx stable/nginx-ingress --values n.yaml --set controller.service.loadBalancerIP=$publicInIP;
 
 #wait for the ip to be available.  usually a few seconds
@@ -57,9 +58,17 @@ storageAccountPassword=$(az storage account keys list --resource-group $RESOURCE
 FILEREPOUSERNAME="Azure\\${STORAGEACCOUNTNAME}"
 FILEREPOURL="\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\${STORAGEACCOUNTFILESHARENAME}"
 
+if [ "$PROFISEEVERSION" = "2020 R1" ]; then
+    ACRREPONAME='profisee2020r1';
+	ACRREPOLABEL='GA';
+else
+    ACRREPONAME='profisee2020r2';
+	ACRREPOLABEL='latest';
+fi
+
 helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
-helm install profiseeplatform2020r1 profisee/profisee-platform --values s.yaml --set sqlServer.name=$SQLNAME --set sqlServer.databaseName=$SQLDBNAME --set sqlServer.userName=$SQLUSERNAME --set sqlServer.password=$SQLUSERPASSWORD --set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME --set profiseeRunTime.fileRepository.password=$storageAccountPassword --set profiseeRunTime.fileRepository.location=$FILEREPOURL --set profiseeRunTime.oidc.authority=$OIDCURL --set profiseeRunTime.oidc.clientId=$azureClientId --set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET --set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME --set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL --set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME --set licenseFileData=$LICENSEDATA
+helm install profiseeplatform2020r1 profisee/profisee-platform --values s.yaml --set sqlServer.name=$SQLNAME --set sqlServer.databaseName=$SQLDBNAME --set sqlServer.userName=$SQLUSERNAME --set sqlServer.password=$SQLUSERPASSWORD --set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME --set profiseeRunTime.fileRepository.password=$storageAccountPassword --set profiseeRunTime.fileRepository.location=$FILEREPOURL --set profiseeRunTime.oidc.authority=$OIDCURL --set profiseeRunTime.oidc.clientId=$azureClientId --set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET --set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME --set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL --set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME --set licenseFileData=$LICENSEDATA --set image.repository=$ACRREPONAME --set image.tag=$ACRREPOLABEL
 
 result="{\
 nginxip:\"$nginxip\",\
@@ -67,4 +76,4 @@ azureAppReplyUrl:\"$azureAppReplyUrl\",\
 azureClientName:\"$azureClientName\",\
 azureClientId:$azureClientId\
 }"
-jq -n $result > $AZ_SCRIPTS_OUTPUT_PATH
+#jq -n $result > $AZ_SCRIPTS_OUTPUT_PATH
