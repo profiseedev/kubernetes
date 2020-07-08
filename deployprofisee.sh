@@ -51,13 +51,18 @@ azureClientId=$(az ad app create --display-name $azureClientName --reply-urls $a
 #get storage account pw
 storageAccountPassword=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
 
+#storage vars
+FILEREPOUSERNAME="Azure\\${STORAGEACCOUNTNAME}"
+FILEREPOURL="\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\${STORAGEACCOUNTFILESHARENAME}"
+
 helm repo add profisee https://profisee.github.io/kubernetes
+helm uninstall profiseeplatform2020r1
 helm install profiseeplatform2020r1 profisee/profisee-platform --values s.yaml --set sqlServer.name=$SQLNAME --set sqlServer.databaseName=$SQLDBNAME --set sqlServer.userName=$SQLUSERNAME --set sqlServer.password=$SQLUSERPASSWORD --set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME --set profiseeRunTime.fileRepository.password=$storageAccountPassword --set profiseeRunTime.fileRepository.location=$FILEREPOURL --set profiseeRunTime.oidc.authority=$OIDCURL --set profiseeRunTime.oidc.clientId=$azureClientId --set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET --set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME --set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL --set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME --set licenseFileData=$LICENSEDATA
 
-var="{\
+result="{\
 nginxip:\"$nginxip\",\
 azureAppReplyUrl:\"$azureAppReplyUrl\",\
 azureClientName:\"$azureClientName\",\
 azureClientId:$azureClientId\
 }"
-jq -n $var > $AZ_SCRIPTS_OUTPUT_PATH
+jq -n $result > $AZ_SCRIPTS_OUTPUT_PATH
