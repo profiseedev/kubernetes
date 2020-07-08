@@ -824,7 +824,7 @@
         "resourceGroupRoleAssignmentId": "[guid(concat(variables('domainResourceGroupId'), 'contributor'))]",
         "domainResourceGroupRoleAssignmentId": "[guid(concat(resourceGroup().id, 'contributor'))]",
         "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-        "IdentityName":"ProfiseePlatformDeploymentIdentity"
+        "IdentityName":"[concat('ProfiseePlatformDeploymentIdentity',resourceGroup().name)]"
         
     },
     "resources": [
