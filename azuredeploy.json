@@ -7,7 +7,7 @@
             "type": "String",
             "allowedValues": [
                 "2020 R1",
-                "2020 R2 Beta"
+                "2020 R2 Preview"
             ]
         },
         "ProfiseeAdminUserAccountName": {
@@ -1059,12 +1059,8 @@
                     "secureValue": "[parameters('StorageAccountName')]"
                 },
                 {
-                    "name": "FILEREPOUSERNAME",
-                    "secureValue": "[concat('Azure\\',parameters('StorageAccountName'))]"
-                },
-                {
-                    "name": "FILEREPOURL",
-                    "secureValue": "[concat('\\\\',parameters('StorageAccountName'),'.file.core.windows.net\\',parameters('StorageAccountFileShareName'))]"
+                    "name": "STORAGEACCOUNTFILESHARENAME",
+                    "secureValue": "[parameters('StorageAccountFileShareName')]"
                 },
                 {
                     "name": "ADMINACCOUNTNAME",
@@ -1117,6 +1113,10 @@
                 {
                     "name": "TLSKEY",
                     "secureValue": "[parameters('HttpsCertificatePrivateKey')]"
+                },
+                {
+                    "name": "PROFISEEVERSION",
+                    "secureValue": "[parameters('ProfiseeVersion')]"
                 }
 
             ],
