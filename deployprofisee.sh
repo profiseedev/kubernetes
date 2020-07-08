@@ -15,6 +15,8 @@ helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 curl -fsSL -o n.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/scripts/nginxSettings.yaml;
 helm install nginx stable/nginx-ingress --values n.yaml --set controller.service.loadBalancerIP=$publicInIP;
 
+#wait for the ip to be available.  usually a few seconds
+sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 echo $nginxip;
