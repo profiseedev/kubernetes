@@ -73,6 +73,10 @@ helm install profiseeplatform2020r1 profisee/profisee-platform --values s.yaml -
 result="{\"Result\":[\
 {\"nginxip\":\"$nginxip\"},\
 {\"azureAppReplyUrl\":\"$azureAppReplyUrl\"},\
-{\"azureClientName\":\"$azureClientName\"}\
+{\"FILEREPOUSERNAME\":\"$FILEREPOUSERNAME\"},\
+{\"FILEREPOURL\":\"$FILEREPOURL\"},\
+{\"CLIENTID\":\"$CLIENTID\"}\
+{\"ACRREPONAME\":\"$ACRREPONAME\"}\
+{\"ACRREPOLABEL\":\"$ACRREPOLABEL\"}\
 ]}"
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
