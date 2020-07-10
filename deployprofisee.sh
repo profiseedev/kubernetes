@@ -55,8 +55,8 @@ azureClientId=$(az ad app create --display-name $azureClientName --reply-urls $a
 storageAccountPassword=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
 
 #storage vars
-FILEREPOUSERNAME="Azure\\${STORAGEACCOUNTNAME}"
-FILEREPOURL="\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\${STORAGEACCOUNTFILESHARENAME}"
+FILEREPOUSERNAME="Azure\\\\${STORAGEACCOUNTNAME}"
+FILEREPOURL="\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\${STORAGEACCOUNTFILESHARENAME}"
 
 if [ "$PROFISEEVERSION" = "2020 R1" ]; then
     ACRREPONAME='profisee2020r1';
