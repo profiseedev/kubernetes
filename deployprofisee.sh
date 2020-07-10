@@ -75,8 +75,8 @@ result="{\"Result\":[\
 {\"azureAppReplyUrl\":\"$azureAppReplyUrl\"},\
 {\"FILEREPOUSERNAME\":\"$FILEREPOUSERNAME\"},\
 {\"FILEREPOURL\":\"$FILEREPOURL\"},\
-{\"CLIENTID\":\"$CLIENTID\"}\
-{\"ACRREPONAME\":\"$ACRREPONAME\"}\
+{\"CLIENTID\":\"$CLIENTID\"},\
+{\"ACRREPONAME\":\"$ACRREPONAME\"},\
 {\"ACRREPOLABEL\":\"$ACRREPOLABEL\"}\
 ]}"
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
