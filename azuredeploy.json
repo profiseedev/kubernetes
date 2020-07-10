@@ -26,6 +26,10 @@
             "defaultValue": "clEptBk4Rce=U42Uu35F35EG18Ce2yv9",
             "type": "String"
         },
+        "AzureActiveDirectoryClientId": {
+            "defaultValue": "0e925f98-95ca-47c6-bf68-158a50b9d881",
+            "type": "String"
+        },
         "KubernetesClusterName": {
             "defaultValue": "MyAKSCluster",
             "type": "String"
@@ -813,19 +817,20 @@
             "defaultValue": "-----BEGIN PRIVATE KEY----- MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCsxzwsTaZaUFb+ ywHLeuArKaSHUtJyy6yMfofPWyskE9etw8awfBxh6W+zwpec2lxrRt+KC01mKON1 IvLn77sfJ2VEwOYRaJKXerEtFj69QrA3WliWFTQkVXLDvtyrx5mb9bdvmZeBJFjv 9gxRmTHRT21falQ8c6pH+VS6+RE6QvwDWc2jMuPW/jFbXLlH3sxqnJ41Hhs7psxw vg23GPXLZDnKujmSy8vPSaLUFDKDfdRzek/m4kb4GWZ7O9xWilzsSXiMnsUep4O9 Ll0wPjjEpr2Qx6eqJkrCcugWGD/yE3zpJKlF+YToKowGkx6kuCPQyJIyvA1I+Wbt IgjwDTSnAgMBAAECggEATm9uBjDEBbj2HVocePrRvFZ9vf8f0YRb0zX3wm8BYTHu 1hAL6X+WRO67ym/a8xaAISU+AsWJwAhs5fbVLey7VnPEeddWOm3uKn1E5JJ2LeYR 6DcIAy4iCyKNZIaHWCZXOiFswmmICVTuWRUqV3rDzmEP5mJ3VjAuC9mJGQ5Lv1X9 RGeAujtryegkAlPQ/3lbN0dHdmV0brxpNHA1QeDOGxLiNfkJopTEdq74bHMzHTJ+ mIY0dSWG6Jv6lHpntb3BVzudH+J5gx31s4jFdnK9RuMkIui/mKVINA26etEU88/7 JfdGlvz+r+GDhDOXEhoWQR7zwa29vEfzv50AmELqcQKBgQDbHlz6cG5TL61GyDWR /jCUFJiMI8Xq9aQ9ngkSDcANF2zayGjjqxLr7P+ebtenwTgpm3Lal04rTMXIxp11 gmkgvTQhDb7cSVhkfNthTumqAG70cC4SOzo7YBPvBIIyMEhmgftIV/9ng7yZhGt/ py9ggOxp/93Fj0hS8ohDChlx1wKBgQDJ3Br2JNcJ+cmdJpySzd/YcwsooKV2tqVJ 7EfWElB7HaGHc7LQ9Wm2NlXQK6P27aSKDBfQ1cWXu84v4qLmd9dl82b2RsWRQB0v 0coi4PIWwt87KwebQ4nptdyxzyqpX0wD1sgBDOw5uED8G/uUkHGTIyPbIWI8pHZo Qq8B5nSZsQKBgQC8lveDfT0XT9OdNjgVPWfmK4vYIfn4bg88EUbRSRBgtCa2bwMH 4HfaoxKm89OcyMpj1S0XQl6/GcapNXjUaLe+u9mgEUqSInZ3lpbiu56U+OaGb/7X Ji7KZ7kAYSsFs1S9FWaHL2XdXB75KmWzatt1/cB8wwHHRbkD20a4HHsl5QKBgGfW AUh8yuEmzL86DXC21l7RTvwnJvZaHcxY7tr/sMakB2NV8LXsh+RjLuFWkZGDzQ/2 CIo0bOAQi4+2VXWYUATxoBUvcpG1GU5v7Drk26M5uvsEt3T22QqPsmcE2j0l+ERB R8DClQFb9pG5E0DozIOTn+4ozg/DyeT36G5hzbkBAoGBAJwU40T1iAt5i570NlPX ocf3j5spQ7daZ0zcQencjXfPcEmMY93qOVHJ8iQ4athTJQDDGkvbSsHJApuUC3zm 4ZpQwhFIwrsKAOnkVVZ7cMYkz+DqpDnhaS7HrogayOd1hLzlhyrnwKTQO+JNaX36 IzljrS0zvM5AukHWxYYNRw6b -----END PRIVATE KEY-----",
             "type": "String"
         },
-        "utcValue": {
-      "type": "string",
-      "defaultValue": "[utcNow()]"
-    }
+       "MainResourceGroupRoleId": {
+            "type": "string",
+            "defaultValue": "[newGuid()]"
+        },
+        "DomainResourceGroupRoleId": {
+            "type": "string",
+            "defaultValue": "[newGuid()]"
+        }
     },
     "variables": 
     {
         "domainResourceGroupId": "[concat(subscription().id, '/resourceGroups/', parameters('DNSDomainNameResourceGroup'))]",
-        "resourceGroupRoleAssignmentId": "[guid(concat(variables('domainResourceGroupId'), 'contributor'))]",
-        "domainResourceGroupRoleAssignmentId": "[guid(concat(resourceGroup().id, 'contributor'))]",
         "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-        "IdentityName":"[concat('ProfiseePlatformDeploymentIdentity',resourceGroup().name)]"
-        
+        "IdentityName":"[concat('ProfiseePlatformDeployment_',resourceGroup().name)]"        
     },
     "resources": [
         {
@@ -997,15 +1002,48 @@
         },
         {
         "type": "Microsoft.Authorization/roleAssignments",
-        "apiVersion": "2018-09-01-preview",
-        "name": "[variables('resourceGroupRoleAssignmentId')]",
+        "apiVersion": "2020-03-01-preview",
+        "name": "[parameters('MainResourceGroupRoleId')]",
         "dependsOn": ["[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('IdentityName'))]"],
         "properties": 
             {
             "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
             "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('IdentityName')), '2018-11-30').principalId]",
-            "principalType": "ServicePrincipal",
-            "scope":"[resourceGroup().id]"
+            "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "AddRoleForDomainResourceGroup",
+            "resourceGroup": "Profisee",
+            "properties": 
+            {
+            "mode": "Incremental",
+            "template": 
+            {
+                "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {},
+                "variables": 
+                {        
+                },
+                "resources": [
+                {
+                "type": "Microsoft.Authorization/roleAssignments",
+                "apiVersion": "2020-03-01-preview",
+                "name": "[parameters('DomainResourceGroupRoleId')]",
+                "properties": 
+                    {
+                    "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
+                    "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('IdentityName')), '2018-11-30').principalId]",
+                    "principalType": "ServicePrincipal",
+                    "scope": "[variables('domainResourceGroupId')]"
+                    }
+                }
+                ]
+            },
+            "parameters": {}
             }
         },
         {
@@ -1024,7 +1062,7 @@
             }
         },
         "properties": {
-            "forceUpdateTag": "[parameters('utcValue')]",
+            "forceUpdateTag": "[parameters('MainResourceGroupRoleId')]",
             "azCliVersion": "2.0.80",
             "timeout": "PT1H",
             "cleanupPreference": "OnSuccess",
@@ -1117,11 +1155,28 @@
                 {
                     "name": "PROFISEEVERSION",
                     "secureValue": "[parameters('ProfiseeVersion')]"
+                },
+                {
+                    "name": "CLIENTID",
+                    "secureValue": "[parameters('AzureActiveDirectoryClientId')]"
                 }
 
             ],
             "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofisee.sh"            
         }
+        },
+        {
+            "apiVersion": "2018-02-01",
+            "name": "pid-498552cf-87f5-55b7-a69b-5364df5c1994",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": []
+                }
+            }
         }       
         
     ],
