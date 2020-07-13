@@ -25,7 +25,6 @@ echo $nginxip;
 #fix tls variables
 #cert
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
-then
 	printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert;
 	sed -e 's/^/    /' a.cert > afinal.cert;
 else    
@@ -34,7 +33,6 @@ fi
 
 #key
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
-then
     printf '%s\n' "$TLSKEY" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/PRIVATE/! s/ /\n/g' >> a.key;
 	sed -e 's/^/    /' a.key > afinal.key;
 else
@@ -43,7 +41,6 @@ fi
 
 #set dns
 if [ "$UPDATEDNS" = "Yes" ]; then
-then
 	az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes;
 	az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5;
 fi
