@@ -724,11 +724,11 @@
             "defaultValue": "1.18.2",
             "type": "String",
             "allowedValues": [
+                "1.18.4",
                 "1.18.2",
                 "1.18.1",
-                "1.17.5",
-                "1.17.4",
-                "1.16.9"
+                "1.17.7",
+                "1.16.10"
             ]
         },
         "SQLServerCreateNew": {
@@ -808,7 +808,18 @@
         "DNSDomainNameResourceGroup": {
             "defaultValue": "Profisee",
             "type": "String"
-        },    
+        },   
+        "HttpsConfigure": {
+            "defaultValue": "Yes",
+            "type": "String",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If No then you web traffic is not secure and only works over http.  "
+            }
+        }, 
         "HttpsCertificate": {
             "defaultValue": "-----BEGIN CERTIFICATE----- MIIF3jCCBMagAwIBAgIRAOofbyznxUjZnNm5pfyHS7gwDQYJKoZIhvcNAQELBQAw gY8xCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAO BgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE3MDUGA1UE AxMuU2VjdGlnbyBSU0EgRG9tYWluIFZhbGlkYXRpb24gU2VjdXJlIFNlcnZlciBD QTAeFw0yMDAzMjQwMDAwMDBaFw0yMTAzMjQyMzU5NTlaMCUxIzAhBgNVBAMMGiou cHJvZmlzZWVjb250YWluZXJkZXYuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A MIIBCgKCAQEArMc8LE2mWlBW/ssBy3rgKymkh1LScsusjH6Hz1srJBPXrcPGsHwc Yelvs8KXnNpca0bfigtNZijjdSLy5++7HydlRMDmEWiSl3qxLRY+vUKwN1pYlhU0 JFVyw77cq8eZm/W3b5mXgSRY7/YMUZkx0U9tX2pUPHOqR/lUuvkROkL8A1nNozLj 1v4xW1y5R97MapyeNR4bO6bMcL4Ntxj1y2Q5yro5ksvLz0mi1BQyg33Uc3pP5uJG +BlmezvcVopc7El4jJ7FHqeDvS5dMD44xKa9kMenqiZKwnLoFhg/8hN86SSpRfmE 6CqMBpMepLgj0MiSMrwNSPlm7SII8A00pwIDAQABo4ICnDCCApgwHwYDVR0jBBgw FoAUjYxexFStiuF36Zv5mwXhuAGNYeEwHQYDVR0OBBYEFOBKp7rl5Mq/v4kDsbSM ejZLGsMrMA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQG CCsGAQUFBwMBBggrBgEFBQcDAjBJBgNVHSAEQjBAMDQGCysGAQQBsjEBAgIHMCUw IwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMAgGBmeBDAECATCB hAYIKwYBBQUHAQEEeDB2ME8GCCsGAQUFBzAChkNodHRwOi8vY3J0LnNlY3RpZ28u Y29tL1NlY3RpZ29SU0FEb21haW5WYWxpZGF0aW9uU2VjdXJlU2VydmVyQ0EuY3J0 MCMGCCsGAQUFBzABhhdodHRwOi8vb2NzcC5zZWN0aWdvLmNvbTA/BgNVHREEODA2 ghoqLnByb2Zpc2VlY29udGFpbmVyZGV2LmNvbYIYcHJvZmlzZWVjb250YWluZXJk ZXYuY29tMIIBBAYKKwYBBAHWeQIEAgSB9QSB8gDwAHYAfT7y+I//iFVoJMLAyp5S iXkrxQ54CX8uapdomX4i8NcAAAFxDQbLQAAABAMARzBFAiB48lb2OygoZQp+uj1z gCgZjLdmc1iWw0vNjoabUHUlrwIhAKaW74bmOokLN9ToAdRR3+CrgC0Hvc4w92eR LuUThofCAHYAlCC8Ho7VjWyIcx+CiyIsDdHaTV5sT5Q9YdtOL1hNosIAAAFxDQbL EgAABAMARzBFAiEA8CvW1RjlIPTYITqaq9bsh5cdirfdGLn8NL2SMdJziT0CIH66 eqZDv2uYU/MzzRI+1KPjEQJFRJFq0ar0KBb8KlQxMA0GCSqGSIb3DQEBCwUAA4IB AQARRBTkGXHTIHY3PHL3mZVp/IqnEhv4lX0wYhpOPjWP3ZCQOcTkfhGNtxEhKVov xCeEOTpSn77fD3XrviCnUkRINKoUsbR4z32R7hpclSr+PEWtreWAfMRC1JAk00Jg ptdevd58vyzIxOX43OI0MAVGPeom7BlgU+2ehlkeO+DpQ/79510tb8E0pPMUo32e /VVPMbeenjgt23wts1FOm/QeRmE6OSYKYX1NEkZIC2LmjZ5T22dO4DX3NCLOPjWi 1x5HJLgsvozvzFq8Y5hBD26+NqUSTqqFYbjotfkmob4LtByF1E2eQ0/HuKQZSJgX l2nugzOKtgd2QBjwPvWqS439 -----END CERTIFICATE-----",
             "type": "String"
@@ -1070,99 +1081,103 @@
             "environmentVariables": [
                 {
                     "name": "RESOURCEGROUPNAME",
-                    "secureValue": "[resourceGroup().name]"
+                    "value": "[resourceGroup().name]"
                 },
                 {
                     "name": "CLUSTERNAME",
-                    "secureValue": "[parameters('KubernetesClusterName')]"
+                    "value": "[parameters('KubernetesClusterName')]"
                 },
                 {
                     "name": "SQLNAME",
-                    "secureValue": "[concat(parameters('SQLServerName'),'.database.windows.net')]"
+                    "value": "[concat(parameters('SQLServerName'),'.database.windows.net')]"
                 },
                 {
                     "name": "SQLUSERNAME",
-                    "secureValue": "[parameters('SQLServerUser')]"
+                    "value": "[parameters('SQLServerUser')]"
                 },
                 {
                     "name": "SQLUSERPASSWORD",
-                    "secureValue": "[parameters('SQLServerPassword')]"
+                    "value": "[parameters('SQLServerPassword')]"
                 },
                 {
                     "name": "SQLDBNAME",
-                    "secureValue": "[parameters('SQLServerDatabaseName')]"
+                    "value": "[parameters('SQLServerDatabaseName')]"
                 },
                 {
                     "name": "STORAGEACCOUNTNAME",
-                    "secureValue": "[parameters('StorageAccountName')]"
+                    "value": "[parameters('StorageAccountName')]"
                 },
                 {
                     "name": "STORAGEACCOUNTFILESHARENAME",
-                    "secureValue": "[parameters('StorageAccountFileShareName')]"
+                    "value": "[parameters('StorageAccountFileShareName')]"
                 },
                 {
                     "name": "ADMINACCOUNTNAME",
-                    "secureValue": "[parameters('ProfiseeAdminUserAccountName')]"
+                    "value": "[parameters('ProfiseeAdminUserAccountName')]"
                 },
                 {
                     "name": "DNSHOSTNAME",
-                    "secureValue": "[parameters('DNSHostName')]"
+                    "value": "[parameters('DNSHostName')]"
                 },
                 {
                     "name": "DNSDOMAINNAME",
-                    "secureValue": "[parameters('DNSDomainName')]"
+                    "value": "[parameters('DNSDomainName')]"
                 },
                 {
                     "name": "DOMAINNAMERESOURCEGROUP",
-                    "secureValue": "[parameters('DNSDomainNameResourceGroup')]"
+                    "value": "[parameters('DNSDomainNameResourceGroup')]"
                 },
                 {
                     "name": "UPDATEDNS",
-                    "secureValue": "[parameters('DNSUpdate')]"
+                    "value": "[parameters('DNSUpdate')]"
                 },
                 {
                     "name": "EXTERNALDNSNAME",
-                    "secureValue": "[concat(parameters('DNSHostName'),'.',parameters('DNSDomainName'))]"
+                    "value": "[concat(parameters('DNSHostName'),'.',parameters('DNSDomainName'))]"
                 },
                 {
                     "name": "EXTERNALDNSURL",
-                    "secureValue": "[concat('https://',parameters('DNSHostName'),'.',parameters('DNSDomainName'))]"
+                    "value": "[if(equals(parameters('HttpsConfigure'),'Yes'), concat('https://',parameters('DNSHostName'),'.',parameters('DNSDomainName')),concat('http://',parameters('DNSHostName'),'.',parameters('DNSDomainName')))]"
                 },                
                 {
                     "name": "OIDCURL",
-                    "secureValue": "[concat('https://login.microsoftonline.com/',subscription().tenantId)]"
+                    "value": "[concat('https://login.microsoftonline.com/',subscription().tenantId)]"
                 },
                 {
                     "name": "LICENSEDATA",
-                    "secureValue": "[parameters('ProfiseeLicense')]"
+                    "value": "[parameters('ProfiseeLicense')]"
                 },
                 {
                     "name": "ACRUSER",
-                    "secureValue": "[parameters('ProfiseeContainerRegistryUser')]"
+                    "value": "[parameters('ProfiseeContainerRegistryUser')]"
                 },
                 {
                     "name": "ACRUSERPASSWORD",
-                    "secureValue": "[parameters('ProfiseeContainerRegistryPassword')]"
+                    "value": "[parameters('ProfiseeContainerRegistryPassword')]"
                 },
                 {
                     "name": "TLSCERT",
-                    "secureValue": "[parameters('HttpsCertificate')]"
+                    "value": "[parameters('HttpsCertificate')]"
                 },
                 {
                     "name": "TLSKEY",
-                    "secureValue": "[parameters('HttpsCertificatePrivateKey')]"
+                    "value": "[parameters('HttpsCertificatePrivateKey')]"
                 },
                 {
                     "name": "PROFISEEVERSION",
-                    "secureValue": "[parameters('ProfiseeVersion')]"
+                    "value": "[parameters('ProfiseeVersion')]"
                 },
                 {
                     "name": "CLIENTID",
-                    "secureValue": "[parameters('AzureActiveDirectoryClientId')]"
+                    "value": "[parameters('AzureActiveDirectoryClientId')]"
+                },
+                {
+                    "name": "CONFIGUREHTTPS",
+                    "value": "[parameters('HttpsConfigure')]"
                 }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofisee.sh"            
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofiseedev.sh"            
         }
         },
         {
@@ -1185,6 +1200,10 @@
     "InstallProfiseePlatformOutputs": {
       "value": "[reference('InstallProfiseePlatform').outputs]",
       "type": "object"
-    }
+    },
+    "KubernetesClusterFQDN": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))).fqdn]"
+        }
   }
 }
