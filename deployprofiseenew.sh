@@ -17,7 +17,7 @@ helm uninstall nginx
 helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
 
 #wait for the ip to be available.  usually a few seconds
-sleep 30;
+#sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 echo $nginxip;
@@ -50,7 +50,7 @@ fi
 curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/SettingsNew.yaml
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
-sed -i -e 's/$ACRUSERPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
+sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
 sed -i -e 's/$ACREMAIL/'"support@profisee.com"'/g' Settings.yaml
 sed -i -e 's/$ACRAUTH/'"$auth"'/g' Settings.yaml
 sed -e '/$TLSCERT/ {' -e 'r afinal.cert' -e 'd' -e '}' -i Settings.yaml
@@ -84,13 +84,13 @@ sed -i -e 's/$SQLUSERPASSWORD/'"$SQLUSERPASSWORD"'/g' Settings.yaml
 sed -i -e 's/$FILEREPOUSERNAME/'"$FILEREPOUSERNAME"'/g' Settings.yaml
 sed -i -e 's/$FILEREPOPASSWORD/'"$FILEREPOPASSWORD"'/g' Settings.yaml
 sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
-sed -i -e 's/$OIDCURL/'"$OIDCURL"'/g' Settings.yaml
+sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$ADMINACCOUNTNAME/'"$ADMINACCOUNTNAME"'/g' Settings.yaml
 sed -i -e 's/$EXTERNALDNSURL/'"$EXTERNALDNSURL"'/g' Settings.yaml
 sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
-sed -i -e 's/$LICENSEDATA/'"$LICENSEDATA"'/g' Settings.yaml
+sed -i -e 's~$LICENSEDATA~'"$LICENSEDATA"'~g' Settings.yaml
 sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 
