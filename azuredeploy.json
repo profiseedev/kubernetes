@@ -1076,8 +1076,8 @@
             "forceUpdateTag": "[parameters('MainResourceGroupRoleId')]",
             "azCliVersion": "2.0.80",
             "timeout": "PT1H",
-            "cleanupPreference": "OnSuccess",
-            "retentionInterval": "P1D",
+            "cleanupPreference": "OnExpiration",
+            "retentionInterval": "P7D",
             "environmentVariables": [
                 {
                     "name": "RESOURCEGROUPNAME",
@@ -1203,7 +1203,7 @@
     },
     "KubernetesClusterFQDN": {
             "type": "string",
-            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))).fqdn]"
+            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))).FQDN]"
         }
   }
 }
