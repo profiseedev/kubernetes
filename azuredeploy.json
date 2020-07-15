@@ -13,7 +13,7 @@
                 "description": "The version of the Profisee platform to be deployed."
             }
         },
-        "ProfiseeAdminUserAccountName": {
+        "ProfiseeAdminUserName": {
             "defaultValue": "first.last@company.com",
             "type": "String",
             "metadata": {
@@ -27,14 +27,14 @@
                 "description": "Profisee plaform license string supplied by Profisee support."
             }
         },
-        "ProfiseeContainerRegistryUser": {
+        "ProfiseeAcrUser": {
             "defaultValue": "",
             "type": "String",
             "metadata": {
                 "description": "User name supplied by Profisee support."
             }
         },
-        "ProfiseeContainerRegistryPassword": {
+        "ProfiseeAcrPassword": {
             "defaultValue": "",
             "type": "string",
             "metadata": {
@@ -757,7 +757,7 @@
                 "No"
             ],
             "metadata": {
-                "description": "If you select No, you must enter the FQDN of the sql server"
+                "description": "If you select No, you must enter the FQDN of an existing sql server accessable by this aazure subscription"
             }
         },
         "SQLServerName": {
@@ -1138,7 +1138,7 @@
                 },
                 {
                     "name": "ADMINACCOUNTNAME",
-                    "value": "[parameters('ProfiseeAdminUserAccountName')]"
+                    "value": "[parameters('ProfiseeAdminUserName')]"
                 },
                 {
                     "name": "DNSHOSTNAME",
@@ -1174,11 +1174,11 @@
                 },
                 {
                     "name": "ACRUSER",
-                    "value": "[parameters('ProfiseeContainerRegistryUser')]"
+                    "value": "[parameters('ProfiseeAcrUser')]"
                 },
                 {
                     "name": "ACRUSERPASSWORD",
-                    "value": "[parameters('ProfiseeContainerRegistryPassword')]"
+                    "value": "[parameters('ProfiseeAcrPassword')]"
                 },
                 {
                     "name": "TLSCERT",
