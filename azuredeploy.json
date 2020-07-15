@@ -1202,7 +1202,7 @@
                 }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofiseedev.sh"            
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofisee.sh"            
         }
         },
         {
