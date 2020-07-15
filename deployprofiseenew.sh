@@ -82,7 +82,7 @@ sed -i -e 's/$SQLDBNAME/'"$SQLDBNAME"'/g' Settings.yaml
 sed -i -e 's/$SQLUSERNAME/'"$SQLUSERNAME"'/g' Settings.yaml
 sed -i -e 's/$SQLUSERPASSWORD/'"$SQLUSERPASSWORD"'/g' Settings.yaml
 sed -i -e 's/$FILEREPOUSERNAME/'"$FILEREPOUSERNAME"'/g' Settings.yaml
-sed -i -e 's/$FILEREPOPASSWORD/'"$FILEREPOPASSWORD"'/g' Settings.yaml
+sed -i -e 's~$FILEREPOPASSWORD~'"$FILEREPOPASSWORD"'~g' Settings.yaml
 sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
 sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
@@ -96,7 +96,23 @@ sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 
 helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
-helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
+helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml 
+--set sqlServer.name=$SQLNAME 
+--set sqlServer.databaseName=$SQLDBNAME 
+--set sqlServer.userName=$SQLUSERNAME 
+--set sqlServer.password=$SQLUSERPASSWORD 
+--set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME 
+--set profiseeRunTime.fileRepository.password=$FILEREPOPASSWORD 
+--set profiseeRunTime.fileRepository.location=$FILEREPOURL 
+--set profiseeRunTime.oidc.authority=$OIDCURL 
+--set profiseeRunTime.oidc.clientId=$CLIENTID 
+--set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET 
+--set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME 
+--set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL 
+--set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME 
+--set licenseFileData=$LICENSEDATA 
+--set image.repository=$ACRREPONAME 
+--set image.tag=$ACRREPOLABEL
 
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
