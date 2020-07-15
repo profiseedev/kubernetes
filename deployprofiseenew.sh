@@ -26,18 +26,20 @@ echo $nginxip;
 #cert
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 	printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert;
-	sed -e 's/^/    /' a.cert > afinal.cert;
+	sed -e 's/^/    /' a.cert > tls.cert;
 else    
-    echo '' > afinal.cert;
+    echo '' > tls.cert;
 fi
+rm a.cert
 
 #key
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
     printf '%s\n' "$TLSKEY" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/PRIVATE/! s/ /\n/g' >> a.key;
-	sed -e 's/^/    /' a.key > afinal.key;
+	sed -e 's/^/    /' a.key > tls.key;
 else
-	echo '' > afinal.key;	    
+	echo '' > tls.key;	    
 fi
+rm a.key
 
 #set dns
 if [ "$UPDATEDNS" = "Yes" ]; then
@@ -53,8 +55,8 @@ sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
 sed -i -e 's/$ACREMAIL/'"support@profisee.com"'/g' Settings.yaml
 sed -i -e 's/$ACRAUTH/'"$auth"'/g' Settings.yaml
-sed -e '/$TLSCERT/ {' -e 'r afinal.cert' -e 'd' -e '}' -i Settings.yaml
-sed -e '/$TLSKEY/ {' -e 'r afinal.key' -e 'd' -e '}' -i Settings.yaml
+sed -e '/$TLSCERT/ {' -e 'r tls.cert' -e 'd' -e '}' -i Settings.yaml
+sed -e '/$TLSKEY/ {' -e 'r tls.key' -e 'd' -e '}' -i Settings.yaml
 
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
@@ -96,23 +98,7 @@ sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 
 helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
-helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml 
---set sqlServer.name=$SQLNAME 
---set sqlServer.databaseName=$SQLDBNAME 
---set sqlServer.userName=$SQLUSERNAME 
---set sqlServer.password=$SQLUSERPASSWORD 
---set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME 
---set profiseeRunTime.fileRepository.password=$FILEREPOPASSWORD 
---set profiseeRunTime.fileRepository.location=$FILEREPOURL 
---set profiseeRunTime.oidc.authority=$OIDCURL 
---set profiseeRunTime.oidc.clientId=$CLIENTID 
---set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET 
---set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME 
---set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL 
---set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME 
---set licenseFileData=$LICENSEDATA 
---set image.repository=$ACRREPONAME 
---set image.tag=$ACRREPOLABEL
+helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
