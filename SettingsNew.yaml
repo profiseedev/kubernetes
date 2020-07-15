@@ -38,7 +38,7 @@ image:
            "auths":{
               "profisee.azurecr.io":{
                  "username":"$ACRUSER",
-                 "password":"$ACRUSERPASSWORD",
+                 "password":"$ACRPASSWORD",
                  "email":"$ACREMAIL",
                  "auth":"$ACRAUTH"
               }
