@@ -8,27 +8,45 @@
             "allowedValues": [
                 "2020 R1",
                 "2020 R2 Preview"
-            ]
+            ],
+            "metadata": {
+                "description": "The version of the Profisee platform to be deployed."
+            }
         },
         "ProfiseeAdminUserAccountName": {
             "defaultValue": "first.last@company.com",
-            "type": "String"
+            "type": "String",
+            "metadata": {
+                "description": "The account of the first super user who will be registered with Profisee, who will be able to logon and add other users."
+            }
         },
         "ProfiseeLicense": {
             "defaultValue": "",
-            "type": "String"
+            "type": "String",
+            "metadata": {
+                "description": "Profisee plaform license string supplied by Profisee support."
+            }
         },
         "ProfiseeContainerRegistryUser": {
             "defaultValue": "",
-            "type": "String"
+            "type": "String",
+            "metadata": {
+                "description": "User name supplied by Profisee support."
+            }
         },
         "ProfiseeContainerRegistryPassword": {
             "defaultValue": "",
-            "type": "String"
+            "type": "string",
+            "metadata": {
+                "description": "User password supplied by Profisee support."
+            }
         },
         "AzureActiveDirectoryClientId": {
             "defaultValue": "",
-            "type": "String"
+            "type": "String",
+            "metadata": {
+                "description": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication."
+            }
         },
         "KubernetesClusterName": {
             "defaultValue": "MyAKSCluster",
