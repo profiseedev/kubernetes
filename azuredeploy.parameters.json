@@ -1,45 +1,93 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "ClusterName": {
-            "value": null
+        "ProfiseeVersion": {
+            "value": "2020 R1"
         },
-        "workspaces_defaultworkspace_73814551_37dd_4143_a149_df9c2a2c97b6_eus2_externalid": {
-            "value": null
+        "ProfiseeAdminUserAccountName": {
+            "value": "first.last@company.com"
         },
-        "publicIPAddresses_AKSStaticOutIP_externalid": {
-            "value": null
+        "ProfiseeLicense": {
+            "value": ""
         },
-        "LinuxVMSize": {
+        "ProfiseeContainerRegistryUser": {
+            "value": ""
+        },
+        "ProfiseeContainerRegistryPassword": {
+            "value": ""
+        },
+        "AzureActiveDirectoryClientId": {
+            "value": ""
+        },
+        "KubernetesClusterName": {
+            "value": "MyAKSCluster"
+        },
+        "KubernetesLinuxVMSize": {
             "value": "Standard_B2s"
         },
-        "WindowsVMSize": {
+        "KubernetesWindowsVMSize": {
             "value": "Standard_B4ms"
-        },
-        "CreateNewSqlServer": {
-            "value": ""
-        },
-        "SQLServerName": {
-            "value": ""
-        },
-        "SQLServerAdminLogin": {
-            "value": "sqladmin"
-        },
-        "SQLServerAdminLoginPassword": {
-            "value": "password"
-        },
-        "StorageAccountName": {
-            "value": ""
-        },
-        "AKSStorageType": {
-            "value": "Standard_LRS"
         },
         "KubernetesVersion": {
             "value": "1.18.2"
         },
-        "dnsPrefix": {
+        "SQLServerCreateNew": {
+            "value": "Yes"
+        },
+        "SQLServerName": {
+            "value": "MySqlServerName"
+        },
+        "SQLServerUser": {
+            "value": "sqladmin"
+        },
+        "SQLServerPassword": {
             "value": ""
+        },
+        "SQLServerDatabaseName": {
+            "value": "Profisee"
+        },
+        "StorageAccountCreateNew": {
+            "value": "Yes"
+        },
+        "StorageAccountName": {
+            "value": "MyStorageAccountName"
+        },
+        "StorageAccountPassword": {
+            "value": ""
+        },
+        "StorageAccountType": {
+            "value": "Standard_LRS"
+        },
+        "StorageAccountFileShareName": {
+            "value": "files"
+        },
+        "DNSUpdate": {
+            "value": "Yes"
+        },
+        "DNSHostName": {
+            "value": "MyProfiseeHostName"
+        },
+        "DNSDomainName": {
+            "value": "company.com"
+        },
+        "DNSDomainNameResourceGroup": {
+            "value": ""
+        },
+        "HttpsConfigure": {
+            "value": "Yes"
+        },
+        "HttpsCertificate": {
+            "value": ""
+        },
+        "HttpsCertificatePrivateKey": {
+            "value": ""
+        },
+        "MainResourceGroupRoleId": {
+            "value": "" // TODO: Fill in parameter value
+        },
+        "DomainResourceGroupRoleId": {
+            "value": "" // TODO: Fill in parameter value
         }
     }
 }
