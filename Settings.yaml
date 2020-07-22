@@ -1,22 +1,22 @@
 sqlServer: 
-    name: ""
-    databaseName: ""
-    userName: ""
-    password: ""
+    name: "$SQLNAME"
+    databaseName: "$SQLDBNAME"
+    userName: "$SQLUSERNAME"
+    password: "$SQLUSERPASSWORD"
 profiseeRunTime:
-    adminAccount: ""
+    adminAccount: "$ADMINACCOUNTNAME"
     fileRepository:
-        userName: ""
-        password: ""
+        userName: "$FILEREPOUSERNAME"
+        password: "$FILEREPOPASSWORD"
         logonType: "NewCredentials"
-        location: ""
+        location: "$FILEREPOURL"
     #externalDnsUrl: ""
-    externalDnsName: ""
+    externalDnsName: "$EXTERNALDNSNAME"
     oidc:
         name: "Azure Active Directory"
-        authority: ""
-        clientId: ""
-        clientSecret: ""
+        authority: "$OIDCURL"
+        clientId: "$CLIENTID"
+        clientSecret: "$OIDCCLIENTSECRET"
         usernameClaim: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
         userIdClaim: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
         firstNameClaim: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
@@ -31,26 +31,26 @@ clusterNode:
       memory: 1000M        
 image:
     registry: "profisee.azurecr.io"
-    repository: "profisee2020r1"
-    tag: "latest"
+    repository: "$ACRREPONAME"
+    tag: "$ACRREPOLABEL"
     auth: |
         {
            "auths":{
               "profisee.azurecr.io":{
-                 "username":"AUTH_USERNAME",
-                 "password":"AUTH_PASSWORD",
-                 "email":"AUTH_EMAIL",
-                 "auth":"AUTH_AUTH"
+                 "username":"$ACRUSER",
+                 "password":"$ACRPASSWORD",
+                 "email":"$ACREMAIL",
+                 "auth":"$ACRAUTH"
               }
            }
         }
-licenseFileData: 
+licenseFileData: $LICENSEDATA
 
 oidcFileData: |
     {      
     }
 tlsCert: |
-    TLSCERT_DATA
+    $TLSCERT
 tlsKey: |
-    TLSKEY_DATA  
+    $TLSKEY  
     
