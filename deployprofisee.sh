@@ -12,9 +12,9 @@ chmod 700 get_helm.sh;
 #install nginx
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
-curl -fsSL -o n.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/scripts/nginxSettings.yaml;
+curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/scripts/nginxSettings.yaml;
 helm uninstall nginx
-helm install nginx stable/nginx-ingress --values n.yaml --set controller.service.loadBalancerIP=$publicInIP;
+helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
 
 #wait for the ip to be available.  usually a few seconds
 sleep 30;
@@ -26,18 +26,20 @@ echo $nginxip;
 #cert
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 	printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert;
-	sed -e 's/^/    /' a.cert > afinal.cert;
+	sed -e 's/^/    /' a.cert > tls.cert;
 else    
-    echo '' > afinal.cert;
+    echo '' > tls.cert;
 fi
+rm a.cert
 
 #key
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
     printf '%s\n' "$TLSKEY" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/PRIVATE/! s/ /\n/g' >> a.key;
-	sed -e 's/^/    /' a.key > afinal.key;
+	sed -e 's/^/    /' a.key > tls.key;
 else
-	echo '' > afinal.key;	    
+	echo '' > tls.key;	    
 fi
+rm a.key
 
 #set dns
 if [ "$UPDATEDNS" = "Yes" ]; then
@@ -46,15 +48,15 @@ if [ "$UPDATEDNS" = "Yes" ]; then
 fi
 
 #install profisee platform
-#get profisee helm chart settings
-curl -fsSL -o s.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/Settings.yaml
+#set profisee helm chart settings
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/SettingsNew.yaml
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
-sed -i -e 's/AUTH_USERNAME/'"$ACRUSER"'/g' s.yaml
-sed -i -e 's/AUTH_PASSWORD/'"$ACRUSERPASSWORD"'/g' s.yaml
-sed -i -e 's/AUTH_EMAIL/'"support@profisee.com"'/g' s.yaml
-sed -i -e 's/AUTH_AUTH/'"$auth"'/g' s.yaml
-sed -e '/TLSCERT_DATA/ {' -e 'r afinal.cert' -e 'd' -e '}' -i s.yaml
-sed -e '/TLSKEY_DATA/ {' -e 'r afinal.key' -e 'd' -e '}' -i s.yaml
+sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
+sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
+sed -i -e 's/$ACREMAIL/'"support@profisee.com"'/g' Settings.yaml
+sed -i -e 's/$ACRAUTH/'"$auth"'/g' Settings.yaml
+sed -e '/$TLSCERT/ {' -e 'r tls.cert' -e 'd' -e '}' -i Settings.yaml
+sed -e '/$TLSKEY/ {' -e 'r tls.key' -e 'd' -e '}' -i Settings.yaml
 
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
@@ -62,7 +64,9 @@ azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
 azureClientId=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
 
 #get storage account pw
-storageAccountPassword=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
+FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
+#clean file repo password - remove quotes
+FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
 
 #storage vars
 FILEREPOUSERNAME="Azure\\\\${STORAGEACCOUNTNAME}"
@@ -76,9 +80,28 @@ else
 	ACRREPOLABEL='latest';
 fi
 
+
+#set values in Settings.yaml
+sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
+sed -i -e 's/$SQLDBNAME/'"$SQLDBNAME"'/g' Settings.yaml
+sed -i -e 's/$SQLUSERNAME/'"$SQLUSERNAME"'/g' Settings.yaml
+sed -i -e 's/$SQLUSERPASSWORD/'"$SQLUSERPASSWORD"'/g' Settings.yaml
+sed -i -e 's/$FILEREPOUSERNAME/'"$FILEREPOUSERNAME"'/g' Settings.yaml
+sed -i -e 's~$FILEREPOPASSWORD~'"$FILEREPOPASSWORD"'~g' Settings.yaml
+sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
+sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
+sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
+sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
+sed -i -e 's/$ADMINACCOUNTNAME/'"$ADMINACCOUNTNAME"'/g' Settings.yaml
+sed -i -e 's/$EXTERNALDNSURL/'"$EXTERNALDNSURL"'/g' Settings.yaml
+sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
+sed -i -e 's~$LICENSEDATA~'"$LICENSEDATA"'~g' Settings.yaml
+sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
+sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
+
 helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
-helm install profiseeplatform2020r1 profisee/profisee-platform --values s.yaml --set sqlServer.name=$SQLNAME --set sqlServer.databaseName=$SQLDBNAME --set sqlServer.userName=$SQLUSERNAME --set sqlServer.password=$SQLUSERPASSWORD --set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME --set profiseeRunTime.fileRepository.password=$storageAccountPassword --set profiseeRunTime.fileRepository.location=$FILEREPOURL --set profiseeRunTime.oidc.authority=$OIDCURL --set profiseeRunTime.oidc.clientId=$CLIENTID --set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET --set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME --set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL --set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME --set licenseFileData=$LICENSEDATA --set image.repository=$ACRREPONAME --set image.tag=$ACRREPOLABEL
+helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
