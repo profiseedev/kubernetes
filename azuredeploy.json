@@ -761,7 +761,7 @@
             }
         },
         "SQLServerName": {
-            "defaultValue": "MySqlServerName",
+            "defaultValue": "mysqlservername",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique name.  Name must be lowe case and be an available sqlserver name in azure.  SqlServerNames are globally unique in Azure"
