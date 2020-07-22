@@ -38,7 +38,7 @@
             }
         },
         "ActiveDirectoryClientId": {
-            "defaultValue": "0e925f98-95ca-47c6-bf68-158a50b9d881",
+            "defaultValue": "",
             "type": "String"
         },
          "ManagedIdentityName": {
