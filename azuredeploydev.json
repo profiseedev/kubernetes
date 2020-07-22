@@ -34,7 +34,7 @@
                 "No"
             ],
             "metadata": {
-                "description": "If No, then you must supply an existing clientid and register the reply url manually https://profisee.company.com/profisee/auth/signin-microsoft"
+                "description": "If No, then you must supply an existing clientid and register the reply url manually.  example - https://profisee.company.com/profisee/auth/signin-microsoft"
             }
         },
         "ActiveDirectoryClientId": {
