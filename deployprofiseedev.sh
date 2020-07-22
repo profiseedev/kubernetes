@@ -60,8 +60,10 @@ sed -e '/$TLSKEY/ {' -e 'r tls.key' -e 'd' -e '}' -i Settings.yaml
 
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
-azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
-azureClientId=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
+if [ "$UPDATEAAD" = "Yes" ]; then
+	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
+	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
+fi
 
 #get storage account pw
 FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
@@ -101,23 +103,7 @@ sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 
 helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
-helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml 
---set sqlServer.name=$SQLNAME 
---set sqlServer.databaseName=$SQLDBNAME 
---set sqlServer.userName=$SQLUSERNAME 
---set sqlServer.password=$SQLUSERPASSWORD 
---set profiseeRunTime.fileRepository.userName=$FILEREPOUSERNAME 
---set profiseeRunTime.fileRepository.password=$FILEREPOPASSWORD 
---set profiseeRunTime.fileRepository.location=$FILEREPOURL 
---set profiseeRunTime.oidc.authority=$OIDCURL 
---set profiseeRunTime.oidc.clientId=$CLIENTID 
---set profiseeRunTime.oidc.clientSecret=$OIDCCLIENTSECRET 
---set profiseeRunTime.adminAccount=$ADMINACCOUNTNAME 
---set profiseeRunTime.externalDnsUrl=$EXTERNALDNSURL 
---set profiseeRunTime.externalDnsName=$EXTERNALDNSNAME 
---set licenseFileData=$LICENSEDATA 
---set image.repository=$ACRREPONAME 
---set image.tag=$ACRREPOLABEL
+helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
