@@ -16,11 +16,5 @@ Deploy Profisee platform (latest dev)....
 # Prerequisites:
 
 Managed Identity
-A managed identiy is required with contributor access either at the subscription level or for the resource group the cluster will be deployed to and the domain resoruce group if the arm template will update the dns information.  If the ar mtemplate will also create the azure ad app registration, then it must have the application developer role assigned to it as well.  Here is an example of how to create the managed identiy using the azure CLI.
+A managed identiy is required with contributor access either at the subscription level or for the resource group the cluster will be deployed to and the domain resoruce group if the arm template will update the dns information.  If the arm template will also create the azure ad app registration, then it must have the application developer role assigned to it as well. 
 
-
-  az identity create -g RESOURCE_GROUP -n USER_ASSIGNED_IDENTITY_NAME
-  
-  az role assignment create --assignee USER_ASSIGNED_IDENTITY_NAME --role 'Contributor'
-  
-  az role assignment create --assignee USER_ASSIGNED_IDENTITY_NAME --role 'Application Developer'
