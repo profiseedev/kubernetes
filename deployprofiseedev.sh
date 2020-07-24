@@ -63,6 +63,10 @@ azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
 	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
+	#add a Graph API permission of "Sign in and read user profile"
+	az ad app permission add --id $CLIENTID --api 00000002-0000-0000-c000-000000000000 --api-permissions 311a71cc-e848-46a1-bdf8-97ff7156d8e6=Scope
+	az ad app permission grant --id $CLIENTID --api 00000002-0000-0000-c000-000000000000
+
 	#clean client id - remove quotes
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
 fi
