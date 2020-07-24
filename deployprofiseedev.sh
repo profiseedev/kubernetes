@@ -73,8 +73,8 @@ FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPN
 FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
 
 #storage vars
-FILEREPOUSERNAME="Azure\\\\\\\\${STORAGEACCOUNTNAME}"
-FILEREPOURL="\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\${STORAGEACCOUNTFILESHARENAME}"
+FILEREPOUSERNAME="Azure\\\\${STORAGEACCOUNTNAME}"
+FILEREPOURL="\\\\\\\\\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\\\\\${STORAGEACCOUNTFILESHARENAME}"
 
 if [ "$PROFISEEVERSION" = "2020 R1" ]; then
     ACRREPONAME='profisee2020r1';
