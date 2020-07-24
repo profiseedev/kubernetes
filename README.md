@@ -17,5 +17,7 @@ Deploy Profisee platform (latest dev)....
 
 Managed Identity
 az identity create -g <RESOURCE GROUP> -n <USER ASSIGNED IDENTITY NAME>
+  
 az role assignment create --assignee <USER ASSIGNED IDENTITY NAME> --role 'Contributor'
+  
 az role assignment create --assignee <USER ASSIGNED IDENTITY NAME> --role 'Application Developer'
