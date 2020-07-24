@@ -13,3 +13,9 @@ Deploy Profisee platform (latest dev)....
   <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
+# Prerequisites:
+
+Managed Identity
+az identity create -g <RESOURCE GROUP> -n <USER ASSIGNED IDENTITY NAME>
+az role assignment create --assignee <USER ASSIGNED IDENTITY NAME> --role 'Contributor'
+az role assignment create --assignee <USER ASSIGNED IDENTITY NAME> --role 'Application Developer'
