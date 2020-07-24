@@ -49,7 +49,7 @@ fi
 
 #install profisee platform
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/SettingsNew.yaml
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/SettingsDev.yaml
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
