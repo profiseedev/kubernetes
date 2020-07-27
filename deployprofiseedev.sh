@@ -70,10 +70,12 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	az ad app permission grant --id $CLIENTID --api 00000002-0000-0000-c000-000000000000
 fi
 
-#get storage account pw
-FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
-#clean file repo password - remove quotes
-FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
+#get storage account pw - if not supplied
+if [-z "$FILEREPOPASSWORD"]; then
+	FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
+	#clean file repo password - remove quotes
+	FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
+fi
 
 #storage vars
 FILEREPOUSERNAME="Azure\\\\\\\\${STORAGEACCOUNTNAME}"
@@ -86,7 +88,6 @@ else
     ACRREPONAME='profisee2020r2';
 	ACRREPOLABEL='latest';
 fi
-
 
 #set values in Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
