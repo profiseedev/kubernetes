@@ -49,7 +49,7 @@ fi
 
 #install profisee platform
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/Settings.yaml
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/SettingsDev.yaml
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
@@ -71,7 +71,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 fi
 
 #get storage account pw - if not supplied
-if [-z "$FILEREPOPASSWORD"]; then
+if ["$FILEREPOPASSWORD" = ""]; then
 	FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
 	#clean file repo password - remove quotes
 	FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
