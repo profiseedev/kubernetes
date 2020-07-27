@@ -10,50 +10,74 @@
                 "2020 R2 Preview"
             ],
             "metadata": {
-                "description": "The version of the Profisee platform to be deployed."
+                "description": "Version of the Profisee platform to use."
             }
         },
-        "ProfiseeAdminUserName": {
+        "ProfiseeAdminUserAccount": {
             "defaultValue": "first.last@company.com",
             "type": "String",
             "metadata": {
-                "description": "The account of the first super user who will be registered with Profisee, who will be able to logon and add other users."
+                "description": "Name of the account of the first super user who will be registered in the Profisee platform, who will be able to logon and add other users."
             }
         },
         "ProfiseeLicense": {
-            "defaultValue": "",
             "type": "String",
             "metadata": {
                 "description": "Profisee plaform license string supplied by Profisee support."
             }
         },
-        "ProfiseeAcrUser": {
-            "defaultValue": "",
+        "ProfiseeACRUserName": {
             "type": "String",
             "metadata": {
                 "description": "User name supplied by Profisee support."
             }
         },
-        "ProfiseeAcrPassword": {
+        "ProfiseeACRPassword": {
             "defaultValue": "",
-            "type": "string",
+            "type": "String",
             "metadata": {
                 "description": "User password supplied by Profisee support."
             }
+        }, 
+        "ActiveDirectoryCreateApp": {
+            "defaultValue": "Yes",
+            "type": "String",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "The Active Directory App Registration will be created and configured.  If No, then you must supply an existing clientid and register the reply url manually.  example - https://profisee.company.com/profisee/auth/signin-microsoft"
+            }
         },
-        "AzureActiveDirectoryClientId": {
+        "ActiveDirectoryClientId": {
             "defaultValue": "",
             "type": "String",
             "metadata": {
                 "description": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication."
             }
         },
+         "ManagedIdentityName": {
+            "type": "String",
+            "metadata": {
+                "description": "Existing managed identity with contributer access at the subscription level or contributor access to the resoure group this is deployed to and the resource group the domain is in if updating dns.  If Active Directory Create Application is Yes, then it must also have Application Developer role in order to create and configure the azure active directory application."
+            }
+        },
+         "ManagedIdentityResourceGroup": {
+            "type": "String",
+            "metadata": {
+                "description": "Resource group the managed identiy was created in."
+            }
+        },
         "KubernetesClusterName": {
             "defaultValue": "MyAKSCluster",
-            "type": "String"
+            "type": "String",
+            "metadata": {
+                "description": "Name of the kubernetes cluster to create."
+            }
         },
         "KubernetesLinuxVMSize": {
-            "defaultValue": "Standard_B2s",
+            "defaultValue": "Standard_D2a_v4",
             "type": "String",
             "allowedValues": [
                 "Standard_B1ls",
@@ -393,10 +417,13 @@
                 "Standard_NV12s_v3",
                 "Standard_NV24s_v3",
                 "Standard_NV48s_v3"
-            ]
+            ],
+            "metadata": {
+                "description": "Size of the VM to use for the linux node(s) in the kubernetes cluster."
+            }
         },
         "KubernetesWindowsVMSize": {
-            "defaultValue": "Standard_B4ms",
+            "defaultValue": "Standard_D4a_v4",
             "type": "String",
             "allowedValues": [
                 "Standard_B1ls",
@@ -736,7 +763,10 @@
                 "Standard_NV12s_v3",
                 "Standard_NV24s_v3",
                 "Standard_NV48s_v3"
-            ]
+            ],
+            "metadata": {
+                "description": "Size of the VM to use for the Windows node(s) in the kubernetes cluster."
+            }
         },
         "KubernetesVersion": {
             "defaultValue": "1.18.2",
@@ -747,7 +777,10 @@
                 "1.18.1",
                 "1.17.7",
                 "1.16.10"
-            ]
+            ],
+            "metadata": {
+                "description": "Version of kubernetes to use."
+            }
         },
         "SQLServerCreateNew": {
             "defaultValue": "Yes",
@@ -757,28 +790,36 @@
                 "No"
             ],
             "metadata": {
-                "description": "If you select No, you must enter the FQDN of an existing sql server accessable by this aazure subscription"
+                "description": "If you select No, you must enter the FQDN of an existing sql server accessable by this azure subscription"
             }
         },
         "SQLServerName": {
             "defaultValue": "mysqlservername",
             "type": "String",
             "metadata": {
-                "description": "Enter a unique name.  Name must be lowe case and be an available sqlserver name in azure.  SqlServerNames are globally unique in Azure"
+                "description": "Enter a unique name.  Name must be lower case and be an available sqlserver name in azure.  SqlServerNames are globally unique in Azure"
             }
         },        
         "SQLServerUser": {
             "defaultValue":"sqladmin",
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "metadata": {
+                "description": "Administrator SQL login name to create with the new sql server or to use to connect to existing sql server."
+            }
         },
         "SQLServerPassword": {
-            "defaultValue":"",
-            "type": "securestring"
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for sql server user."
+            }
         },
         "SQLServerDatabaseName": {
             "defaultValue": "Profisee",
-            "type": "String"
+            "type": "String",
+            "metadata": {
+                "description": "Name of database to create and/or use."
+            }
         },
         "StorageAccountCreateNew": {
             "defaultValue": "Yes",
@@ -800,7 +841,10 @@
         }, 
          "StorageAccountPassword": {
             "defaultValue":"",
-            "type": "securestring"
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for existing storage account."
+            }
         },
         "StorageAccountType": {
             "type": "string",
@@ -811,11 +855,17 @@
                 "Standard_GRS",
                 "Standard_RAGRS",
                 "Premium_LRS"
-            ]
+            ],
+            "metadata": {
+                "description": "Storage Account type"
+            }
         },
          "StorageAccountFileShareName": {
             "defaultValue": "files",
-            "type": "String"
+            "type": "String",
+            "metadata": {
+                "description": "Name of file share in the storage account to create and/or use."
+            }
         },
         "DNSUpdate": {
             "defaultValue": "Yes",
@@ -829,16 +879,25 @@
             }
         },
         "DNSHostName": {
-            "defaultValue": "MyProfiseeHostName",
-            "type": "String"
+            "defaultValue": "myprofiseehostname",
+            "type": "String",
+            "metadata": {
+                "description": "Host name to use/create.  Required if updating DNS."
+            }
         },
         "DNSDomainName": {
-            "defaultValue": "company.com",
-            "type": "String"
+            "defaultValue": "mydomain.com",
+            "type": "String",
+            "metadata": {
+                "description": "Domain name name to use.  Required if updating DNS."
+            }
         },
-        "DNSDomainNameResourceGroup": {
-            "defaultValue": "",
-            "type": "String"
+        "DNSDomainResourceGroup": {
+            "defaultValue": "mydnszoneresourcegroup",
+            "type": "String",
+            "metadata": {
+                "description": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS."
+            }
         },   
         "HttpsConfigure": {
             "defaultValue": "Yes",
@@ -848,31 +907,27 @@
                 "No"
             ],
             "metadata": {
-                "description": "If No then you web traffic is not secure and only works over http.  "
+                "description": "If No then you web traffic is not secure and only works over http."
             }
         }, 
         "HttpsCertificate": {
             "defaultValue": "",
-            "type": "String"
+            "type": "String",
+            "metadata": {
+                "description": "Required if using Https."
+            }
         },
         "HttpsCertificatePrivateKey": {
             "defaultValue": "",
-            "type": "String"
-        },
-       "MainResourceGroupRoleId": {
-            "type": "string",
-            "defaultValue": "[newGuid()]"
-        },
-        "DomainResourceGroupRoleId": {
-            "type": "string",
-            "defaultValue": "[newGuid()]"
+            "type": "String",
+            "metadata": {
+                "description": "Required if using Https."
+            }
         }
     },
     "variables": 
     {
-        "domainResourceGroupId": "[concat(subscription().id, '/resourceGroups/', parameters('DNSDomainNameResourceGroup'))]",
-        "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-        "IdentityName":"[concat('ProfiseePlatformDeployment_',resourceGroup().name)]"        
+        
     },
     "resources": [
         {
@@ -1035,59 +1090,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', tolower(parameters('StorageAccountName')))]"
             ]
-        },
-        {
-        "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-        "apiVersion": "2018-11-30",
-        "name": "[variables('IdentityName')]",
-        "location": "[resourceGroup().location]"
-        },
-        {
-        "type": "Microsoft.Authorization/roleAssignments",
-        "apiVersion": "2020-03-01-preview",
-        "name": "[parameters('MainResourceGroupRoleId')]",
-        "dependsOn": ["[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('IdentityName'))]"],
-        "properties": 
-            {
-            "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
-            "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('IdentityName')), '2018-11-30').principalId]",
-            "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01",
-            "name": "AddRoleForDomainResourceGroup",
-            "resourceGroup": "Profisee",
-            "properties": 
-            {
-            "mode": "Incremental",
-            "template": 
-            {
-                "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                "contentVersion": "1.0.0.0",
-                "parameters": {},
-                "variables": 
-                {        
-                },
-                "resources": [
-                {
-                "type": "Microsoft.Authorization/roleAssignments",
-                "apiVersion": "2020-03-01-preview",
-                "name": "[parameters('DomainResourceGroupRoleId')]",
-                "properties": 
-                    {
-                    "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
-                    "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('IdentityName')), '2018-11-30').principalId]",
-                    "principalType": "ServicePrincipal",
-                    "scope": "[variables('domainResourceGroupId')]"
-                    }
-                }
-                ]
-            },
-            "parameters": {}
-            }
-        },
+        },          
         {
         "type": "Microsoft.Resources/deploymentScripts",
         "apiVersion": "2019-10-01-preview",
@@ -1100,15 +1103,15 @@
         "identity": {
             "type": "userAssigned",
             "userAssignedIdentities": {
-                "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',resourceGroup().name,'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',variables('IdentityName'))]":{}
+                "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',parameters('ManagedIdentityResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('ManagedIdentityName'))]":{}
             }
         },
         "properties": {
-            "forceUpdateTag": "[parameters('MainResourceGroupRoleId')]",
+            "forceUpdateTag": "[guid(resourceGroup().id)]",
             "azCliVersion": "2.0.80",
             "timeout": "PT1H",
             "cleanupPreference": "OnExpiration",
-            "retentionInterval": "P1D",
+            "retentionInterval": "P30D",
             "environmentVariables": [
                 {
                     "name": "RESOURCEGROUPNAME",
@@ -1120,7 +1123,7 @@
                 },
                 {
                     "name": "SQLNAME",
-                    "value": "[concat(parameters('SQLServerName'),'.database.windows.net')]"
+                    "value": "[if(equals(parameters('SQLServerCreateNew'),'Yes'), concat(parameters('SQLServerName'),'.database.windows.net'),parameters('SQLServerName'))]"
                 },
                 {
                     "name": "SQLUSERNAME",
@@ -1144,7 +1147,7 @@
                 },
                 {
                     "name": "ADMINACCOUNTNAME",
-                    "value": "[parameters('ProfiseeAdminUserName')]"
+                    "value": "[parameters('ProfiseeAdminUserAccount')]"
                 },
                 {
                     "name": "DNSHOSTNAME",
@@ -1156,7 +1159,7 @@
                 },
                 {
                     "name": "DOMAINNAMERESOURCEGROUP",
-                    "value": "[parameters('DNSDomainNameResourceGroup')]"
+                    "value": "[parameters('DNSDomainResourceGroup')]"
                 },
                 {
                     "name": "UPDATEDNS",
@@ -1180,11 +1183,11 @@
                 },
                 {
                     "name": "ACRUSER",
-                    "value": "[parameters('ProfiseeAcrUser')]"
+                    "value": "[parameters('ProfiseeACRUserName')]"
                 },
                 {
                     "name": "ACRUSERPASSWORD",
-                    "value": "[parameters('ProfiseeAcrPassword')]"
+                    "value": "[parameters('ProfiseeACRPassword')]"
                 },
                 {
                     "name": "TLSCERT",
@@ -1199,16 +1202,25 @@
                     "value": "[parameters('ProfiseeVersion')]"
                 },
                 {
+                    "name": "UPDATEAAD",
+                    "value": "[parameters('ActiveDirectoryCreateApp')]"
+                },
+                {
                     "name": "CLIENTID",
-                    "value": "[parameters('AzureActiveDirectoryClientId')]"
+                    "value": "[parameters('ActiveDirectoryClientId')]"
                 },
                 {
                     "name": "CONFIGUREHTTPS",
                     "value": "[parameters('HttpsConfigure')]"
                 }
+                ,
+                {
+                    "name": "FILEREPOPASSWORD",
+                    "value": "[parameters('StorageAccountPassword')]"
+                }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofisee.sh"            
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/aks/master/deployprofiseedev.sh"            
         }
         },
         {
