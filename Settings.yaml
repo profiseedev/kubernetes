@@ -10,7 +10,7 @@ profiseeRunTime:
         password: "$FILEREPOPASSWORD"
         logonType: "NewCredentials"
         location: "$FILEREPOURL"
-    #externalDnsUrl: ""
+    externalDnsUrl: ""
     externalDnsName: "$EXTERNALDNSNAME"
     oidc:
         name: "Azure Active Directory"
