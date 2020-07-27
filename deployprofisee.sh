@@ -49,7 +49,7 @@ fi
 
 #install profisee platform
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/Settings.yaml
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/SettingsDev.yaml
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
@@ -60,17 +60,26 @@ sed -e '/$TLSKEY/ {' -e 'r tls.key' -e 'd' -e '}' -i Settings.yaml
 
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
-azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
-azureClientId=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
+if [ "$UPDATEAAD" = "Yes" ]; then
+	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
+	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
+	#clean client id - remove quotes
+	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
+	#add a Graph API permission of "Sign in and read user profile"
+	az ad app permission add --id $CLIENTID --api 00000002-0000-0000-c000-000000000000 --api-permissions 311a71cc-e848-46a1-bdf8-97ff7156d8e6=Scope
+	az ad app permission grant --id $CLIENTID --api 00000002-0000-0000-c000-000000000000
+fi
 
-#get storage account pw
-FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
-#clean file repo password - remove quotes
-FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
+#get storage account pw - if not supplied
+if [-z "$FILEREPOPASSWORD"]; then
+	FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
+	#clean file repo password - remove quotes
+	FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
+fi
 
 #storage vars
-FILEREPOUSERNAME="Azure\\\\${STORAGEACCOUNTNAME}"
-FILEREPOURL="\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\${STORAGEACCOUNTFILESHARENAME}"
+FILEREPOUSERNAME="Azure\\\\\\\\${STORAGEACCOUNTNAME}"
+FILEREPOURL="\\\\\\\\\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\\\\\${STORAGEACCOUNTFILESHARENAME}"
 
 if [ "$PROFISEEVERSION" = "2020 R1" ]; then
     ACRREPONAME='profisee2020r1';
@@ -79,7 +88,6 @@ else
     ACRREPONAME='profisee2020r2';
 	ACRREPOLABEL='latest';
 fi
-
 
 #set values in Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
