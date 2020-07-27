@@ -60,7 +60,7 @@
          "ManagedIdentityName": {
             "type": "String",
             "metadata": {
-                "description": "Existing managed identity with contributer access at the subscription level or contributor access to the resoure group this is deployed to and the resource group the domain is in if updating dns.  If Active Directory Create Application is Yes, then it must also have Application Developer role in order to create and configure the azure active directory application."
+                "description": "Existing user assigned Managed Identity with contributer access at the subscription level or contributor access to the resoure group this is deployed to and the resource group the domain is in if updating dns.  If Active Directory Create Application is Yes, then it must also have Application Developer role in order to create and configure the azure active directory application."
             }
         },
          "ManagedIdentityResourceGroup": {
