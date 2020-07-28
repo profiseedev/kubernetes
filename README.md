@@ -13,5 +13,9 @@ Deploy Profisee platform (latest dev)....
 
 # Prerequisites:
 
-A user assigned managed identity is required with contributor access either at the subscription level or contributor access to the resource group the cluster will be deployed to and the domain resoruce group if the arm template will update the dns information.  If the arm template will also create the azure ad app registration, then it must have the application developer role assigned to it as well. https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal
+1.  Managed Identity
+    - You must have a managed identity configured ahead of time.  The MI must have Contributor role for the resource group, and the DNS zone resource group.  If creating an AAZ app registration, the MI must have the Application Developer role assigned to it.  There is already one configure in the Profisee R&D azure subscription call ProfiseePlatformDeployment.   https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal
+2.  License
+    - Profisee license associated with the dns for the environment
+    - Token for access to the profisee container
 
