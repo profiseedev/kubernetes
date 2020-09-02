@@ -12,7 +12,7 @@ chmod 700 get_helm.sh;
 #install nginx
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
-curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/scripts/nginxSettings.yaml;
+curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/Azure-ARM/nginxSettings.yaml;
 helm uninstall nginx
 helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
 
@@ -28,7 +28,7 @@ if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 	printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert;
 	sed -e 's/^/    /' a.cert > tls.cert;
 else    
-    echo '' > tls.cert;
+    echo '    NA' > tls.cert;
 fi
 rm a.cert
 
@@ -37,9 +37,9 @@ if [ "$CONFIGUREHTTPS" = "Yes" ]; then
     printf '%s\n' "$TLSKEY" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/PRIVATE/! s/ /\n/g' >> a.key;
 	sed -e 's/^/    /' a.key > tls.key;
 else
-	echo '' > tls.key;	    
+	echo '    NA' > tls.key;	    
 fi
-rm a.key
+#rm a.key
 
 #set dns
 if [ "$UPDATEDNS" = "Yes" ]; then
@@ -49,7 +49,7 @@ fi
 
 #install profisee platform
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/aks/master/Settings.yaml
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/Azure-ARM/Settings.yaml;
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
@@ -81,13 +81,14 @@ fi
 FILEREPOUSERNAME="Azure\\\\\\\\${STORAGEACCOUNTNAME}"
 FILEREPOURL="\\\\\\\\\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\\\\\${STORAGEACCOUNTFILESHARENAME}"
 
-if [ "$PROFISEEVERSION" = "2020 R1" ]; then
-    ACRREPONAME='profisee2020r1';
-	ACRREPOLABEL='GA';
-else
-    ACRREPONAME='profisee2020r2';
-	ACRREPOLABEL='latest';
-fi
+#PROFISEEVERSION looks like this 2020R1.0
+#The repo is Profisee + everything to the left of the .
+#The label is everything to the right of the .
+
+IFS='.' read -r -a repostring <<< "$PROFISEEVERSION"
+
+ACRREPONAME="profisee${repostring[0],,}"; #lowercase is the ,,
+ACRREPOLABEL="${repostring[1]}"
 
 #set values in Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
@@ -97,6 +98,7 @@ sed -i -e 's/$SQLUSERPASSWORD/'"$SQLUSERPASSWORD"'/g' Settings.yaml
 sed -i -e 's/$FILEREPOUSERNAME/'"$FILEREPOUSERNAME"'/g' Settings.yaml
 sed -i -e 's~$FILEREPOPASSWORD~'"$FILEREPOPASSWORD"'~g' Settings.yaml
 sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
+sed -i -e 's/$FILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' Settings.yaml
 sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
@@ -106,6 +108,10 @@ sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
 sed -i -e 's~$LICENSEDATA~'"$LICENSEDATA"'~g' Settings.yaml
 sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
+
+#Add settings.yaml as a secret so its always available after the deployment
+kubectl delete secret profisee-settings-yaml
+kubectl create secret generic profisee-settings-yml --from-file=.\Settings.yaml
 
 helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
