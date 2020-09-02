@@ -30,7 +30,7 @@ if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 else    
     echo '    NA' > tls.cert;
 fi
-rm a.cert
+#rm a.cert
 
 #key
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
@@ -49,7 +49,7 @@ fi
 
 #install profisee platform
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/Azure-ARM/Settings.yaml;
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/Settings.yaml;
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
