@@ -1312,7 +1312,7 @@
                 }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/Profisee/kubernetes/master/Azure-ARM/deployprofisee.sh"            
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/kubernetes/master/deployprofisee.sh"            
         }
         },
         {
