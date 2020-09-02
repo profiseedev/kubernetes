@@ -7,7 +7,7 @@ This ARM template deploys Profisee platform into a new Azure Kubernetes service 
 </a>
 
 
-Deploy Profisee platform (latest dev)....
+Deploy Profisee platform (Already filled out)....
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FProfiseeGroup%2Faks%2Fmaster%2Fazuredeploydev.json)
 
