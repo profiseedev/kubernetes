@@ -113,7 +113,7 @@ sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 kubectl delete secret profisee-settings-yaml
 kubectl create secret generic profisee-settings-yml --from-file=.\Settings.yaml
 
-helm repo add profisee https://profisee.github.io/kubernetes
+helm repo add profisee https://profiseegroup.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
 helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 
