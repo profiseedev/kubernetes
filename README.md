@@ -30,16 +30,16 @@ Deploy Profisee platform (Already filled out)....
 
 3.  Check sql connection from container
 
-	$connectionString = 'Data Source={0};database={1};User ID={2};Password={3}' -f $env:ProfiseeSqlServer,$env:ProfiseeSqlDatabase,$env:ProfiseeSqlUserName,$env:ProfiseeSqlPassword
-	$sqlConnection = New-Object System.Data.SqlClient.SqlConnection $connectionString
-	$sqlConnection.Open()
-	$sqlConnection.Close()
+		$connectionString = 'Data Source={0};database={1};User ID={2};Password={3}' -f $env:ProfiseeSqlServer,$env:ProfiseeSqlDatabase,$env:ProfiseeSqlUserName,$env:ProfiseeSqlPassword
+		$sqlConnection = New-Object System.Data.SqlClient.SqlConnection $connectionString
+		$sqlConnection.Open()
+		$sqlConnection.Close()
 
 4.  Check connection to fileshare
 
-	#map drive to X
-	$pass=$env:ProfiseeAttachmentRepositoryUserPassword|ConvertTo-SecureString -AsPlainText -Force
-	$azureCredential = New-Object System.Management.Automation.PsCredential($env:ProfiseeAttachmentRepositoryUserName,$pass)
-	New-PSDrive -Name "X" -PSProvider "FileSystem" -Root $env:ProfiseeAttachmentRepositoryLocation -Credential $azureCredential -Persist;
-	#remove mapped drive
-	Remove-PSDrive X
+		#map drive to X
+		$pass=$env:ProfiseeAttachmentRepositoryUserPassword|ConvertTo-SecureString -AsPlainText -Force
+		$azureCredential = New-Object System.Management.Automation.PsCredential($env:ProfiseeAttachmentRepositoryUserName,$pass)
+		New-PSDrive -Name "X" -PSProvider "FileSystem" -Root $env:ProfiseeAttachmentRepositoryLocation -Credential $azureCredential -Persist;
+		#remove mapped drive
+		Remove-PSDrive X
