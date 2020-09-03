@@ -19,6 +19,12 @@ Deploy Profisee platform (Already filled out)....
 
 1. Uninstall profisee and reinstall
 				
-        helm repo add profisee https://profisee.github.io/kubernetes
-				helm uninstall profiseeplatform2020r1
-				helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
+	helm repo add profisee https://profisee.github.io/kubernetes
+	helm uninstall profiseeplatform2020r1
+	helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
+	
+2.  Connect to container and look at log
+
+	kubectl exec -it profisee-0 powershell
+	Get-Content C:\Profisee\Configuration\LogFiles\SystemLog.log
+
