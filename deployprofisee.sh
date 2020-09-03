@@ -99,6 +99,7 @@ sed -i -e 's/$FILEREPOUSERNAME/'"$FILEREPOUSERNAME"'/g' Settings.yaml
 sed -i -e 's~$FILEREPOPASSWORD~'"$FILEREPOPASSWORD"'~g' Settings.yaml
 sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
 sed -i -e 's/$FILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' Settings.yaml
+sed -i -e 's/$FILEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' Settings.yaml
 sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
@@ -111,7 +112,7 @@ sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 
 #Add settings.yaml as a secret so its always available after the deployment
 kubectl delete secret profisee-settings
-kubectl create secret generic profisee-settings --from-file=.\Settings.yaml
+kubectl create secret generic profisee-settings --from-file=Settings.yaml
 
 helm repo add profisee https://profiseegroup.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
