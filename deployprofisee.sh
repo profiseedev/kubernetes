@@ -10,7 +10,7 @@ chmod 700 get_helm.sh;
 ./get_helm.sh;
 
 #install nginx
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
+helm repo add stable https://github.com/kubernetes/ingress-nginx/tree/master/charts/ingress-nginx;
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/nginxSettings.yaml;
 helm uninstall nginx
