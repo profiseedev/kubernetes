@@ -11,6 +11,7 @@ profiseeRunTime:
         logonType: "NewCredentials"
         location: "$FILEREPOURL"
         fileShareName: "$FILESHARENAME"
+        accountName: $FILEACCOUNTNAME
     externalDnsUrl: ""
     externalDnsName: "$EXTERNALDNSNAME"
     oidc:
