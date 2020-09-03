@@ -1,4 +1,7 @@
 #!/bin/bash
+exec 3>&1 4>&2
+trap 'exec 2>&4 1>&3' 0 1 2 3
+exec 1>log.out 2>&1
 #install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5
 az aks install-cli;
 #get the aks creds, this allows us to use kubectl commands if needed
