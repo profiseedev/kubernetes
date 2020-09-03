@@ -14,3 +14,11 @@ Deploy Profisee platform (Already filled out)....
 # Prerequisites:
 
 1.  Be a profisee employee or 
+
+#Debug
+
+1. Uninstall profisee and reinstall
+				
+        helm repo add profisee https://profisee.github.io/kubernetes
+				helm uninstall profiseeplatform2020r1
+				helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
