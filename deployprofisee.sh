@@ -1,7 +1,7 @@
 #!/bin/bash
-exec 3>&1 4>&2
-trap 'exec 2>&4 1>&3' 0 1 2 3
-exec 1>log.out 2>&1
+#exec 3>&1 4>&2
+#trap 'exec 2>&4 1>&3' 0 1 2 3
+#exec 1>log.out 2>&1
 #install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5
 az aks install-cli;
 #get the aks creds, this allows us to use kubectl commands if needed
@@ -17,7 +17,9 @@ helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/nginxSettings.yaml;
 helm uninstall nginx
-helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
+#helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
+helm install nginx nginx-stable/nginx-ingress --set controller.service.loadBalancerIP=$publicInIP;
+
 
 #wait for the ip to be available.  usually a few seconds
 sleep 30;
