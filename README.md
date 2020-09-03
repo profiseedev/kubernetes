@@ -15,7 +15,7 @@ Deploy Profisee platform (Already filled out)....
 
 1.  Be a profisee employee or 
 
-#Debug
+# Debug
 
 1. Uninstall profisee and reinstall
 				
