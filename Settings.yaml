@@ -12,7 +12,7 @@ profiseeRunTime:
         location: "$FILEREPOURL"
         fileShareName: "$FILESHARENAME"
         accountName: $FILEACCOUNTNAME
-    externalDnsUrl: ""
+    externalDnsUrl: "$EXTERNALDNSURL"
     externalDnsName: "$EXTERNALDNSNAME"
     oidc:
         name: "Azure Active Directory"
