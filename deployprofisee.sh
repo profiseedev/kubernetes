@@ -23,7 +23,7 @@ helm repo update
 curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/nginxSettings.yaml;
 helm uninstall nginx
 #helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
-helm install nginx ingress-nginx/ingress-nginx --set controller.service.loadBalancerIP=$publicInIP;
+helm install nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
 
 
 #wait for the ip to be available.  usually a few seconds
