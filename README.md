@@ -19,30 +19,30 @@ Deploy Profisee platform (Already filled out)....
 
 ## Uninstall profisee and reinstall
 				
-		helm repo add profisee https://profisee.github.io/kubernetes
-		helm uninstall profiseeplatform2020r1
-		helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
+	helm repo add profisee https://profisee.github.io/kubernetes
+	helm uninstall profiseeplatform2020r1
+	helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 	
 ## Connect to container and look at log
 
-		kubectl exec -it profisee-0 powershell
-		Get-Content C:\Profisee\Configuration\LogFiles\SystemLog.log
+	kubectl exec -it profisee-0 powershell
+	Get-Content C:\Profisee\Configuration\LogFiles\SystemLog.log
 
 ## Check sql connection from container
 
-		$connectionString = 'Data Source={0};database={1};User ID={2};Password={3}' -f $env:ProfiseeSqlServer,$env:ProfiseeSqlDatabase,$env:ProfiseeSqlUserName,$env:ProfiseeSqlPassword
-		$sqlConnection = New-Object System.Data.SqlClient.SqlConnection $connectionString
-		$sqlConnection.Open()
-		$sqlConnection.Close()
+	$connectionString = 'Data Source={0};database={1};User ID={2};Password={3}' -f $env:ProfiseeSqlServer,$env:ProfiseeSqlDatabase,$env:ProfiseeSqlUserName,$env:ProfiseeSqlPassword
+	$sqlConnection = New-Object System.Data.SqlClient.SqlConnection $connectionString
+	$sqlConnection.Open()
+	$sqlConnection.Close()
 
 ## Check connection to fileshare
 
-		#map drive to X
-		$pass=$env:ProfiseeAttachmentRepositoryUserPassword|ConvertTo-SecureString -AsPlainText -Force
-		$azureCredential = New-Object System.Management.Automation.PsCredential($env:ProfiseeAttachmentRepositoryUserName,$pass)
-		New-PSDrive -Name "X" -PSProvider "FileSystem" -Root $env:ProfiseeAttachmentRepositoryLocation -Credential $azureCredential -Persist;
-		#remove mapped drive
-		Remove-PSDrive X
+	#map drive to X
+	$pass=$env:ProfiseeAttachmentRepositoryUserPassword|ConvertTo-SecureString -AsPlainText -Force
+	$azureCredential = New-Object System.Management.Automation.PsCredential($env:ProfiseeAttachmentRepositoryUserName,$pass)
+	New-PSDrive -Name "X" -PSProvider "FileSystem" -Root $env:ProfiseeAttachmentRepositoryLocation -Credential $azureCredential -Persist;
+	#remove mapped drive
+	Remove-PSDrive X
 		
 ## Copying files to/from container
 
