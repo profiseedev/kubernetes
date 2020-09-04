@@ -13,7 +13,7 @@ Deploy Profisee platform (Already filled out)....
 
 # Prerequisites:
 
-1.  Be a profisee employee or 
+1.  Be a profisee employee or very friendly
 
 # Debug
 
