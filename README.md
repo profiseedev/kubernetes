@@ -17,25 +17,25 @@ Deploy Profisee platform (Already filled out)....
 
 # Debug
 
-1. Uninstall profisee and reinstall
+## Uninstall profisee and reinstall
 				
 		helm repo add profisee https://profisee.github.io/kubernetes
 		helm uninstall profiseeplatform2020r1
 		helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 	
-2.  Connect to container and look at log
+## Connect to container and look at log
 
 		kubectl exec -it profisee-0 powershell
 		Get-Content C:\Profisee\Configuration\LogFiles\SystemLog.log
 
-3.  Check sql connection from container
+## Check sql connection from container
 
 		$connectionString = 'Data Source={0};database={1};User ID={2};Password={3}' -f $env:ProfiseeSqlServer,$env:ProfiseeSqlDatabase,$env:ProfiseeSqlUserName,$env:ProfiseeSqlPassword
 		$sqlConnection = New-Object System.Data.SqlClient.SqlConnection $connectionString
 		$sqlConnection.Open()
 		$sqlConnection.Close()
 
-4.  Check connection to fileshare
+## Check connection to fileshare
 
 		#map drive to X
 		$pass=$env:ProfiseeAttachmentRepositoryUserPassword|ConvertTo-SecureString -AsPlainText -Force
@@ -43,3 +43,11 @@ Deploy Profisee platform (Already filled out)....
 		New-PSDrive -Name "X" -PSProvider "FileSystem" -Root $env:ProfiseeAttachmentRepositoryLocation -Credential $azureCredential -Persist;
 		#remove mapped drive
 		Remove-PSDrive X
+		
+## Copying files to/from container
+
+	#copy file to container
+	kubectl cp appsettings.json profisee-0:profisee/services/auth/appsettings.json
+
+	#copy file from container
+	kubectl cp profisee-0:profisee/services/auth/appsettings.json appsettings.json
