@@ -35,7 +35,7 @@
         },
         "ProfiseeACRPassword": {
             "defaultValue": "",
-            "type": "String",
+            "type": "securestring",
             "metadata": {
                 "description": "User password supplied by Profisee support."
             }
