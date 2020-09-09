@@ -129,7 +129,7 @@ curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseegroup
 kubectl apply -f clusterissuer.yaml
 #################################Lets Encrypt Part 1 End #######################################
 
-helm repo add profisee https://profisee.github.io/kubernetes
+helm repo add profisee https://profiseegroup.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
 helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 
