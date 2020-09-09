@@ -909,7 +909,7 @@
     },
     "variables": 
     {
-        "DNSHostName": "[concat('MC_',resourceGroup().name,'_', parameters('KubernetesClusterName'), '_',resourceGroup().location)]",
+        "DNSHostName": "[guid(resourceGroup().id)]",
         "DNSDomainName": "[concat(resourceGroup().location,'.cloudapp.azure.com')]"
     },
     "resources": [
