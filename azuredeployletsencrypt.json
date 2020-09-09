@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ProfiseeVersion": {
-            "defaultValue": "2020R1.1",
+            "defaultValue": "2020R2.Preview",
             "type": "String",
             "allowedValues": [
                 "2020R1.0",
@@ -34,7 +34,6 @@
             }
         },
         "ProfiseeACRPassword": {
-            "defaultValue": "",
             "type": "securestring",
             "metadata": {
                 "description": "User password supplied by Profisee support."
