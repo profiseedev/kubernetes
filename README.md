@@ -11,6 +11,11 @@ Deploy Profisee platform (https via Lets ecrypt and generated dns)....
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FProfiseeGroup%2Fkubernetes%2Fmaster%2Fazuredeployletsencrypt.json)
 
+Deploy Profisee platform (https via Lets ecrypt and generated dns and new sql and storage)....
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FProfiseeGroup%2Fkubernetes%2Fmaster%2Fazuredeployletsencryptallnew.json)
+
+
 # Prerequisites:
 
 1.  Be a profisee employee or very friendly
