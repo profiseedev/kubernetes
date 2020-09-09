@@ -909,7 +909,7 @@
     },
     "variables": 
     {
-        "DNSHostName": "[guid(resourceGroup().id)]",
+        "DNSHostName": "[concat('profisee', uniqueString(resourceGroup().id))]",
         "DNSDomainName": "[concat(resourceGroup().location,'.cloudapp.azure.com')]"
     },
     "resources": [
