@@ -909,7 +909,8 @@
     },
     "variables": 
     {
-        
+        "DNSHostName": "[concat('MC_',resourceGroup().name,'_', parameters('KubernetesClusterName'), '_',resourceGroup().location)]",
+        "DNSDomainName": "[concat(resourceGroup().location,'.cloudapp.azure.com')]"
     },
     "resources": [
         {
@@ -1134,27 +1135,27 @@
                 },
                 {
                     "name": "DNSHOSTNAME",
-                    "value": "[parameters('DNSHostName')]"
+                    "value": "[variables('DNSHostName')]"
                 },
                 {
                     "name": "DNSDOMAINNAME",
-                    "value": "[parameters('DNSDomainName')]"
+                    "value": "[variables('DNSDomainName')]"
                 },
                 {
                     "name": "DOMAINNAMERESOURCEGROUP",
-                    "value": "[parameters('DNSDomainResourceGroup')]"
+                    "value": ""
                 },
                 {
                     "name": "UPDATEDNS",
-                    "value": "[parameters('DNSUpdate')]"
+                    "value": "No"
                 },
                 {
                     "name": "EXTERNALDNSNAME",
-                    "value": "[concat(parameters('DNSHostName'),'.',parameters('DNSDomainName'))]"
+                    "value": "[concat(variables('DNSHostName'),'.',variables('DNSDomainName'))]"
                 },
                 {
                     "name": "EXTERNALDNSURL",
-                    "value": "[if(equals(parameters('HttpsConfigure'),'Yes'), concat('https://',parameters('DNSHostName'),'.',parameters('DNSDomainName')),concat('http://',parameters('DNSHostName'),'.',parameters('DNSDomainName')))]"
+                    "value": "[concat('https://',variables('DNSHostName'),'.',variables('DNSDomainName'))]"
                 },                
                 {
                     "name": "OIDCURL",
@@ -1174,11 +1175,11 @@
                 },
                 {
                     "name": "TLSCERT",
-                    "value": "[parameters('HttpsCertificate')]"
+                    "value": ""
                 },
                 {
                     "name": "TLSKEY",
-                    "value": "[parameters('HttpsCertificatePrivateKey')]"
+                    "value": ""
                 },
                 {
                     "name": "PROFISEEVERSION",
@@ -1194,7 +1195,7 @@
                 },
                 {
                     "name": "CONFIGUREHTTPS",
-                    "value": "[parameters('HttpsConfigure')]"
+                    "value": "No"
                 }
                 ,
                 {
@@ -1203,7 +1204,7 @@
                 }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/kubernetes/master/deployprofisee.sh"            
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/kubernetes/master/deployprofiseeletsecrypt.sh"            
         }
         },
         {
