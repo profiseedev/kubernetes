@@ -1,15 +1,19 @@
 #!/bin/bash
+echo "install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5" 
 #install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5
 az aks install-cli;
 #get the aks creds, this allows us to use kubectl commands if needed
+echo "get the aks creds, this allows us to use kubectl commands if needed"
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
 
 #install helm
+echo "install helm"
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3;
 chmod 700 get_helm.sh;
 ./get_helm.sh;
 
 #install nginx
+echo "install nginx"
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/nginxSettings.yaml;
@@ -20,7 +24,7 @@ helm install nginx nginx-stable/nginx-ingress --values nginxSettings.yaml --set 
 sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-echo $nginxip;
+echo "nginx ip $nginxip";
 
 #fix tls variables
 #cert
