@@ -39,7 +39,7 @@ if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 else
 	echo '    NA' > tls.key;	    
 fi
-#rm a.key
+rm a.key
 
 #set dns
 if [ "$UPDATEDNS" = "Yes" ]; then
@@ -58,6 +58,9 @@ sed -i -e 's/$ACRAUTH/'"$auth"'/g' Settings.yaml
 sed -e '/$TLSCERT/ {' -e 'r tls.cert' -e 'd' -e '}' -i Settings.yaml
 sed -e '/$TLSKEY/ {' -e 'r tls.key' -e 'd' -e '}' -i Settings.yaml
 
+rm tls.cert
+rm tls.key
+
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
@@ -67,7 +70,6 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
 	#add a Graph API permission of "Sign in and read user profile"
 	az ad app permission add --id $CLIENTID --api 00000002-0000-0000-c000-000000000000 --api-permissions 311a71cc-e848-46a1-bdf8-97ff7156d8e6=Scope
-	az ad app permission grant --id $CLIENTID --api 00000002-0000-0000-c000-000000000000
 fi
 
 #get storage account pw - if not supplied
@@ -99,19 +101,20 @@ sed -i -e 's/$FILEREPOUSERNAME/'"$FILEREPOUSERNAME"'/g' Settings.yaml
 sed -i -e 's~$FILEREPOPASSWORD~'"$FILEREPOPASSWORD"'~g' Settings.yaml
 sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
 sed -i -e 's/$FILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' Settings.yaml
+sed -i -e 's/$FILEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' Settings.yaml
 sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$ADMINACCOUNTNAME/'"$ADMINACCOUNTNAME"'/g' Settings.yaml
-sed -i -e 's/$EXTERNALDNSURL/'"$EXTERNALDNSURL"'/g' Settings.yaml
+sed -i -e 's~$EXTERNALDNSURL~'"$EXTERNALDNSURL"'~g' Settings.yaml
 sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
 sed -i -e 's~$LICENSEDATA~'"$LICENSEDATA"'~g' Settings.yaml
 sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 
 #Add settings.yaml as a secret so its always available after the deployment
-kubectl delete secret profisee-settings-yaml
-kubectl create secret generic profisee-settings-yml --from-file=.\Settings.yaml
+kubectl delete secret profisee-settings
+kubectl create secret generic profisee-settings --from-file=Settings.yaml
 
 helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
