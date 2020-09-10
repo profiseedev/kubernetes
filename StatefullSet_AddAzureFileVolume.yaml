@@ -40,5 +40,5 @@ spec:
       - name: fileshare
         azureFile:
           secretName: fileshare-secret
-          shareName: files
+          shareName: $STORAGEACCOUNTFILESHARENAME
           readOnly: false
