@@ -120,6 +120,14 @@ helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
 helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 
+#Add Azure File volume
+curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/StatefullSet_AddAzureFileVolume.yaml;
+sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+sed -i -e 's~$STORAGEACCOUNTKEY~'"$FILEREPOPASSWORD"'~g' StatefullSet_AddAzureFileVolume.yaml
+sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+
+kubectl apply -f .\StatefullSet_AddAzureFileVolume.yaml 
+
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
 {\"WEBURL\":\"${EXTERNALDNSURL}/Profisee\"},\
