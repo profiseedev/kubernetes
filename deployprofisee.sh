@@ -126,7 +126,7 @@ curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent
 STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
 FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64)"
 sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
-sed -i -e 's~$STORAGEACCOUNTKEY~'"$FILEREPOPASSWORD"'~g' StatefullSet_AddAzureFileVolume.yaml
+sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
 sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
 
 kubectl apply -f StatefullSet_AddAzureFileVolume.yaml 
