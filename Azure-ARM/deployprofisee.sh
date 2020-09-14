@@ -70,7 +70,6 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
 	#add a Graph API permission of "Sign in and read user profile"
 	az ad app permission add --id $CLIENTID --api 00000002-0000-0000-c000-000000000000 --api-permissions 311a71cc-e848-46a1-bdf8-97ff7156d8e6=Scope
-	az ad app permission grant --id $CLIENTID --api 00000002-0000-0000-c000-000000000000
 fi
 
 #get storage account pw - if not supplied
