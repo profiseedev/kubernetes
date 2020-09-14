@@ -12,7 +12,7 @@ chmod 700 get_helm.sh;
 #install nginx
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
-curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/Azure-ARM/nginxSettings.yaml;
+curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/nginxSettings.yaml;
 helm uninstall nginx
 helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
 
@@ -49,7 +49,7 @@ fi
 
 #install profisee platform
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/Azure-ARM/Settings.yaml;
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/Settings.yaml;
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
@@ -116,6 +116,17 @@ kubectl create secret generic profisee-settings-yml --from-file=.\Settings.yaml
 helm repo add profisee https://profisee.github.io/kubernetes
 helm uninstall profiseeplatform2020r1
 helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
+
+#Add Azure File volume
+curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml;
+
+STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
+FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
+sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
+sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+
+kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
 
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
