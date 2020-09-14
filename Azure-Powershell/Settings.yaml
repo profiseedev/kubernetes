@@ -1,0 +1,60 @@
+sqlServer: 
+    name: ""
+    databaseName: ""
+    userName: ""
+    password: ""
+profiseeRunTime:
+    adminAccount: ""
+    fileRepository:
+        userName: ""
+        password: ""
+        logonType: "NewCredentials"
+        location: ""
+    #externalDnsUrl: ""
+    externalDnsName: ""
+    oidc:
+        name: "Azure Active Directory"
+        authority: ""
+        clientId: ""
+        clientSecret: ""
+        usernameClaim: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        userIdClaim: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        firstNameClaim: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+        lastNameClaim: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
+        emailClaim: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+clusterNode:
+    limits:
+      cpu: 1
+      memory: 4000M
+    requests:
+      cpu: 1
+      memory: 1000M        
+image:
+    registry: "profisee.azurecr.io"
+    repository: "profisee2020r1"
+    tag: "GA"
+    auth: |
+        {
+           "auths":{
+              "profisee.azurecr.io":{
+                 "username":"",
+                 "password":"",
+                 "email":"",
+                 "auth":""
+              }
+           }
+        }
+licenseFileData: 
+
+oidcFileData: |
+    {      
+    }
+tlsCert: |
+    -----BEGIN CERTIFICATE-----
+    
+    -----END CERTIFICATE-----
+tlsKey: |
+    -----BEGIN PRIVATE KEY-----
+    
+    -----END PRIVATE KEY-----   
+    
