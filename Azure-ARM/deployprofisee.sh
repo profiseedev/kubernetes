@@ -58,6 +58,9 @@ sed -i -e 's/$ACRAUTH/'"$auth"'/g' Settings.yaml
 sed -e '/$TLSCERT/ {' -e 'r tls.cert' -e 'd' -e '}' -i Settings.yaml
 sed -e '/$TLSKEY/ {' -e 'r tls.key' -e 'd' -e '}' -i Settings.yaml
 
+rm tls.cert
+rm tls.key
+
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
