@@ -935,21 +935,7 @@
                 "description": "Access key for existing storage account if not creating one.  If creating one, not required and will be ignored.  Can contain only lowercase letters and numbers. Name must be between 3 and 24 characters."
             }
         },
-        "StorageAccountType": {
-            "type": "string",
-            "defaultValue": "Standard_LRS",
-            "allowedValues": [
-                "Standard_LRS",
-                "Standard_ZRS",
-                "Standard_GRS",
-                "Standard_RAGRS",
-                "Premium_LRS"
-            ],
-            "metadata": {
-                "description": "Storage Account type"
-            }
-        },
-         "StorageAccountFileShareName": {
+        "StorageAccountFileShareName": {
             "defaultValue": "files",
             "type": "String",
             "metadata": {
@@ -1172,7 +1158,7 @@
                 "displayName": "[parameters('StorageAccountName')]"
             },
             "sku": {
-                "name": "[parameters('StorageAccountType')]"
+                "name": "Standard_LRS"
             },
             "kind": "StorageV2"
         },
