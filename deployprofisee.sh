@@ -105,7 +105,6 @@ sed -i -e 's/$FILEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' Settings.yaml
 sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
-sed -i -e 's/$ADMINACCOUNTNAME/'"$ADMINACCOUNTNAME"'/g' Settings.yaml
 sed -i -e 's~$EXTERNALDNSURL~'"$EXTERNALDNSURL"'~g' Settings.yaml
 sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
 sed -i -e 's~$LICENSEDATA~'"$LICENSEDATA"'~g' Settings.yaml
