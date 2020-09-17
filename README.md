@@ -57,3 +57,7 @@
 
 	#copy file from container
 	kubectl cp profisee-0:profisee/services/auth/appsettings.json appsettings.json
+	
+## "Edit" a value (logging) in web.config
+
+	(Get-Content -path C:\profisee\services\auth\web.config -Raw) -replace 'stdoutLogEnabled="false"','stdoutLogEnabled="true"'
