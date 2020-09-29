@@ -136,11 +136,8 @@ helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings
 #################################Lets Encrypt Part 2 Start #####################################
 #Install Ingress for lets encrypt
 curl -fsSL -o ingressletsencrypt.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/ingressletsencrypt.yaml;
-kubectl apply -f ingressletsencrypt.yaml --set sepc.tls.hosts=$EXTERNALDNSNAME
-
-#Certs
-curl -fsSL -o certificates.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/Azure-ARM-LE/certificates.yaml;
-kubectl apply -f certificates.yaml --set spec.dnsNames = $EXTERNALDNSNAME --set spec.acme.domains= $EXTERNALDNSNAME
+sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' ingressletsencrypt.yaml
+kubectl apply -f ingressletsencrypt.yaml
 #################################Lets Encrypt Part 2 End #######################################
 
 result="{\"Result\":[\
