@@ -1190,7 +1190,7 @@
                 }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/kubernetes/master/deployprofiseeletsencrypt.sh"                                            
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseedev/kubernetes/master/deployprofisee.sh"                                            
         }
         },
         {
