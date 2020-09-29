@@ -61,7 +61,7 @@
 				
 	helm repo add profisee https://profisee.github.io/kubernetes
 	helm uninstall profiseeplatform2020r1
-	#get settings.yaml fro mteh secret its stored in
+	#get settings.yaml from the secret its stored in
 	kubectl get secret profisee-settings -o jsonpath="{.data.Settings\.yaml}" | base64 --decode > Settings.yaml
 	helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 	
