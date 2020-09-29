@@ -121,11 +121,10 @@ Create a file named UpdateProfisee.yaml (any name is fine as long as use that fi
 Upload to cloud shell drive
 	
 	Launch Cloud Shell from the top navigation of the Azure portal.
-	
-	Click upload/download, then upload and chose the file you just created 
+	Click upload/download, then upload and chose the file you just created 	
 
 Connect to aks cluster
-
+	
 	az aks get-credentials --resource-group MyResourceGroup --name MyAKSCluster --overwrite-existing
 
 Patch it
