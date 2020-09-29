@@ -12,7 +12,7 @@ chmod 700 get_helm.sh;
 #install nginx
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
-curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/nginxSettings.yaml;
+curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/nginxSettings.yaml;
 helm uninstall nginx
 helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 
@@ -49,7 +49,7 @@ fi
 
 #install profisee platform
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Settings.yaml;
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/Settings.yaml;
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
@@ -125,7 +125,7 @@ helm repo update
 # Install the cert-manager Helm chart
 helm install cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta\.kubernetes\.io/os"=linux --set webhook.nodeSelector."beta\.kubernetes\.io/os"=linux --set cainjector.nodeSelector."beta\.kubernetes\.io/os"=linux
 #create the CA cluster issuer
-curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/clusterissuer.yaml;
+curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/clusterissuer.yaml;
 kubectl apply -f clusterissuer.yaml
 #################################Lets Encrypt Part 1 End #######################################
 
@@ -135,11 +135,11 @@ helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings
 
 #################################Lets Encrypt Part 2 Start #####################################
 #Install Ingress for lets encrypt
-curl -fsSL -o ingressletsencrypt.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/ingressletsencrypt.yaml;
+curl -fsSL -o ingressletsencrypt.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/ingressletsencrypt.yaml;
 kubectl apply -f ingressletsencrypt.yaml --set sepc.tls.hosts=$EXTERNALDNSNAME
 
 #Certs
-curl -fsSL -o certificates.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/certificates.yaml;
+curl -fsSL -o certificates.yaml https://raw.githubusercontent.com/profiseegroup/kubernetes/master/Azure-ARM-LE/certificates.yaml;
 kubectl apply -f certificates.yaml --set spec.dnsNames = $EXTERNALDNSNAME --set spec.acme.domains= $EXTERNALDNSNAME
 #################################Lets Encrypt Part 2 End #######################################
 
