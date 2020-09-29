@@ -57,6 +57,15 @@
 	
 # Debug
 
+## Uninstall nginx and reinstall
+				
+	#install nginx
+	helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
+	#get profisee nginx settings
+	curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profisee/kubernetes/master/Azure-ARM/nginxSettings.yaml;
+	helm uninstall nginx
+	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
+	
 ## Uninstall profisee and reinstall
 				
 	helm repo add profisee https://profisee.github.io/kubernetes
