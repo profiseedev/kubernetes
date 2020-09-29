@@ -62,7 +62,7 @@
 
 	(Get-Content -path C:\profisee\services\auth\web.config -Raw) -replace 'stdoutLogEnabled="false"','stdoutLogEnabled="true"'
 	
-## Upgrade fro mone version to another
+## Upgrade from one version to another
 
 Create a file named UpdateProfisee.yaml (any name is fine as long as use that file name in the patch statement) that has this content:
 
@@ -71,7 +71,7 @@ Create a file named UpdateProfisee.yaml (any name is fine as long as use that fi
 	    spec:
 	      containers:
 	      - name: profisee
-		image: profisee.azurecr.io/profisee2020r2:0
+		image: profisee.azurecr.io/profisee2020r2:preview
 
 Upload to cloud shell drive
 	
