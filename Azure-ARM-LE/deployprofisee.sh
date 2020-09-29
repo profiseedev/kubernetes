@@ -130,6 +130,7 @@ kubectl apply -f clusterissuer.yaml
 #################################Lets Encrypt Part 1 End #######################################
 
 helm repo add profisee https://profiseedev.github.io/kubernetes
+helm repo update
 helm uninstall profiseeplatform2020r1
 helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
 
