@@ -19,7 +19,7 @@ metadata:
 spec:
   tls:
   - hosts:
-    - x.location.cloudapp.azure.com
+    - $EXTERNALDNSNAME
     secretName: tls-secret
   #rules:
   #- host: chuckprofisee.westus.cloudapp.azure.com
