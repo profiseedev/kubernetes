@@ -61,3 +61,29 @@
 ## "Edit" a value (logging) in web.config
 
 	(Get-Content -path C:\profisee\services\auth\web.config -Raw) -replace 'stdoutLogEnabled="false"','stdoutLogEnabled="true"'
+	
+## Upgrade fro mone version to another
+
+Create a file named UpdateProfisee.yaml (any name is fine as long as use that file name in the patch statement) that has this content:
+
+	spec:
+	  template:
+	    spec:
+	      containers:
+	      - name: profisee
+		image: profisee.azurecr.io/profisee2020r2:0
+
+Upload to cloud shell drive
+	
+	Launch Cloud Shell from the top navigation of the Azure portal.
+	
+	Click upload/download, then upload and chose the file you just created 
+
+Connect to aks cluster
+
+	az aks get-credentials --resource-group MyResourceGroup --name MyAKSCluster --overwrite-existing
+
+Patch it
+
+	kubectl patch statefulset profisee --patch $(Get-Content UpdateProfisee.yaml -Raw)
+
