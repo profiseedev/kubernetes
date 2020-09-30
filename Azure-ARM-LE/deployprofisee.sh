@@ -10,22 +10,19 @@ chmod 700 get_helm.sh;
 ./get_helm.sh;
 
 #install nginx
-echo $"\n";
-echo $"Installing nginx started\n";
+echo $"Installing nginx started";
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/nginxSettings.yaml;
 helm uninstall nginx
 helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
-echo $"Installing nginx finished\n";
-echo $"\n";
+echo $"Installing nginx finished";
 
 #wait for the ip to be available.  usually a few seconds
 sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-echo $"\n";
-echo $"nginx LB IP is $nginxip \n";
+echo $"nginx LB IP is $nginxip";
 
 #fix tls variables
 echo $"fix tls variables started\n";
@@ -72,14 +69,14 @@ rm tls.key
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
-	echo "Update AAD started\n";
+	echo "Update AAD started";
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
 	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
 	#clean client id - remove quotes
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
 	#add a Graph API permission of "Sign in and read user profile"
 	az ad app permission add --id $CLIENTID --api 00000002-0000-0000-c000-000000000000 --api-permissions 311a71cc-e848-46a1-bdf8-97ff7156d8e6=Scope
-	echo "Update AAD finished\n";
+	echo "Update AAD finished";
 fi
 
 #get storage account pw - if not supplied
@@ -128,6 +125,7 @@ kubectl create secret generic profisee-settings --from-file=Settings.yaml
 
 #################################Lets Encrypt Part 1 Start #####################################
 # Label the ingress-basic namespace to disable resource validation
+echo "Lets Encrypt Part 1 started";
 kubectl label namespace default cert-manager.io/disable-validation=true
 helm repo add jetstack https://charts.jetstack.io
 # Update your local Helm chart repository cache
@@ -139,18 +137,21 @@ sleep 30;
 #create the CA cluster issuer
 curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/clusterissuer.yaml;
 kubectl apply -f clusterissuer.yaml
+echo "Lets Encrypt Part 1 finshed";
 #################################Lets Encrypt Part 1 End #######################################
-echo "Install Profisee started \n";
+echo "Install Profisee started";
 helm repo add profisee https://profiseedev.github.io/kubernetes
 helm repo update
 helm uninstall profiseeplatform2020r1
 helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
-echo "Install Profisee finsihed \n";
+echo "Install Profisee finsihed";
 #################################Lets Encrypt Part 2 Start #####################################
 #Install Ingress for lets encrypt
+echo "Lets Encrypt Part 2 started";
 curl -fsSL -o ingressletsencrypt.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/ingressletsencrypt.yaml;
 sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' ingressletsencrypt.yaml
 kubectl apply -f ingressletsencrypt.yaml
+echo "Lets Encrypt Part 2 finished";
 #################################Lets Encrypt Part 2 End #######################################
 
 result="{\"Result\":[\
