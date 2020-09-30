@@ -124,6 +124,8 @@ helm repo add jetstack https://charts.jetstack.io
 helm repo update
 # Install the cert-manager Helm chart
 helm install cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta\.kubernetes\.io/os"=linux --set webhook.nodeSelector."beta\.kubernetes\.io/os"=linux --set cainjector.nodeSelector."beta\.kubernetes\.io/os"=linux
+#wait for the cert manager to be ready
+sleep 30;
 #create the CA cluster issuer
 curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/clusterissuer.yaml;
 kubectl apply -f clusterissuer.yaml
