@@ -24,9 +24,10 @@ echo "\n";
 sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-echo "NGINX LB IP $nginxip";
+echo "nginx LB IP is $nginxip \n";
 
 #fix tls variables
+echo "fix tls variables started\n";
 #cert
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 	printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert;
@@ -50,6 +51,7 @@ if [ "$UPDATEDNS" = "Yes" ]; then
 	az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes;
 	az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5;
 fi
+echo "fix tls variables finished\n";
 
 #install profisee platform
 #set profisee helm chart settings
@@ -68,12 +70,14 @@ rm tls.key
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
+	echo "Update AAD started\n";
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
 	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
 	#clean client id - remove quotes
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
 	#add a Graph API permission of "Sign in and read user profile"
 	az ad app permission add --id $CLIENTID --api 00000002-0000-0000-c000-000000000000 --api-permissions 311a71cc-e848-46a1-bdf8-97ff7156d8e6=Scope
+	echo "Update AAD finished\n";
 fi
 
 #get storage account pw - if not supplied
@@ -134,12 +138,12 @@ sleep 30;
 curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/clusterissuer.yaml;
 kubectl apply -f clusterissuer.yaml
 #################################Lets Encrypt Part 1 End #######################################
-
+echo "Install Profisee started \n";
 helm repo add profisee https://profiseedev.github.io/kubernetes
 helm repo update
 helm uninstall profiseeplatform2020r1
 helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
-
+echo "Install Profisee finsihed \n";
 #################################Lets Encrypt Part 2 Start #####################################
 #Install Ingress for lets encrypt
 curl -fsSL -o ingressletsencrypt.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/ingressletsencrypt.yaml;
