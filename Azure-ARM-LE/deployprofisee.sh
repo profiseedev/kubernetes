@@ -21,6 +21,7 @@ sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 echo "LB IP $nginxip";
+1>&2 echo "msg to STDERR"
 
 #fix tls variables
 #cert
