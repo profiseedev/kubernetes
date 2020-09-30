@@ -52,7 +52,7 @@ fi
 echo $"fix tls variables finished\n";
 
 #install profisee platform
-echo $"install profisee platform statrted\n";
+echo $"install profisee platform statrted";
 #set profisee helm chart settings
 curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/Settings.yaml;
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
@@ -153,7 +153,7 @@ sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' ingressletsencrypt.yaml
 kubectl apply -f ingressletsencrypt.yaml
 echo "Lets Encrypt Part 2 finished";
 #################################Lets Encrypt Part 2 End #######################################
-
+echo $"install profisee platform finished";
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
 {\"WEBURL\":\"${EXTERNALDNSURL}/Profisee\"},\
