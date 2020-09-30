@@ -10,24 +10,25 @@ chmod 700 get_helm.sh;
 ./get_helm.sh;
 
 #install nginx
-echo "\n";
-echo "Installing nginx started\n";
+echo $"\n";
+echo $"Installing nginx started\n";
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/nginxSettings.yaml;
 helm uninstall nginx
 helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
-echo "Installing nginx finished\n";
-echo "\n";
+echo $"Installing nginx finished\n";
+echo $"\n";
 
 #wait for the ip to be available.  usually a few seconds
 sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-echo "nginx LB IP is $nginxip \n";
+echo $"\n";
+echo $"nginx LB IP is $nginxip \n";
 
 #fix tls variables
-echo "fix tls variables started\n";
+echo $"fix tls variables started\n";
 #cert
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 	printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert;
@@ -51,9 +52,10 @@ if [ "$UPDATEDNS" = "Yes" ]; then
 	az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes;
 	az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5;
 fi
-echo "fix tls variables finished\n";
+echo $"fix tls variables finished\n";
 
 #install profisee platform
+echo $"install profisee platform statrted\n";
 #set profisee helm chart settings
 curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/Settings.yaml;
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
