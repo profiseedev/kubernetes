@@ -10,18 +10,21 @@ chmod 700 get_helm.sh;
 ./get_helm.sh;
 
 #install nginx
+echo "\n";
+echo "Installing nginx started\n";
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/nginxSettings.yaml;
 helm uninstall nginx
 helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+echo "Installing nginx finished\n";
+echo "\n";
 
 #wait for the ip to be available.  usually a few seconds
 sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-echo "LB IP $nginxip";
-1>&2 echo "msg to STDERR"
+echo "NGINX LB IP $nginxip";
 
 #fix tls variables
 #cert
