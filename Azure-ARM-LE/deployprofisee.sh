@@ -20,7 +20,7 @@ helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set contro
 sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-echo $nginxip;
+echo "LB IP $nginxip";
 
 #fix tls variables
 #cert
