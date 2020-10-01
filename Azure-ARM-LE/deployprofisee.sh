@@ -28,6 +28,10 @@ echo $"Getting values from license started";
 ./LicenseReader "ExternalDnsUrl" $LICENSEDATA
 ./LicenseReader "ACRUserName" $LICENSEDATA
 ./LicenseReader "ACRUserPassword" $LICENSEDATA
+
+EXTERNALDNSURL=$(<ExternalDnsUrl.txt)
+ACRUSER=$(<ACRUserName.txt)
+ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 echo $"Getting values from license finished";
 cd ..
 
