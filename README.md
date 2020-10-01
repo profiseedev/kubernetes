@@ -105,7 +105,8 @@
 	
 ## "Edit" a value (logging) in web.config
 
-	(Get-Content -path C:\profisee\services\auth\web.config -Raw) -replace 'stdoutLogEnabled="false"','stdoutLogEnabled="true"'
+	((Get-Content -path C:\profisee\services\auth\appsettings.json -Raw) -replace 'Warning','Debug') | Set-Content -Path C:\profisee\services\auth\appsettings.json
+
 	
 ## Upgrade from one version to another
 
