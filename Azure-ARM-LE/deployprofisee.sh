@@ -4,6 +4,33 @@ az aks install-cli;
 #get the aks creds, this allows us to use kubectl commands if needed
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
 
+#install dotnet core
+echo $"Installing dotnet core started";
+curl -fsSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
+#set permisssions
+chmod 755 ./dotnet-install.sh
+#install dotnet
+./dotnet-install.sh -c Current
+echo $"Installing dotnet core finished";
+
+#Downloadind and extracting license reader
+echo $"Downloadind and extracting license reader started";
+mkdir licensereader
+cd licensereader
+curl -fsSL -o LicenseReader.tar.001 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.001
+curl -fsSL -o LicenseReader.tar.002 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.002
+curl -fsSL -o LicenseReader.tar.003 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.003
+curl -fsSL -o LicenseReader.tar.004 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.004
+cat LicenseReader.tar.* | tar xvf -
+echo $"Downloadind and extracting license reader finished";
+
+echo $"Getting values from license started";
+./LicenseReader "ExternalDnsUrl" $LICENSEDATA
+./LicenseReader "ACRUserName" $LICENSEDATA
+./LicenseReader "ACRUserPassword" $LICENSEDATA
+echo $"Getting values from license finished";
+cd ..
+
 #install helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3;
 chmod 700 get_helm.sh;
