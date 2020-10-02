@@ -47,7 +47,7 @@
                 "description": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group"
             }
         },
-        "KubernetesLinuxVMSize": {
+        "KubernetesLinuxNodeSize": {
             "defaultValue": "Standard_D2_v3",
             "type": "String",
             "allowedValues": [
@@ -419,7 +419,7 @@
                 "description": "Size of the VM to use for the linux node(s) in the kubernetes cluster."
             }
         },
-        "KubernetesWindowsVMSize": {
+        "KubernetesWindowsNodeSize": {
             "defaultValue": "Standard_D4_v3",
             "type": "String",
             "allowedValues": [
@@ -845,7 +845,7 @@
                     {
                         "name": "nplinux1",
                         "count": 1,
-                        "vmSize": "[parameters('KubernetesLinuxVMSize')]",
+                        "vmSize": "[parameters('KubernetesLinuxNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
@@ -858,7 +858,7 @@
                     {
                         "name": "npwin1",
                         "count": 1,
-                        "vmSize": "[parameters('KubernetesWindowsVMSize')]",
+                        "vmSize": "[parameters('KubernetesWindowsNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
@@ -906,7 +906,7 @@
             ],
             "properties": {
                 "count": 1,
-                "vmSize": "[parameters('KubernetesLinuxVMSize')]",
+                "vmSize": "[parameters('KubernetesLinuxNodeSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
                 "type": "VirtualMachineScaleSets",
@@ -926,7 +926,7 @@
             ],
             "properties": {
                 "count": 1,
-                "vmSize": "[parameters('KubernetesWindowsVMSize')]",
+                "vmSize": "[parameters('KubernetesWindowsNodeSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
                 "type": "VirtualMachineScaleSets",
