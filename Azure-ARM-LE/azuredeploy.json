@@ -885,8 +885,8 @@
     {
         "DNSHostName": "[concat('profisee', uniqueString(resourceGroup().id))]",
         "DNSDomainName": "[concat(resourceGroup().location,'.cloudapp.azure.com')]",
-	"ExternalDNSName": "[concat(variables('DNSHostName'),'.',variables('DNSDomainName'))]",
-	"ExternalDNSURL": "[concat('https://',variables('ExternalDNSName'))]"
+	    "ExternalDNSName": "[concat(variables('DNSHostName'),'.',variables('DNSDomainName'))]",
+	    "ExternalDNSURL": "[concat('https://',variables('ExternalDNSName'))]"
     },
     "resources": [
         {
@@ -1202,7 +1202,7 @@
 	{
     "WebPortalUrl": {
       "value": "[variables('ExternalDNSURL')]",
-      "type": "object"
+      "type": "string"
     },
     "InstallProfiseePlatformOutputs": {
       "value": "[reference('InstallProfiseePlatform').outputs]",
