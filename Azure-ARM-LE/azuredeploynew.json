@@ -1019,7 +1019,7 @@
                 },
                 {
                     "name": "SQLNAME",
-                    "value": "[parameters('SQLServerName')]"
+                    "value": "[concat(parameters('SQLServerName'),'.database.windows.net')]"
                 },
                 {
                     "name": "SQLUSERNAME",
