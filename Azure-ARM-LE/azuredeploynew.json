@@ -27,18 +27,6 @@
                 "description": "Profisee plaform license string supplied by Profisee support."
             }
         },
-        "ProfiseeACRUserName": {
-            "type": "String",
-            "metadata": {
-                "description": "User name supplied by Profisee support."
-            }
-        },
-        "ProfiseeACRPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "User password supplied by Profisee support."
-            }
-        },         
          "ManagedIdentityName": {
             "type": "String",
             "metadata": {
@@ -802,11 +790,40 @@
             "metadata": {
                 "description": "Size of the VM to use for the Windows node(s) in the kubernetes cluster."
             }
-        }      
+        },
+        "SQLServerName": {
+            "defaultValue": "mysqlservername",
+            "type": "String",
+            "metadata": {
+                "description": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure"
+            }
+        },        
+        "SQLServerUser": {
+            "defaultValue":"sqladmin",
+            "type": "string",
+            "minLength": 1,
+            "metadata": {
+                "description": "Administrator SQL login name to create with the new sql server or to use to connect to existing sql server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols"
+            }
+        },
+        "SQLServerPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for sql server user.  The password does not contain the account name of the user and must be at least eight characters long and be no more than 128 characters in length.  The password contains characters from three of the following four categories: Latin uppercase letters (A through Z).  Latin lowercase letters (a through z).  Base 10 digits (0 through 9).  Non-alphanumeric characters such as: exclamation point (!), dollar sign ($), number sign (#), or percent (%)."
+            }
+        },               
+        "StorageAccountName": {
+            "defaultValue": "mystorageaccountname",
+            "type": "String",
+            "metadata": {
+                "description": "Enter a unique name.  Can contain only lowercase letters and numbers. Name must be between 3 and 24 characters.  Storage account names are globally unique in Azure"
+            }
+        }
+              
     },
     "variables": 
     {
-        "DNSHostName": "[guid(resourceGroup().id)]",
+        "DNSHostName": "[concat('profisee', uniqueString(resourceGroup().id))]",
         "DNSDomainName": "[concat(resourceGroup().location,'.cloudapp.azure.com')]"
     },
     "resources": [
@@ -918,7 +935,6 @@
             }
         },
         {
-            "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
             "name": "[tolower(parameters('SQLServerName'))]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
@@ -933,7 +949,6 @@
             },
             "resources": [
                 {
-                    "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
                     "name": "AllowAllWindowsAzureIps",
                     "type": "firewallrules",
                     "location": "[resourceGroup().location]",
@@ -949,7 +964,6 @@
             ]
         },
         {
-            "condition": "[equals(tolower(parameters('StorageAccountCreateNew')),tolower('Yes'))]",
             "name": "[tolower(parameters('StorageAccountName'))]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourceGroup().location]",
@@ -959,15 +973,14 @@
                 "displayName": "[parameters('StorageAccountName')]"
             },
             "sku": {
-                "name": "[parameters('StorageAccountType')]"
+                "name": "Standard_LRS"
             },
             "kind": "StorageV2"
         },
         {
-            "condition": "[equals(tolower(parameters('StorageAccountCreateNew')),tolower('Yes'))]",
             "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
             "apiVersion": "2019-06-01",
-            "name": "[concat(tolower(parameters('StorageAccountName')), '/default/', tolower(parameters('StorageAccountFileShareName')))]",
+            "name": "[concat(tolower(parameters('StorageAccountName')), '/default/files')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', tolower(parameters('StorageAccountName')))]"
             ]
@@ -1064,11 +1077,11 @@
                 },
                 {
                     "name": "ACRUSER",
-                    "value": "[parameters('ProfiseeACRUserName')]"
+                    "value": ""
                 },
                 {
                     "name": "ACRUSERPASSWORD",
-                    "value": "[parameters('ProfiseeACRPassword')]"
+                    "value": ""
                 },
                 {
                     "name": "TLSCERT",
@@ -1101,7 +1114,7 @@
                 }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseegroup/kubernetes/master/deployprofiseeletsecrypt.sh"            
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/deployprofisee.sh"                                            
         }
         },
         {
