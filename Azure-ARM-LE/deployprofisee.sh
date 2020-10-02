@@ -29,7 +29,14 @@ echo $"Getting values from license started";
 ./LicenseReader "ACRUserName" $LICENSEDATA
 ./LicenseReader "ACRUserPassword" $LICENSEDATA
 
-EXTERNALDNSURL=$(<ExternalDnsUrl.txt)
+#use whats in the license otherwise use whats passed in which is a generated hostname
+EXTERNALDNSURLLICENSE=$(<ExternalDnsUrl.txt)
+if [ ! "$EXTERNALDNSURLLICENSE"]; then
+	EXTERNALDNSURL = EXTERNALDNSURLLICENSE
+	EXTERNALDNSURL=$(echo $EXTERNALDNSURL | sed 's~http[s]*://~~g')
+	DNSHOSTNAME=$(echo "${EXTERNALDNSURL%%.*}")
+fi
+
 ACRUSER=$(<ACRUserName.txt)
 ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 echo $"Getting values from license finished";
