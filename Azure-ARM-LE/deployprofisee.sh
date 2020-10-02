@@ -21,7 +21,7 @@ curl -fsSL -o LicenseReader.tar.001 https://raw.githubusercontent.com/profiseede
 curl -fsSL -o LicenseReader.tar.002 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.002
 curl -fsSL -o LicenseReader.tar.003 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.003
 curl -fsSL -o LicenseReader.tar.004 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.004
-cat LicenseReader.tar.* | tar xvf -
+cat LicenseReader.tar.* | tar xf -
 echo $"Downloadind and extracting license reader finished";
 
 echo $"Getting values from license started";
