@@ -31,10 +31,14 @@ echo $"Getting values from license started";
 
 #use whats in the license otherwise use whats passed in which is a generated hostname
 EXTERNALDNSURLLICENSE=$(<ExternalDnsUrl.txt)
-if [ ! "$EXTERNALDNSURLLICENSE"]; then
+if [ "$EXTERNALDNSURLLICENSE" = ""]; then
+	echo $"EXTERNALDNSURLLICENSE is empty"
+else	
+	echo $"EXTERNALDNSURLLICENSE is not empty"
 	EXTERNALDNSURL = EXTERNALDNSURLLICENSE
 	EXTERNALDNSURL=$(echo $EXTERNALDNSURL | sed 's~http[s]*://~~g')
 	DNSHOSTNAME=$(echo "${EXTERNALDNSURL%%.*}")
+	
 fi
 
 ACRUSER=$(<ACRUserName.txt)
