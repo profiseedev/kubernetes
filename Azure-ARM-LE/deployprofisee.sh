@@ -118,7 +118,8 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	#clean client id - remove quotes
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
 	#add a Graph API permission of "Sign in and read user profile"
-	az ad app permission add --id $CLIENTID --api 00000002-0000-0000-c000-000000000000 --api-permissions 311a71cc-e848-46a1-bdf8-97ff7156d8e6=Scope
+	az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
+	az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
 	echo "Update AAD finished";
 fi
 
