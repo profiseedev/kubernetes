@@ -1204,7 +1204,6 @@
       "value": "[variables('ExternalDNSURL')]",
       "type": "object"
     },
-    {
     "InstallProfiseePlatformOutputs": {
       "value": "[reference('InstallProfiseePlatform').outputs]",
       "type": "object"
