@@ -1133,6 +1133,10 @@
         
     ],
     "outputs": 
+    "WebPortalUrl": {
+      "value": "[variables('ExternalDNSURL')]",
+      "type": "string"
+    },
     {
     "InstallProfiseePlatformOutputs": {
       "value": "[reference('InstallProfiseePlatform').outputs]",
