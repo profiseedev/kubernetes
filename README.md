@@ -8,7 +8,7 @@
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM-LE%2Fazuredeployquick.json)
 
-#### 'Advanced' Deploy Profisee platform (latest development version - pushing to prod)....
+#### 'Advanced' Deploy Profisee platform (custom networking, certificated and dns)....
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploy.json)
 <a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploy.json" target="_blank">
