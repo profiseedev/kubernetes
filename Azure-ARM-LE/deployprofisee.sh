@@ -37,8 +37,7 @@ else
 	echo $"EXTERNALDNSURLLICENSE is not empty"
 	EXTERNALDNSURLX = EXTERNALDNSURLLICENSE
 	EXTERNALDNSURLX=$(echo $EXTERNALDNSURLX | sed 's~http[s]*://~~g')
-	DNSHOSTNAMEX=$(echo "${EXTERNALDNSURLX%%.*}")
-	
+	DNSHOSTNAMEX=$(echo "${EXTERNALDNSURLX%%.*}")	
 fi
 
 ACRUSER=$(<ACRUserName.txt)
@@ -184,8 +183,8 @@ echo "Lets Encrypt Part 1 finshed";
 echo "Install Profisee started";
 helm repo add profisee https://profiseedev.github.io/kubernetes
 helm repo update
-helm uninstall profiseeplatform2020r1
-helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
+helm uninstall profiseeplatform
+helm install profiseeplatform profisee/profisee-platform --values Settings.yaml
 echo "Install Profisee finsihed";
 #################################Lets Encrypt Part 2 Start #####################################
 #Install Ingress for lets encrypt
