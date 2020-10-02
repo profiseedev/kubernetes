@@ -1,4 +1,4 @@
-# Profisee development - Deploy Profisee platform on to AKS
+# Profisee development - Deploy platform on to AKS
 
 #### 'Advanced' Deploy Profisee platform (latest development version - pushing to prod)....
 
