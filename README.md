@@ -2,7 +2,7 @@
 
 #### 'Lighting' Deploy Profisee platform (https via Lets ecrypt and generated dns and new sql and storage)....
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM-LE%2Fazuredeploylighting.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM-LE%2Fazuredeploylightning.json)
 
 #### 'Quick' Deploy Profisee platform (https via Lets ecrypt and generated dns)....
 
