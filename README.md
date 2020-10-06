@@ -139,6 +139,15 @@ Patch it
 
 	kubectl patch statefulset profisee --patch $(Get-Content UpdateProfisee.yaml -Raw)
 
+## Replace license via uninstall/reinstall
+
+	helm repo add profisee https://profisee.github.io/kubernetes
+	helm uninstall profiseeplatform2020r1
+	#get settings.yaml from the secret its stored in
+	kubectl get secret profisee-settings -o jsonpath="{.data.Settings\.yaml}" | base64 --decode > Settings.yaml
+	helm install profiseeplatform profisee/profisee-platform --values Settings.yaml --set licenseFileData=PastedBase64LicenseString
+
+
 # Debug with Lens
 
 ## Install Lens (Kubernetes IDE)
