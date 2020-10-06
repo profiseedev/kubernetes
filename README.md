@@ -154,6 +154,12 @@ Patch it
 	helm uninstall nginx
 	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
 
+## Add cluster ip address to sql
+				
+	#If you are haing odd sql connection issues fr omteh container(s), try adding the outbound ip ti the sql firewall
+	#from in the container run this to get the outbound ip of the cluster
+	Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
+	"goto sql server firewall and add it
 
 # Debug with Lens
 
