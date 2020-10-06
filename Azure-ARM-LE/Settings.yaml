@@ -10,8 +10,6 @@ profiseeRunTime:
         password: "$FILEREPOPASSWORD"
         logonType: "NewCredentials"
         location: "$FILEREPOURL"
-        fileShareName: "$FILESHARENAME"
-        accountName: $FILEACCOUNTNAME
     externalDnsUrl: "$EXTERNALDNSURL"
     externalDnsName: "$EXTERNALDNSNAME"
     oidc:
