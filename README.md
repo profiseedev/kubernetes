@@ -14,7 +14,7 @@
 
 #### 'Advanced with keyvault' Deploy Profisee platform (custom kubernetes, networking, certificated and dns pulling all sensitive data from keyvault)....
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)]Coming soon
+<img src="https://aka.ms/deploytoazurebutton"/>Coming soon
 
 
 # Prerequisites:
