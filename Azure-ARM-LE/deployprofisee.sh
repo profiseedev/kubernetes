@@ -152,7 +152,6 @@ sed -i -e 's/$FILEREPOUSERNAME/'"$FILEREPOUSERNAME"'/g' Settings.yaml
 sed -i -e 's~$FILEREPOPASSWORD~'"$FILEREPOPASSWORD"'~g' Settings.yaml
 sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
 sed -i -e 's/$FILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' Settings.yaml
-sed -i -e 's/$FILEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' Settings.yaml
 sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
