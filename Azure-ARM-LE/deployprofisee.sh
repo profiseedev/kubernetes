@@ -183,12 +183,23 @@ curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseedev/k
 kubectl apply -f clusterissuer.yaml
 echo "Lets Encrypt Part 1 finshed";
 #################################Lets Encrypt Part 1 End #######################################
+#################################Install Profisee Start #######################################
 echo "Install Profisee started";
 helm repo add profisee https://profiseedev.github.io/kubernetes
 helm repo update
 helm uninstall profiseeplatform
 helm install profiseeplatform profisee/profisee-platform --values Settings.yaml
 echo "Install Profisee finsihed";
+#################################Install Profisee End #######################################
+#################################Add Azure File volume Start #######################################
+curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profisee/kubernetes/master/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml;
+STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
+FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
+sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
+sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
+#################################Add Azure File volume End #######################################
 #################################Lets Encrypt Part 2 Start #####################################
 #Install Ingress for lets encrypt
 echo "Lets Encrypt Part 2 started";
