@@ -191,6 +191,7 @@ helm install profiseeplatform profisee/profisee-platform --values Settings.yaml
 echo "Install Profisee finsihed";
 #################################Install Profisee End #######################################
 #################################Add Azure File volume Start #######################################
+echo "Add Azure File volume started";
 curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profisee/kubernetes/master/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml;
 STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
 FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
@@ -198,6 +199,7 @@ sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzur
 sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
 sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
 kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
+echo "Add Azure File volume finished";
 #################################Add Azure File volume End #######################################
 #################################Lets Encrypt Part 2 Start #####################################
 #Install Ingress for lets encrypt
