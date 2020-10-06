@@ -192,7 +192,7 @@ echo "Install Profisee finsihed";
 #################################Install Profisee End #######################################
 #################################Add Azure File volume Start #######################################
 echo "Add Azure File volume started";
-curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profisee/kubernetes/master/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml;
+curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/StatefullSet_AddAzureFileVolume.yaml;
 STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
 FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
 sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
