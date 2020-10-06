@@ -147,6 +147,14 @@ Main website https://k8slens.dev
 
 Install the latest https://github.com/lensapp/lens/releases/latest
 
+## Enable metrics
+
+Lens uses promethius https://prometheus.io/ for metrics
+
+To enable it right cick on node name in left bar and click settings
+
+Scroll down to metrics and click install
+
 ## Add AKS cluster to Lens
 
 	Go to Azure portal, open cloud shell
