@@ -146,6 +146,11 @@ Patch it
 	#get settings.yaml from the secret its stored in
 	kubectl get secret profisee-settings -o jsonpath="{.data.Settings\.yaml}" | base64 --decode > Settings.yaml
 	helm install profiseeplatform profisee/profisee-platform --values Settings.yaml --set licenseFileData=PastedBase64LicenseString
+	
+## Scale to more than one container
+
+	#this will add another pod (container) to have two servers that are completely load balanced
+	kubectl scale sts profisee --replicas=2
 
 
 # Debug with Lens
