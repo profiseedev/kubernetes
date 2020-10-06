@@ -70,7 +70,8 @@
 	helm uninstall profiseeplatform2020r1
 	#get settings.yaml from the secret its stored in
 	kubectl get secret profisee-settings -o jsonpath="{.data.Settings\.yaml}" | base64 --decode > Settings.yaml
-	helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
+	#note the name is now jsut called profiseeplatform without the release name in it like 2020r1
+	helm install profiseeplatform profisee/profisee-platform --values Settings.yaml
 	
 ## Connect to container and look at log
 
@@ -105,6 +106,14 @@
 
 	((Get-Content -path C:\profisee\services\auth\appsettings.json -Raw) -replace 'Warning','Debug') | Set-Content -Path C:\profisee\services\auth\appsettings.json
 
+## Upgrade from one version to another via uninstall/reinstall
+
+	helm repo add profisee https://profisee.github.io/kubernetes
+	helm uninstall profiseeplatform2020r1
+	#get settings.yaml from the secret its stored in
+	kubectl get secret profisee-settings -o jsonpath="{.data.Settings\.yaml}" | base64 --decode > Settings.yaml
+	#note the name is now jsut called profiseeplatform without the release name in it like 2020r1 and image.tag will vary based on the minor release.  now its preview but it will be 0 which will be GA
+	helm install profiseeplatform profisee/profisee-platform --values Settings.yaml --set image.repository=profiseeplatform2020r2 --set image.tag=X
 	
 ## Upgrade from one version to another
 
