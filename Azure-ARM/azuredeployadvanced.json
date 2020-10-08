@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ProfiseeVersion": {
-            "defaultValue": "2020R2.Preview",
+            "defaultValue": "2020R1.1",
             "type": "String",
             "allowedValues": [
                 "2020R1.0",
@@ -26,7 +26,20 @@
             "metadata": {
                 "description": "Profisee plaform license string supplied by Profisee support."
             }
-        },        
+        },
+        "ProfiseeACRUserName": {
+            "type": "String",
+            "metadata": {
+                "description": "User name supplied by Profisee support."
+            }
+        },
+        "ProfiseeACRPassword": {
+            "defaultValue": "",
+            "type": "securestring",
+            "metadata": {
+                "description": "User password supplied by Profisee support."
+            }
+        }, 
         "ActiveDirectoryCreateApp": {
             "defaultValue": "Yes",
             "type": "String",
@@ -59,7 +72,7 @@
             }
         },
         "KubernetesClusterName": {
-            "defaultValue": "ProfiseeAKSCluster",
+            "defaultValue": "MyAKSCluster",
             "type": "String",
             "metadata": {
                 "description": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group"
@@ -808,7 +821,56 @@
             "metadata": {
                 "description": "Size of the VM to use for the Windows node(s) in the kubernetes cluster."
             }
-        },        
+        },
+        "KubernetesVersion": {
+            "defaultValue": "",
+            "type": "String",            
+            "metadata": {
+                "description": "Version of kubernetes to use. Leave blank to use the default version from Microsoft."
+            }
+        },
+        "KubernetesVnetName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Name of an existing VNET that will contain this AKS deployment.  Leave blank to create a new one with defaults"
+            }
+        },
+        "KubernetesVnetResourceGroup": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Name of the existing VNET resource group.  Leave blank if not using an existing VNet."
+            }
+        },
+        "KubernetesSubnetName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Subnet name that will contain the App Service Environment in the existing VNet.  Leave blank if not using an existing VNet."
+            }
+        },
+        "KubernetesServiceCidr": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "A CIDR notation IP range from which to assign service cluster IPs."
+            }
+        },
+        "KubernetesDNSServiceIP": {
+            "type": "string",
+            "defaultValue": "10.0.0.10",
+            "metadata": {
+                "description": "Containers DNS server IP address."
+            }
+        },
+        "KubernetesDockerBridgeCidr": {
+            "type": "string",
+            "defaultValue": "172.17.0.1/16",
+            "metadata": {
+                "description": "A CIDR notation IP for Docker bridge."
+            }
+        },
         "SQLServerCreateNew": {
             "defaultValue": "Yes",
             "type": "String",
@@ -879,14 +941,70 @@
             "metadata": {
                 "description": "Name of file share in the storage account to create and/or use.   Can contain only lowercase letters, numbers, and hyphens, and must begin and end with a letter or a number. The name cannot contain two consecutive hyphens."
             }
-        }        
+        },
+        "DNSUpdate": {
+            "defaultValue": "Yes",
+            "type": "String",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If Yes then your dns zone must be in Azure.  If No then you have to update the dns record yourself.  Use the IP adress that is output from the InstallProfiseePlatform deploymnet step"
+            }
+        },
+        "DNSHostName": {
+            "defaultValue": "myprofiseehostname",
+            "type": "String",
+            "metadata": {
+                "description": "Host name to use/create.  Required if updating DNS."
+            }
+        },
+        "DNSDomainName": {
+            "defaultValue": "mydomain.com",
+            "type": "String",
+            "metadata": {
+                "description": "Domain name name to use.  Required if updating DNS."
+            }
+        },
+        "DNSDomainResourceGroup": {
+            "defaultValue": "mydnszoneresourcegroup",
+            "type": "String",
+            "metadata": {
+                "description": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS."
+            }
+        },   
+        "HttpsConfigure": {
+            "defaultValue": "Yes",
+            "type": "String",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If Yes, then you must supply the certificate informtion.  If No then you web traffic is not secure and only works over http."
+            }
+        }, 
+        "HttpsCertificate": {
+            "defaultValue": "",
+            "type": "String",
+            "metadata": {
+                "description": "Required if using Https.  Paste the text from TLS certificate. Starts with    -----BEGIN CERTIFICATE-----"
+            }
+        },
+        "HttpsCertificatePrivateKey": {
+            "defaultValue": "",
+            "type": "String",
+            "metadata": {
+                "description": "Required if using Https.  Paste the text from private key for your TLS certificate. Starts with    -----BEGIN PRIVATE KEY-----"
+            }
+        }
     },
     "variables": 
     {
-        "DNSHostName": "[concat('profisee', uniqueString(resourceGroup().id))]",
-        "DNSDomainName": "[concat(resourceGroup().location,'.cloudapp.azure.com')]",
-	    "ExternalDNSName": "[concat(variables('DNSHostName'),'.',variables('DNSDomainName'))]",
-	    "ExternalDNSURL": "[concat('https://',variables('ExternalDNSName'))]"
+        "vnetId":"[resourceId(parameters('KubernetesVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('KubernetesVnetName'),parameters('KubernetesSubnetName'))]",
+        "externalurl":"[if(equals(parameters('HttpsConfigure'),'Yes'), concat('https://',parameters('DNSHostName'),'.',parameters('DNSDomainName')),concat('http://',parameters('DNSHostName'),'.',parameters('DNSDomainName')))]",
+        "platformUrl":"[concat(variables('externalurl'),'/profisee')]"
     },
     "resources": [
         {
@@ -899,7 +1017,7 @@
                 "tier": "Free"
             },
             "properties": {
-                "kubernetesVersion": "",
+                "kubernetesVersion": "[parameters('KubernetesVersion')]",
                 "dnsPrefix": "profisee",
                 "agentPoolProfiles": [
                     {
@@ -909,11 +1027,12 @@
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
-                        "orchestratorVersion": "",
+                        "orchestratorVersion": "[parameters('KubernetesVersion')]",
                         "enableNodePublicIP": false,
                         "nodeLabels": {},
                         "mode": "System",
-                        "osType": "Linux"
+                        "osType": "Linux",
+                        "vnetSubnetID": "[if(not(empty(parameters('KubernetesVnetName'))),variables('vnetId'),json('null'))]"
                     },
                     {
                         "name": "npwin1",
@@ -922,10 +1041,11 @@
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
-                        "orchestratorVersion": "",
+                        "orchestratorVersion": "[parameters('KubernetesVersion')]",
                         "enableNodePublicIP": false,
                         "mode": "User",
-                        "osType": "Windows"
+                        "osType": "Windows",
+                        "vnetSubnetID": "[if(not(empty(parameters('KubernetesVnetName'))),variables('vnetId'),json('null'))]"
                     }
                 ],
                 "linuxProfile": {
@@ -948,9 +1068,9 @@
                     "networkPlugin": "azure",
                     "loadBalancerSku": "Standard",
                     "outboundType": "loadBalancer",
-                    "serviceCidr": "10.0.0.0/16",
-                    "dnsServiceIP": "10.0.0.10",
-                    "dockerBridgeCidr": "172.17.0.1/16"
+                    "serviceCidr": "[parameters('KubernetesServiceCidr')]",
+                    "dnsServiceIP": "[parameters('KubernetesDNSServiceIP')]",
+                    "dockerBridgeCidr": "[parameters('KubernetesDockerBridgeCidr')]"
                 }
             },
             "identity": {
@@ -970,7 +1090,7 @@
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
                 "type": "VirtualMachineScaleSets",
-                "orchestratorVersion": "",
+                "orchestratorVersion": "[parameters('KubernetesVersion')]",
                 "enableNodePublicIP": false,
                 "nodeLabels": {},
                 "mode": "System",
@@ -990,7 +1110,7 @@
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
                 "type": "VirtualMachineScaleSets",
-                "orchestratorVersion": "",
+                "orchestratorVersion": "[parameters('KubernetesVersion')]",
                 "enableNodePublicIP": false,
                 "mode": "User",
                 "osType": "Windows"
@@ -1111,27 +1231,27 @@
                 },
                 {
                     "name": "DNSHOSTNAME",
-                    "value": "[variables('DNSHostName')]"
+                    "value": "[parameters('DNSHostName')]"
                 },
                 {
                     "name": "DNSDOMAINNAME",
-                    "value": "[variables('DNSDomainName')]"
+                    "value": "[parameters('DNSDomainName')]"
                 },
                 {
                     "name": "DOMAINNAMERESOURCEGROUP",
-                    "value": ""
+                    "value": "[parameters('DNSDomainResourceGroup')]"
                 },
                 {
                     "name": "UPDATEDNS",
-                    "value": "No"
+                    "value": "[parameters('DNSUpdate')]"
                 },
                 {
                     "name": "EXTERNALDNSNAME",
-                    "value": "[variables('ExternalDNSName')]"
+                    "value": "[concat(parameters('DNSHostName'),'.',parameters('DNSDomainName'))]"
                 },
                 {
                     "name": "EXTERNALDNSURL",
-                    "value": "[variables('ExternalDNSURL')]"
+                    "value": "[variables('externalurl')]"
                 },                
                 {
                     "name": "OIDCURL",
@@ -1143,19 +1263,19 @@
                 },
                 {
                     "name": "ACRUSER",
-                    "value": ""
+                    "value": "[parameters('ProfiseeACRUserName')]"
                 },
                 {
                     "name": "ACRUSERPASSWORD",
-                    "value": ""
+                    "value": "[parameters('ProfiseeACRPassword')]"
                 },
                 {
                     "name": "TLSCERT",
-                    "value": ""
+                    "value": "[parameters('HttpsCertificate')]"
                 },
                 {
                     "name": "TLSKEY",
-                    "value": ""
+                    "value": "[parameters('HttpsCertificatePrivateKey')]"
                 },
                 {
                     "name": "PROFISEEVERSION",
@@ -1171,16 +1291,21 @@
                 },
                 {
                     "name": "CONFIGUREHTTPS",
-                    "value": "No"
+                    "value": "[parameters('HttpsConfigure')]"
                 }
                 ,
                 {
                     "name": "FILEREPOPASSWORD",
                     "value": "[parameters('StorageAccountAccessKey')]"
                 }
+                ,
+                {
+                    "name": "USELETSENCRYPT",
+                    "value": "No"
+                }
 
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/deployprofisee.sh"                                            
+            "primaryScriptUri": "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/deployprofisee.sh"            
         }
         },
         {
@@ -1199,7 +1324,7 @@
         
     ],
     "outputs": 
-	{    
+    {
     "InstallProfiseePlatformOutputs": {
       "value": "[reference('InstallProfiseePlatform').outputs]",
       "type": "object"
@@ -1207,6 +1332,10 @@
     "KubernetesClusterFQDN": {
             "type": "string",
             "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))).FQDN]"
-        }
+        },
+    "ProfiseePlatformURL": {
+        "type": "string",
+        "value": "[variables('platformUrl')]"
+    }
   }
 }

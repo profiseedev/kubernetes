@@ -4,25 +4,78 @@ az aks install-cli;
 #get the aks creds, this allows us to use kubectl commands if needed
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
 
+#install dotnet core
+echo $"Installing dotnet core started";
+curl -fsSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
+#set permisssions
+chmod 755 ./dotnet-install.sh
+#install dotnet
+./dotnet-install.sh -c Current
+echo $"Installing dotnet core finished";
+
+#Downloadind and extracting license reader
+echo $"Downloadind and extracting license reader started";
+mkdir licensereader
+cd licensereader
+curl -fsSL -o LicenseReader.tar.001 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.001
+curl -fsSL -o LicenseReader.tar.002 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.002
+curl -fsSL -o LicenseReader.tar.003 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.003
+curl -fsSL -o LicenseReader.tar.004 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.004
+cat LicenseReader.tar.* | tar xf -
+echo $"Downloadind and extracting license reader finished";
+
+echo $"Getting values from license started";
+./LicenseReader "ExternalDnsUrl" $LICENSEDATA
+./LicenseReader "ACRUserName" $LICENSEDATA
+./LicenseReader "ACRUserPassword" $LICENSEDATA
+
+#use whats in the license otherwise use whats passed in which is a generated hostname
+EXTERNALDNSURLLICENSE=$(<ExternalDnsUrl.txt)
+if [ "$EXTERNALDNSURLLICENSE" = ""]; then
+	echo $"EXTERNALDNSURLLICENSE is empty"
+else	
+	echo $"EXTERNALDNSURLLICENSE is not empty"
+	EXTERNALDNSURL=$EXTERNALDNSURLLICENSE
+	EXTERNALDNSNAME=$(echo $EXTERNALDNSURL | sed 's~http[s]*://~~g')
+	DNSHOSTNAME=$(echo "${EXTERNALDNSNAME%%.*}")	
+fi
+echo $"EXTERNALDNSURL is $EXTERNALDNSURL";
+echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
+echo $"DNSHOSTNAME is $DNSHOSTNAME";
+
+ACRUSER=$(<ACRUserName.txt)
+ACRUSERPASSWORD=$(<ACRUserPassword.txt)
+echo $"Getting values from license finished";
+cd ..
+
 #install helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3;
 chmod 700 get_helm.sh;
 ./get_helm.sh;
 
 #install nginx
+echo $"Installing nginx started";
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
-curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/nginxSettings.yaml;
+curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/nginxSettings.yaml;
 helm uninstall nginx
-helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP;
+
+if [ "$USELETSENCRYPT" = "Yes" ]; then
+	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+else
+	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP
+fi
+
+echo $"Installing nginx finished";
 
 #wait for the ip to be available.  usually a few seconds
 sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-echo $nginxip;
+echo $"nginx LB IP is $nginxip";
 
 #fix tls variables
+echo $"fix tls variables started\n";
 #cert
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 	printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert;
@@ -39,17 +92,19 @@ if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 else
 	echo '    NA' > tls.key;	    
 fi
-#rm a.key
+rm a.key
 
 #set dns
 if [ "$UPDATEDNS" = "Yes" ]; then
 	az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes;
 	az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5;
 fi
+echo $"fix tls variables finished\n";
 
 #install profisee platform
+echo $"install profisee platform statrted";
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/Settings.yaml;
+curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/Settings.yaml;
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
@@ -64,6 +119,7 @@ rm tls.key
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
+	echo "Update AAD started";
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
 	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
 	#clean client id - remove quotes
@@ -71,6 +127,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	#add a Graph API permission of "Sign in and read user profile"
 	az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
 	az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
+	echo "Update AAD finished";
 fi
 
 #get storage account pw - if not supplied
@@ -113,24 +170,60 @@ sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 
 #Add settings.yaml as a secret so its always available after the deployment
-kubectl delete secret profisee-settings-yaml
-kubectl create secret generic profisee-settings-yml --from-file=Settings.yaml
+kubectl delete secret profisee-settings
+kubectl create secret generic profisee-settings --from-file=Settings.yaml
 
-#Install Profisee Platform
-helm repo add profisee https://profisee.github.io/kubernetes
-helm uninstall profiseeplatform2020r1
-helm install profiseeplatform2020r1 profisee/profisee-platform --values Settings.yaml
+if [ "$USELETSENCRYPT" = "Yes" ]; then
+	#################################Lets Encrypt Part 1 Start #####################################
+	# Label the ingress-basic namespace to disable resource validation
+	echo "Lets Encrypt Part 1 started";
+	kubectl label namespace default cert-manager.io/disable-validation=true
+	helm repo add jetstack https://charts.jetstack.io
+	# Update your local Helm chart repository cache
+	helm repo update
+	# Install the cert-manager Helm chart
+	helm install cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta\.kubernetes\.io/os"=linux --set webhook.nodeSelector."beta\.kubernetes\.io/os"=linux --set cainjector.nodeSelector."beta\.kubernetes\.io/os"=linux
+	#wait for the cert manager to be ready
+	sleep 30;
+	#create the CA cluster issuer
+	curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/clusterissuer.yaml;
+	kubectl apply -f clusterissuer.yaml
+	echo "Lets Encrypt Part 1 finshed";
+	#################################Lets Encrypt Part 1 End #######################################
+fi
 
-#Add Azure File volume
-curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml;
+#################################Install Profisee Start #######################################
+echo "Install Profisee started";
+helm repo add profisee https://profiseedev.github.io/kubernetes
+helm repo update
+helm uninstall profiseeplatform
+helm install profiseeplatform profisee/profisee-platform --values Settings.yaml
+echo "Install Profisee finsihed";
+#################################Install Profisee End #######################################
+#################################Add Azure File volume Start #######################################
+echo "Add Azure File volume started";
+curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/StatefullSet_AddAzureFileVolume.yaml;
 STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
 FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
 sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
 sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
 sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
 kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
+echo "Add Azure File volume finished";
+#################################Add Azure File volume End #######################################
 
-#Output
+if [ "$USELETSENCRYPT" = "Yes" ]; then
+	#################################Lets Encrypt Part 2 Start #####################################
+	#Install Ingress for lets encrypt
+	echo "Lets Encrypt Part 2 started";
+	curl -fsSL -o ingressletsencrypt.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/ingressletsencrypt.yaml;
+	sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' ingressletsencrypt.yaml
+	kubectl apply -f ingressletsencrypt.yaml
+	echo "Lets Encrypt Part 2 finished";
+	#################################Lets Encrypt Part 2 End #######################################
+fi
+
+echo $"install profisee platform finished";
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
 {\"WEBURL\":\"${EXTERNALDNSURL}/Profisee\"},\
