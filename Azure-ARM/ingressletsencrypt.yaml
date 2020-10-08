@@ -22,9 +22,10 @@ spec:
     - $EXTERNALDNSNAME
     secretName: tls-secret
   rules:
-    - http:
-        paths:
-        - path: /(.*)
-          backend:
-            serviceName: profisee-service
-            servicePort: 80
+  - host: $EXTERNALDNSNAME
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: profisee-service
+          servicePort: 80
