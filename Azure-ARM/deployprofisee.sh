@@ -22,6 +22,10 @@ curl -fsSL -o LicenseReader.tar.002 "$REPOURL/Utilities/LicenseReader/LicenseRea
 curl -fsSL -o LicenseReader.tar.003 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.003"
 curl -fsSL -o LicenseReader.tar.004 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.004"
 cat LicenseReader.tar.* | tar xf -
+rm LicenseReader.tar.001
+rm LicenseReader.tar.002
+rm LicenseReader.tar.003
+rm LicenseReader.tar.004
 echo $"Downloadind and extracting license reader finished";
 
 echo $"Getting values from license started";
