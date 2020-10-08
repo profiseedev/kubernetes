@@ -1,4 +1,6 @@
 #!/bin/bash
+REPOURL="https://raw.githubusercontent.com/profiseedev/kubernetes/master";
+
 #install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5
 az aks install-cli;
 #get the aks creds, this allows us to use kubectl commands if needed
@@ -17,10 +19,10 @@ echo $"Installing dotnet core finished";
 echo $"Downloadind and extracting license reader started";
 mkdir licensereader
 cd licensereader
-curl -fsSL -o LicenseReader.tar.001 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.001
-curl -fsSL -o LicenseReader.tar.002 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.002
-curl -fsSL -o LicenseReader.tar.003 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.003
-curl -fsSL -o LicenseReader.tar.004 https://raw.githubusercontent.com/profiseedev/kubernetes/master/Utilities/LicenseReader/LicenseReader.tar.004
+curl -fsSL -o LicenseReader.tar.001 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.001"
+curl -fsSL -o LicenseReader.tar.002 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.002"
+curl -fsSL -o LicenseReader.tar.003 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.003"
+curl -fsSL -o LicenseReader.tar.004 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.004"
 cat LicenseReader.tar.* | tar xf -
 echo $"Downloadind and extracting license reader finished";
 
@@ -57,7 +59,7 @@ chmod 700 get_helm.sh;
 echo $"Installing nginx started";
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
 #get profisee nginx settings
-curl -fsSL -o nginxSettings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/nginxSettings.yaml;
+curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
 helm uninstall nginx
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
@@ -104,7 +106,7 @@ echo $"fix tls variables finished\n";
 #install profisee platform
 echo $"install profisee platform statrted";
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/Settings.yaml;
+curl -fsSL -o Settings.yaml "$REPOURL/Azure-ARM/Settings.yaml";
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
@@ -186,7 +188,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	#wait for the cert manager to be ready
 	sleep 30;
 	#create the CA cluster issuer
-	curl -fsSL -o clusterissuer.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/clusterissuer.yaml;
+	curl -fsSL -o clusterissuer.yaml "$REPOURL/Azure-ARM/clusterissuer.yaml";
 	kubectl apply -f clusterissuer.yaml
 	echo "Lets Encrypt Part 1 finshed";
 	#################################Lets Encrypt Part 1 End #######################################
@@ -202,7 +204,7 @@ echo "Install Profisee finsihed";
 #################################Install Profisee End #######################################
 #################################Add Azure File volume Start #######################################
 echo "Add Azure File volume started";
-curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/StatefullSet_AddAzureFileVolume.yaml;
+curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml "$REPOURL/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml";
 STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
 FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
 sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
@@ -216,7 +218,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	#################################Lets Encrypt Part 2 Start #####################################
 	#Install Ingress for lets encrypt
 	echo "Lets Encrypt Part 2 started";
-	curl -fsSL -o ingressletsencrypt.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM-LE/ingressletsencrypt.yaml;
+	curl -fsSL -o ingressletsencrypt.yaml "$REPOURL/Azure-ARM/ingressletsencrypt.yaml";
 	sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' ingressletsencrypt.yaml
 	kubectl apply -f ingressletsencrypt.yaml
 	echo "Lets Encrypt Part 2 finished";
