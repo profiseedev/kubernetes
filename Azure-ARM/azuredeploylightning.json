@@ -792,7 +792,7 @@
             }
         },
         "SQLServerName": {
-            "defaultValue": "[concat(resourceGroup().name,'sql')]",
+            "defaultValue": "[resourceGroup().name]",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure"
@@ -813,7 +813,7 @@
             }
         },               
         "StorageAccountName": {
-            "defaultValue": "[concat(resourceGroup().name,'storage')]",
+            "defaultValue": "[resourceGroup().name]",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique name.  Can contain only lowercase letters and numbers. Name must be between 3 and 24 characters.  Storage account names are globally unique in Azure"
