@@ -17,8 +17,6 @@ echo $"Installing dotnet core finished";
 
 #Downloadind and extracting license reader
 echo $"Downloadind and extracting license reader started";
-mkdir licensereader
-cd licensereader
 curl -fsSL -o LicenseReader.tar.001 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.001"
 curl -fsSL -o LicenseReader.tar.002 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.002"
 curl -fsSL -o LicenseReader.tar.003 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.003"
@@ -48,7 +46,6 @@ echo $"DNSHOSTNAME is $DNSHOSTNAME";
 ACRUSER=$(<ACRUserName.txt)
 ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 echo $"Getting values from license finished";
-cd ..
 
 #install helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3;
