@@ -41,7 +41,7 @@
             }
         },
         "KubernetesClusterName": {
-            "defaultValue": "ProfiseeAKSCluster",
+            "defaultValue": "[concat(resourceGroup().name,'ProfiseeCluster')]",
             "type": "String",
             "metadata": {
                 "description": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group"
@@ -792,7 +792,7 @@
             }
         },
         "SQLServerName": {
-            "defaultValue": "mysqlservername",
+            "defaultValue": "[concat(resourceGroup().name,'sql')]",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure"
@@ -813,7 +813,7 @@
             }
         },               
         "StorageAccountName": {
-            "defaultValue": "mystorageaccountname",
+            "defaultValue": "[concat(resourceGroup().name,'storage')]",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique name.  Can contain only lowercase letters and numbers. Name must be between 3 and 24 characters.  Storage account names are globally unique in Azure"
