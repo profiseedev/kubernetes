@@ -161,6 +161,22 @@ Patch it
 	Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
 	"goto sql server firewall and add it
 
+## Add FileShare volume to container
+	#This can happen if using g an old deployment of 2020r1 before the fileshare was added
+	#set the vars that get set during the deployment
+	STORAGEACCOUNTNAME="MyStorageAccountName"
+	FILEREPOPASSWORD="MyStorageAccountAccessKey"
+	STORAGEACCOUNTFILESHARENAME="files"
+
+	curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml";
+	STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
+	FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
+	sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+	sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
+	sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+	kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
+
+
 # Debug with Lens
 
 ## Install Lens (Kubernetes IDE)
