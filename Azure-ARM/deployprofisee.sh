@@ -16,7 +16,7 @@ chmod 755 ./dotnet-install.sh
 echo $"Installing dotnet core finished";
 
 #Downloadind and extracting license reader
-echo $"Downloadind and extracting license reader started";
+echo $"Downloading and extracting license reader started";
 curl -fsSL -o LicenseReader.tar.001 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.001"
 curl -fsSL -o LicenseReader.tar.002 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.002"
 curl -fsSL -o LicenseReader.tar.003 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.003"
@@ -26,7 +26,7 @@ rm LicenseReader.tar.001
 rm LicenseReader.tar.002
 rm LicenseReader.tar.003
 rm LicenseReader.tar.004
-echo $"Downloadind and extracting license reader finished";
+echo $"Downloading and extracting license reader finished";
 
 echo $"Getting values from license started";
 ./LicenseReader "ExternalDnsUrl" $LICENSEDATA
