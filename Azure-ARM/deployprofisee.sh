@@ -47,8 +47,11 @@ echo $"EXTERNALDNSURL is $EXTERNALDNSURL";
 echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
 echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
-ACRUSER=$(<ACRUserName.txt)
-ACRUSERPASSWORD=$(<ACRUserPassword.txt)
+#If acr info is passed in (via legacy script) use it, otherwise pull it from license
+if [ "$ACRUSER" = ""]; then
+	ACRUSER=$(<ACRUserName.txt)
+	ACRUSERPASSWORD=$(<ACRUserPassword.txt)
+fi
 echo $"Getting values from license finished";
 
 #install helm
