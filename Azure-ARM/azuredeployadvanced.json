@@ -70,14 +70,7 @@
             "metadata": {
                 "description": "Resource group the managed identiy was created in."
             }
-        },
-        "KubernetesClusterName": {
-            "defaultValue": "MyAKSCluster",
-            "type": "String",
-            "metadata": {
-                "description": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group"
-            }
-        },
+        },        
         "KubernetesLinuxNodeSize": {
             "defaultValue": "Standard_D2_v3",
             "type": "String",
@@ -448,6 +441,13 @@
             ],
             "metadata": {
                 "description": "Size of the VM to use for the linux node(s) in the kubernetes cluster."
+            }
+        },
+        "KubernetesLinuxNodeCount": {
+            "defaultValue": "1",
+            "type": "String",            
+            "metadata": {
+                "description": "Amount of the nodes to create in the linux node pool."
             }
         },
         "KubernetesWindowsNodeSize": {
@@ -822,6 +822,13 @@
                 "description": "Size of the VM to use for the Windows node(s) in the kubernetes cluster."
             }
         },
+        "KubernetesWindowsNodeCount": {
+            "defaultValue": "1",
+            "type": "String",            
+            "metadata": {
+                "description": "Amount of the nodes to create in the windows node pool."
+            }
+        },
         "KubernetesVersion": {
             "defaultValue": "",
             "type": "String",            
@@ -1003,14 +1010,48 @@
     "variables": 
     {
         "vnetId":"[resourceId(parameters('KubernetesVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('KubernetesVnetName'),parameters('KubernetesSubnetName'))]",
-        "externalurl":"[if(equals(parameters('HttpsConfigure'),'Yes'), concat('https://',parameters('DNSHostName'),'.',parameters('DNSDomainName')),concat('http://',parameters('DNSHostName'),'.',parameters('DNSDomainName')))]",
-        "platformUrl":"[concat(variables('externalurl'),'/profisee')]"
+
+        "PROFISEEVERSION":"[parameters('ProfiseeVersion')]",
+        "ADMINACCOUNTNAME":"[parameters('ProfiseeAdminUserAccount')]",
+        "LICENSEDATA":"[parameters('ProfiseeLicense')]",
+        "ACRUSER":"[parameters('ProfiseeACRUserName')]",
+        "ACRUSERPASSWORD":"[parameters('ProfiseeACRPassword')]",
+
+        "UPDATEAAD":"[parameters('ActiveDirectoryCreateApp')]",
+        "CLIENTID":"[parameters('ActiveDirectoryClientId')]",
+        "OIDCURL":"[concat('https://login.microsoftonline.com/',subscription().tenantId)]",
+
+        "KubernetesClusterName": "[concat(resourceGroup().name,'ProfiseeCluster')]",
+        "DNSHostName": "[parameters('DNSHostName')]",
+        "DNSDomainName": "[parameters('DNSDomainName')]",
+	    "ExternalDNSName": "[concat(variables('DNSHostName'),'.',variables('DNSDomainName'))]",
+        "ExternalDNSURL":"[if(equals(parameters('HttpsConfigure'),'Yes'), concat('https://',variables('ExternalDNSName')),concat('http://',variables('ExternalDNSName')))]",
+        "DOMAINNAMERESOURCEGROUP":"[parameters('DNSDomainResourceGroup')]",
+        "DNSUpdate":"[parameters('DNSUpdate')]",
+
+        
+        "SQLServerCreateNew" : "[parameters('SQLServerCreateNew')]",
+        "SQLNAME": "[if(equals(variables('SQLServerCreateNew'),'Yes'), concat(parameters('SQLServerName'),'.database.windows.net'),parameters('SQLServerName'))]",
+        "SQLDBNAME":"[parameters('SQLServerDatabaseName')]",
+        "SQLUSERPASSWORD":"[parameters('SQLServerPassword')]",
+        "SQLUSERNAME":"[parameters('SQLServerUser')]",
+
+        "STORAGEACCOUNTNAME":"[parameters('StorageAccountName')]",
+        "FILEREPOPASSWORD":"[parameters('StorageAccountAccessKey')]",
+        "STORAGEACCOUNTFILESHARENAME":"[parameters('StorageAccountFileShareName')]",
+        
+        
+        "CONFIGUREHTTPS":"[parameters('HttpsConfigure')]",
+        "TLSCERT":"[parameters('HttpsCertificate')]",
+        "TLSKEY":"[parameters('HttpsCertificatePrivateKey')]",
+                
+        "USELETSENCRYPT":"No"
     },
     "resources": [
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-07-01",
-            "name": "[parameters('KubernetesClusterName')]",
+            "name": "[variables('KubernetesClusterName')]",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Basic",
@@ -1022,7 +1063,7 @@
                 "agentPoolProfiles": [
                     {
                         "name": "nplinux1",
-                        "count": 1,
+                        "count": "[parameters('KubernetesLinuxNodeCount')]",
                         "vmSize": "[parameters('KubernetesLinuxNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
@@ -1036,7 +1077,7 @@
                     },
                     {
                         "name": "npwin1",
-                        "count": 1,
+                        "count": "[parameters('KubernetesWindowsNodeCount')]",
                         "vmSize": "[parameters('KubernetesWindowsNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
@@ -1062,7 +1103,7 @@
                     "adminUsername": "winadmin",
                     "adminPassword": "Ple@seCh@ngeMe1234!"
                 },                
-                "nodeResourceGroup": "[concat('MC_',resourceGroup().name,'_', parameters('KubernetesClusterName'), '_',resourceGroup().location)]",
+                "nodeResourceGroup": "[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "azure",
@@ -1080,12 +1121,12 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
-            "name": "[concat(parameters('KubernetesClusterName'), '/nplinux1')]",
+            "name": "[concat(variables('KubernetesClusterName'), '/nplinux1')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
             "properties": {
-                "count": 1,
+                "count": "[parameters('KubernetesLinuxNodeCount')]",
                 "vmSize": "[parameters('KubernetesLinuxNodeSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
@@ -1100,12 +1141,12 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
-            "name": "[concat(parameters('KubernetesClusterName'), '/npwin1')]",
+            "name": "[concat(variables('KubernetesClusterName'), '/npwin1')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
             "properties": {
-                "count": 1,
+                "count": "[parameters('KubernetesWindowsNodeCount')]",
                 "vmSize": "[parameters('KubernetesWindowsNodeSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
@@ -1178,7 +1219,7 @@
         "location": "[resourceGroup().location]",
         "kind": "AzureCLI",
          "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
         "identity": {
             "type": "userAssigned",
@@ -1199,109 +1240,109 @@
                 },
                 {
                     "name": "CLUSTERNAME",
-                    "value": "[parameters('KubernetesClusterName')]"
+                    "value": "[variables('KubernetesClusterName')]"
                 },
                 {
                     "name": "SQLNAME",
-                    "value": "[if(equals(parameters('SQLServerCreateNew'),'Yes'), concat(parameters('SQLServerName'),'.database.windows.net'),parameters('SQLServerName'))]"
+                    "value": "[variables('SQLNAME')]"
                 },
                 {
                     "name": "SQLUSERNAME",
-                    "value": "[parameters('SQLServerUser')]"
+                    "value": "[variables('SQLUSERNAME')]"
                 },
                 {
                     "name": "SQLUSERPASSWORD",
-                    "value": "[parameters('SQLServerPassword')]"
+                    "value": "[variables('SQLUSERPASSWORD')]"
                 },
                 {
                     "name": "SQLDBNAME",
-                    "value": "[parameters('SQLServerDatabaseName')]"
+                    "value": "[variables('SQLDBNAME')]"
                 },
                 {
                     "name": "STORAGEACCOUNTNAME",
-                    "value": "[parameters('StorageAccountName')]"
+                    "value": "[variables('STORAGEACCOUNTNAME')]"
                 },
                 {
                     "name": "STORAGEACCOUNTFILESHARENAME",
-                    "value": "[parameters('StorageAccountFileShareName')]"
+                    "value": "[variables('StorageAccountFileShareName')]"
                 },
                 {
                     "name": "ADMINACCOUNTNAME",
-                    "value": "[parameters('ProfiseeAdminUserAccount')]"
+                    "value": "[variables('ADMINACCOUNTNAME')]"
                 },
                 {
                     "name": "DNSHOSTNAME",
-                    "value": "[parameters('DNSHostName')]"
+                    "value": "[variables('DNSHostName')]"
                 },
                 {
                     "name": "DNSDOMAINNAME",
-                    "value": "[parameters('DNSDomainName')]"
+                    "value": "[variables('DNSDomainName')]"
                 },
                 {
                     "name": "DOMAINNAMERESOURCEGROUP",
-                    "value": "[parameters('DNSDomainResourceGroup')]"
+                    "value": "[variables('DOMAINNAMERESOURCEGROUP')]"
                 },
                 {
                     "name": "UPDATEDNS",
-                    "value": "[parameters('DNSUpdate')]"
+                    "value": "[variables('DNSUpdate')]"
                 },
                 {
                     "name": "EXTERNALDNSNAME",
-                    "value": "[concat(parameters('DNSHostName'),'.',parameters('DNSDomainName'))]"
+                    "value": "[variables('ExternalDNSName')]"
                 },
                 {
                     "name": "EXTERNALDNSURL",
-                    "value": "[variables('externalurl')]"
+                    "value": "[variables('ExternalDNSURL')]"
                 },                
                 {
                     "name": "OIDCURL",
-                    "value": "[concat('https://login.microsoftonline.com/',subscription().tenantId)]"
+                    "value": "[variables('OIDCURL')]"
                 },
                 {
                     "name": "LICENSEDATA",
-                    "value": "[parameters('ProfiseeLicense')]"
+                    "value": "[variables('LICENSEDATA')]"
                 },
                 {
                     "name": "ACRUSER",
-                    "value": "[parameters('ProfiseeACRUserName')]"
+                    "value": "[variables('ACRUSER')]"
                 },
                 {
                     "name": "ACRUSERPASSWORD",
-                    "value": "[parameters('ProfiseeACRPassword')]"
+                    "value": "[variables('ACRUSERPASSWORD')]"
                 },
                 {
                     "name": "TLSCERT",
-                    "value": "[parameters('HttpsCertificate')]"
+                    "value": "[variables('TLSCERT')]"
                 },
                 {
                     "name": "TLSKEY",
-                    "value": "[parameters('HttpsCertificatePrivateKey')]"
+                    "value": "[variables('TLSKEY')]"
                 },
                 {
                     "name": "PROFISEEVERSION",
-                    "value": "[parameters('ProfiseeVersion')]"
+                    "value": "[variables('PROFISEEVERSION')]"
                 },
                 {
                     "name": "UPDATEAAD",
-                    "value": "[parameters('ActiveDirectoryCreateApp')]"
+                    "value": "[variables('UPDATEAAD')]"
                 },
                 {
                     "name": "CLIENTID",
-                    "value": "[parameters('ActiveDirectoryClientId')]"
+                    "value": "[variables('CLIENTID')]"
                 },
                 {
                     "name": "CONFIGUREHTTPS",
-                    "value": "[parameters('HttpsConfigure')]"
+                    "value": "[variables('CONFIGUREHTTPS')]"
                 }
                 ,
                 {
                     "name": "FILEREPOPASSWORD",
-                    "value": "[parameters('StorageAccountAccessKey')]"
+                    "value": "[variables('FILEREPOPASSWORD')]"
                 }
                 ,
                 {
                     "name": "USELETSENCRYPT",
-                    "value": "No"
+                    "value": "[variables('USELETSENCRYPT')]"
                 }
 
             ],
@@ -1331,11 +1372,7 @@
     },
     "KubernetesClusterFQDN": {
             "type": "string",
-            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))).FQDN]"
-        },
-    "ProfiseePlatformURL": {
-        "type": "string",
-        "value": "[variables('platformUrl')]"
-    }
+            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).FQDN]"
+        }
   }
 }
