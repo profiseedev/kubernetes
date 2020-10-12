@@ -1050,7 +1050,7 @@
                 "agentPoolProfiles": [
                     {
                         "name": "nplinux1",
-                        "count": "[parameters('KubernetesLinuxNodeCount')]",
+                        "count": "[int(parameters('KubernetesLinuxNodeCount'))]",
                         "vmSize": "[parameters('KubernetesLinuxNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
@@ -1064,7 +1064,7 @@
                     },
                     {
                         "name": "npwin1",
-                        "count": "[parameters('KubernetesWindowsNodeCount')]",
+                        "count": "[int(parameters('KubernetesWindowsNodeCount'))]",
                         "vmSize": "[parameters('KubernetesWindowsNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
@@ -1113,7 +1113,7 @@
                 "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
             "properties": {
-                "count": "[parameters('KubernetesLinuxNodeCount')]",
+                "count": "[int(parameters('KubernetesLinuxNodeCount'))]",
                 "vmSize": "[parameters('KubernetesLinuxNodeSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
@@ -1133,7 +1133,7 @@
                 "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
             "properties": {
-                "count": "[parameters('KubernetesWindowsNodeCount')]",
+                "count": "[int(parameters('KubernetesWindowsNodeCount'))]",
                 "vmSize": "[parameters('KubernetesWindowsNodeSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
