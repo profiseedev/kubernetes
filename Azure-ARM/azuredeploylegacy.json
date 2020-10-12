@@ -1010,8 +1010,8 @@
     "variables": 
     {
         "ScriptURL":"https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/deployprofisee.sh",
+        "KubernetesVnetResourceGroup":"[parameters('KubernetesVnetResourceGroup')]",
         "vnetId":"[resourceId(parameters('KubernetesVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('KubernetesVnetName'),parameters('KubernetesSubnetName'))]",
-        "KubernetesVNetSubnetId":"[if(not(empty(parameters('KubernetesVnetName'))),variables('vnetId'),json('null'))]",
         "PROFISEEVERSION":"[parameters('ProfiseeVersion')]",
         "ADMINACCOUNTNAME":"[parameters('ProfiseeAdminUserAccount')]",
         "LICENSEDATA":"[parameters('ProfiseeLicense')]",
@@ -1087,7 +1087,7 @@
                         "nodeLabels": {},
                         "mode": "System",
                         "osType": "Linux",
-                        "vnetSubnetID": "[variables('KubernetesVNetSubnetId')]"
+                        "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     },
                     {
                         "name": "npwin1",
@@ -1100,7 +1100,7 @@
                         "enableNodePublicIP": false,
                         "mode": "User",
                         "osType": "Windows",
-                        "vnetSubnetID": "[variables('KubernetesVNetSubnetId')]"
+                        "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     }
                 ],
                 "linuxProfile": {
