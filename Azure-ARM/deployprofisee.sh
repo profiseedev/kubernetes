@@ -151,10 +151,8 @@ FILEREPOURL="\\\\\\\\\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\\\\\
 #The repo is Profisee + everything to the left of the .
 #The label is everything to the right of the .
 
-IFS='.' read -r -a repostring <<< "$PROFISEEVERSION"
-
-ACRREPONAME="profisee${repostring[0],,}"; #lowercase is the ,,
-ACRREPOLABEL="${repostring[1],,}";
+ACRREPONAME="profiseeplatform"; 
+ACRREPOLABEL="${PROFISEEVERSION,,}"; #lowercase is the ,,
 
 #set values in Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
