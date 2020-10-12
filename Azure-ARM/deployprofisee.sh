@@ -49,8 +49,11 @@ echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
 #If acr info is passed in (via legacy script) use it, otherwise pull it from license
 if [ "$ACRUSER" = ""]; then
+	echo $"ACRUSER is empty, pulling from license"
 	ACRUSER=$(<ACRUserName.txt)
 	ACRUSERPASSWORD=$(<ACRUserPassword.txt)
+else
+	echo $"ACRUSER is not empty, using it"
 fi
 echo $"Getting values from license finished";
 

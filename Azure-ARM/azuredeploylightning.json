@@ -24,29 +24,22 @@
         "ProfiseeLicense": {
             "type": "String",
             "metadata": {
-                "description": "Profisee plaform license string supplied by Profisee support."
+                "description": "Profisee platform license string supplied by Profisee support."
             }
-        },
+        },                      
          "ManagedIdentityName": {
             "type": "String",
             "metadata": {
-                "description": "Existing user assigned Managed Identity with contributer access at the subscription level or contributor access to the resoure group this is deployed to and the resource group the domain is in if updating dns.  If Active Directory Create Application is Yes, then it must also have Application Developer role in order to create and configure the azure active directory application."
+                "description": "Existing user assigned Managed Identity with contributer access at the subscription level or contributor access to the resource group this is deployed to and the resource group the domain is in if updating dns.  If Active Directory Create Application is Yes, then it must also have Application Developer role in order to create and configure the azure active directory application."
             }
         },
          "ManagedIdentityResourceGroup": {
             "defaultValue": "[resourceGroup().name]",
             "type": "String",
             "metadata": {
-                "description": "Resource group the managed identiy was created in."
+                "description": "Resource group the managed identity was created in."
             }
-        },
-        "KubernetesClusterName": {
-            "defaultValue": "[concat(resourceGroup().name,'ProfiseeCluster')]",
-            "type": "String",
-            "metadata": {
-                "description": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group"
-            }
-        },
+        },        
         "KubernetesLinuxNodeSize": {
             "defaultValue": "Standard_D2_v3",
             "type": "String",
@@ -417,6 +410,13 @@
             ],
             "metadata": {
                 "description": "Size of the VM to use for the linux node(s) in the kubernetes cluster."
+            }
+        },
+        "KubernetesLinuxNodeCount": {
+            "defaultValue": "1",
+            "type": "String",            
+            "metadata": {
+                "description": "Amount of the nodes to create in the linux node pool."
             }
         },
         "KubernetesWindowsNodeSize": {
@@ -791,8 +791,16 @@
                 "description": "Size of the VM to use for the Windows node(s) in the kubernetes cluster."
             }
         },
+        "KubernetesWindowsNodeCount": {
+            "defaultValue": "1",
+            "type": "String",            
+            "metadata": {
+                "description": "Amount of the nodes to create in the windows node pool."
+            }
+        },
+        
         "SQLServerName": {
-            "defaultValue": "[resourceGroup().name]",
+            "defaultValue": "mysqlservername",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure"
@@ -811,61 +819,109 @@
             "metadata": {
                 "description": "Password for sql server user.  The password does not contain the account name of the user and must be at least eight characters long and be no more than 128 characters in length.  The password contains characters from three of the following four categories: Latin uppercase letters (A through Z).  Latin lowercase letters (a through z).  Base 10 digits (0 through 9).  Non-alphanumeric characters such as: exclamation point (!), dollar sign ($), number sign (#), or percent (%)."
             }
-        },               
+        },
         "StorageAccountName": {
-            "defaultValue": "[resourceGroup().name]",
+            "defaultValue": "mystorageaccountname",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique name.  Can contain only lowercase letters and numbers. Name must be between 3 and 24 characters.  Storage account names are globally unique in Azure"
             }
-        }
-              
+        }        
     },
     "variables": 
     {
-        "DNSHostName": "[concat('profisee', uniqueString(resourceGroup().id))]",
-        "DNSDomainName": "[concat(resourceGroup().location,'.cloudapp.azure.com')]",
+        "ScriptURL":"https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/deployprofisee.sh",
+        "vnetId":"",
+        "KubernetesVNetSubnetId":"[if(not(empty(variables('vnetId'))),variables('vnetId'),json('null'))]",
+        "PROFISEEVERSION":"[parameters('ProfiseeVersion')]",
+        "ADMINACCOUNTNAME":"[parameters('ProfiseeAdminUserAccount')]",
+        "LICENSEDATA":"[parameters('ProfiseeLicense')]",
+        "ACRUSER":"",
+        "ACRUSERPASSWORD":"",
+
+        "UPDATEAAD":"Yes",
+        "CLIENTID":"",
+        "OIDCURL":"[concat('https://login.microsoftonline.com/',subscription().tenantId)]",
+
+        "KubernetesVersion":"",
+        "KubernetesClusterName": "[concat(resourceGroup().name,'ProfiseeCluster')]",
+
+        "KubernetesServiceCidr": "",
+        "KubernetesDNSServiceIP": "",
+        "KubernetesDockerBridgeCidr": "",
+        "KubernetesLinuxNodeCount": "[int(parameters('KubernetesLinuxNodeCount'))]",
+        "KubernetesLinuxNodeSize": "[parameters('KubernetesLinuxNodeSize')]",
+        "KubernetesWindowsNodeCount": "[int(parameters('KubernetesWindowsNodeCount'))]",
+        "KubernetesWindowsNodeSize": "[parameters('KubernetesWindowsNodeSize')]",
+
+        "ManagedIdentityResourceGroup": "[parameters('ManagedIdentityResourceGroup')]",
+        "ManagedIdentityName": "[parameters('ManagedIdentityName')]",
+
+        "DNSHostName": "",
+        "DNSDomainName": "",
 	    "ExternalDNSName": "[concat(variables('DNSHostName'),'.',variables('DNSDomainName'))]",
-	    "ExternalDNSURL": "[concat('https://',variables('ExternalDNSName'))]"
+        "ExternalDNSURL":"[concat('https://',variables('ExternalDNSName'))]",
+        "DOMAINNAMERESOURCEGROUP":"",
+        "DNSUpdate":"No",
+        
+        "SQLServerCreateNew" : "Yes",
+        "SQLNAME": "[if(equals(variables('SQLServerCreateNew'),'Yes'), concat(parameters('SQLServerName'),'.database.windows.net'),parameters('SQLServerName'))]",
+        "SQLDBNAME":"Profisee",
+        "SQLUSERPASSWORD":"[parameters('SQLServerPassword')]",
+        "SQLUSERNAME":"[parameters('SQLServerUser')]",
+
+        "StorageAccountCreateNew" : "Yes",
+        "STORAGEACCOUNTNAME":"[parameters('StorageAccountName')]",
+        "FILEREPOPASSWORD":"",
+        "STORAGEACCOUNTFILESHARENAME":"files",
+        
+        
+        "CONFIGUREHTTPS":"No",
+        "TLSCERT":"",
+        "TLSKEY":"",
+                
+        "USELETSENCRYPT":"Yes"
     },
     "resources": [
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-07-01",
-            "name": "[parameters('KubernetesClusterName')]",
+            "name": "[variables('KubernetesClusterName')]",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Basic",
                 "tier": "Free"
             },
             "properties": {
-                "kubernetesVersion": "",
+                "kubernetesVersion": "[variables('KubernetesVersion')]",
                 "dnsPrefix": "profisee",
                 "agentPoolProfiles": [
                     {
                         "name": "nplinux1",
-                        "count": 1,
-                        "vmSize": "[parameters('KubernetesLinuxNodeSize')]",
+                        "count": "[variables('KubernetesLinuxNodeCount')]",
+                        "vmSize": "[variables('KubernetesLinuxNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
-                        "orchestratorVersion": "",
+                        "orchestratorVersion": "[variables('KubernetesVersion')]",
                         "enableNodePublicIP": false,
                         "nodeLabels": {},
                         "mode": "System",
-                        "osType": "Linux"
+                        "osType": "Linux",
+                        "vnetSubnetID": "[variables('KubernetesVNetSubnetId')]"
                     },
                     {
                         "name": "npwin1",
-                        "count": 1,
-                        "vmSize": "[parameters('KubernetesWindowsNodeSize')]",
+                        "count": "[variables('KubernetesWindowsNodeCount')]",
+                        "vmSize": "[variables('KubernetesWindowsNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 30,
                         "type": "VirtualMachineScaleSets",
-                        "orchestratorVersion": "",
+                        "orchestratorVersion": "[variables('KubernetesVersion')]",
                         "enableNodePublicIP": false,
                         "mode": "User",
-                        "osType": "Windows"
+                        "osType": "Windows",
+                        "vnetSubnetID": "[variables('KubernetesVNetSubnetId')]"
                     }
                 ],
                 "linuxProfile": {
@@ -882,15 +938,15 @@
                     "adminUsername": "winadmin",
                     "adminPassword": "Ple@seCh@ngeMe1234!"
                 },                
-                "nodeResourceGroup": "[concat('MC_',resourceGroup().name,'_', parameters('KubernetesClusterName'), '_',resourceGroup().location)]",
+                "nodeResourceGroup": "[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "azure",
                     "loadBalancerSku": "Standard",
                     "outboundType": "loadBalancer",
-                    "serviceCidr": "10.0.0.0/16",
-                    "dnsServiceIP": "10.0.0.10",
-                    "dockerBridgeCidr": "172.17.0.1/16"
+                    "serviceCidr": "[variables('KubernetesServiceCidr')]",
+                    "dnsServiceIP": "[variables('KubernetesDNSServiceIP')]",
+                    "dockerBridgeCidr": "[variables('KubernetesDockerBridgeCidr')]"
                 }
             },
             "identity": {
@@ -900,17 +956,17 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
-            "name": "[concat(parameters('KubernetesClusterName'), '/nplinux1')]",
+            "name": "[concat(variables('KubernetesClusterName'), '/nplinux1')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
             "properties": {
-                "count": 1,
-                "vmSize": "[parameters('KubernetesLinuxNodeSize')]",
+                "count": "[variables('KubernetesLinuxNodeCount')]",
+                "vmSize": "[variables('KubernetesLinuxNodeSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
                 "type": "VirtualMachineScaleSets",
-                "orchestratorVersion": "",
+                "orchestratorVersion": "[variables('KubernetesVersion')]",
                 "enableNodePublicIP": false,
                 "nodeLabels": {},
                 "mode": "System",
@@ -920,24 +976,25 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
-            "name": "[concat(parameters('KubernetesClusterName'), '/npwin1')]",
+            "name": "[concat(variables('KubernetesClusterName'), '/npwin1')]",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
             "properties": {
-                "count": 1,
-                "vmSize": "[parameters('KubernetesWindowsNodeSize')]",
+                "count": "[variables('KubernetesWindowsNodeCount')]",
+                "vmSize": "[variables('KubernetesWindowsNodeSize')]",
                 "osDiskSizeGB": 100,
                 "maxPods": 30,
                 "type": "VirtualMachineScaleSets",
-                "orchestratorVersion": "",
+                "orchestratorVersion": "[variables('KubernetesVersion')]",
                 "enableNodePublicIP": false,
                 "mode": "User",
                 "osType": "Windows"
             }
         },
         {
-            "name": "[tolower(parameters('SQLServerName'))]",
+            "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+            "name": "[tolower(variables('SQLNAME'))]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
             "apiVersion": "2019-06-01-preview",
@@ -946,17 +1003,18 @@
                 "displayName": "SQLServer"
             },
             "properties": {
-                "administratorLogin": "[parameters('SQLServerUser')]",
-                "administratorLoginPassword": "[parameters('SQLServerPassword')]"
+                "administratorLogin": "[variables('SQLUSERNAME')]",
+                "administratorLoginPassword": "[variables('SQLUSERPASSWORD')]"
             },
             "resources": [
                 {
+                    "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
                     "name": "AllowAllWindowsAzureIps",
                     "type": "firewallrules",
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-05-01-preview",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', tolower(parameters('SQLServerName')))]"
+                        "[concat('Microsoft.Sql/servers/', tolower(variables('SQLNAME')))]"
                     ],
                     "properties": {
                         "startIpAddress": "0.0.0.0",
@@ -966,13 +1024,14 @@
             ]
         },
         {
-            "name": "[tolower(parameters('StorageAccountName'))]",
+            "condition": "[equals(tolower(variables('StorageAccountCreateNew')),tolower('Yes'))]",
+            "name": "[tolower(variables('StorageAccountName'))]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourceGroup().location]",
             "apiVersion": "2019-06-01",
             "dependsOn": [],
             "tags": {
-                "displayName": "[parameters('StorageAccountName')]"
+                "displayName": "[variables('StorageAccountName')]"
             },
             "sku": {
                 "name": "Standard_LRS"
@@ -980,11 +1039,12 @@
             "kind": "StorageV2"
         },
         {
+            "condition": "[equals(tolower(variables('StorageAccountCreateNew')),tolower('Yes'))]",
             "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
             "apiVersion": "2019-06-01",
-            "name": "[concat(tolower(parameters('StorageAccountName')), '/default/files')]",
+            "name": "[concat(tolower(variables('StorageAccountName')), '/default/', tolower(variables('StorageAccountFileShareName')))]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', tolower(parameters('StorageAccountName')))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('StorageAccountName')))]"
             ]
         },          
         {
@@ -994,12 +1054,12 @@
         "location": "[resourceGroup().location]",
         "kind": "AzureCLI",
          "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
         "identity": {
             "type": "userAssigned",
             "userAssignedIdentities": {
-                "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',parameters('ManagedIdentityResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('ManagedIdentityName'))]":{}
+                "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',variables('ManagedIdentityResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',variables('ManagedIdentityName'))]":{}
             }
         },
         "properties": {
@@ -1015,35 +1075,35 @@
                 },
                 {
                     "name": "CLUSTERNAME",
-                    "value": "[parameters('KubernetesClusterName')]"
+                    "value": "[variables('KubernetesClusterName')]"
                 },
                 {
                     "name": "SQLNAME",
-                    "value": "[concat(parameters('SQLServerName'),'.database.windows.net')]"
+                    "value": "[variables('SQLNAME')]"
                 },
                 {
                     "name": "SQLUSERNAME",
-                    "value": "[parameters('SQLServerUser')]"
+                    "value": "[variables('SQLUSERNAME')]"
                 },
                 {
                     "name": "SQLUSERPASSWORD",
-                    "value": "[parameters('SQLServerPassword')]"
+                    "value": "[variables('SQLUSERPASSWORD')]"
                 },
                 {
                     "name": "SQLDBNAME",
-                    "value": "Profisee"
+                    "value": "[variables('SQLDBNAME')]"
                 },
                 {
                     "name": "STORAGEACCOUNTNAME",
-                    "value": "[parameters('StorageAccountName')]"
+                    "value": "[variables('STORAGEACCOUNTNAME')]"
                 },
                 {
                     "name": "STORAGEACCOUNTFILESHARENAME",
-                    "value": "files"
+                    "value": "[variables('StorageAccountFileShareName')]"
                 },
                 {
                     "name": "ADMINACCOUNTNAME",
-                    "value": "[parameters('ProfiseeAdminUserAccount')]"
+                    "value": "[variables('ADMINACCOUNTNAME')]"
                 },
                 {
                     "name": "DNSHOSTNAME",
@@ -1055,72 +1115,73 @@
                 },
                 {
                     "name": "DOMAINNAMERESOURCEGROUP",
-                    "value": ""
+                    "value": "[variables('DOMAINNAMERESOURCEGROUP')]"
                 },
                 {
                     "name": "UPDATEDNS",
-                    "value": "No"
+                    "value": "[variables('DNSUpdate')]"
                 },
                 {
                     "name": "EXTERNALDNSNAME",
-                    "value": "[concat(variables('DNSHostName'),'.',variables('DNSDomainName'))]"
+                    "value": "[variables('ExternalDNSName')]"
                 },
                 {
                     "name": "EXTERNALDNSURL",
-                    "value": "[concat('https://',variables('DNSHostName'),'.',variables('DNSDomainName'))]"
+                    "value": "[variables('ExternalDNSURL')]"
                 },                
                 {
                     "name": "OIDCURL",
-                    "value": "[concat('https://login.microsoftonline.com/',subscription().tenantId)]"
+                    "value": "[variables('OIDCURL')]"
                 },
                 {
                     "name": "LICENSEDATA",
-                    "value": "[parameters('ProfiseeLicense')]"
+                    "value": "[variables('LICENSEDATA')]"
                 },
                 {
                     "name": "ACRUSER",
-                    "value": ""
+                    "value": "[variables('ACRUSER')]"
                 },
                 {
                     "name": "ACRUSERPASSWORD",
-                    "value": ""
+                    "value": "[variables('ACRUSERPASSWORD')]"
                 },
                 {
                     "name": "TLSCERT",
-                    "value": ""
+                    "value": "[variables('TLSCERT')]"
                 },
                 {
                     "name": "TLSKEY",
-                    "value": ""
+                    "value": "[variables('TLSKEY')]"
                 },
                 {
                     "name": "PROFISEEVERSION",
-                    "value": "[parameters('ProfiseeVersion')]"
+                    "value": "[variables('PROFISEEVERSION')]"
                 },
                 {
                     "name": "UPDATEAAD",
-                    "value": "Yes"
+                    "value": "[variables('UPDATEAAD')]"
                 },
                 {
                     "name": "CLIENTID",
-                    "value": ""
+                    "value": "[variables('CLIENTID')]"
                 },
                 {
                     "name": "CONFIGUREHTTPS",
-                    "value": "No"
+                    "value": "[variables('CONFIGUREHTTPS')]"
                 }
                 ,
                 {
                     "name": "FILEREPOPASSWORD",
-                    "value": ""
+                    "value": "[variables('FILEREPOPASSWORD')]"
                 }
                 ,
                 {
                     "name": "USELETSENCRYPT",
-                    "value": "Yes"
+                    "value": "[variables('USELETSENCRYPT')]"
                 }
+
             ],
-            "primaryScriptUri": "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/deployprofisee.sh"                                            
+            "primaryScriptUri": "[variables('ScriptURL')]"            
         }
         },
         {
@@ -1139,14 +1200,14 @@
         
     ],
     "outputs": 
-	{    
+    {
     "InstallProfiseePlatformOutputs": {
       "value": "[reference('InstallProfiseePlatform').outputs]",
       "type": "object"
     },
     "KubernetesClusterFQDN": {
             "type": "string",
-            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('KubernetesClusterName'))).FQDN]"
+            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).FQDN]"
         }
   }
 }
