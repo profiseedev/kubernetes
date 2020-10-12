@@ -26,20 +26,7 @@
             "metadata": {
                 "description": "Profisee plaform license string supplied by Profisee support."
             }
-        },
-        "ProfiseeACRUserName": {
-            "type": "String",
-            "metadata": {
-                "description": "User name supplied by Profisee support."
-            }
-        },
-        "ProfiseeACRPassword": {
-            "defaultValue": "",
-            "type": "securestring",
-            "metadata": {
-                "description": "User password supplied by Profisee support."
-            }
-        }, 
+        },        
         "ActiveDirectoryCreateApp": {
             "defaultValue": "Yes",
             "type": "String",
@@ -1014,8 +1001,8 @@
         "PROFISEEVERSION":"[parameters('ProfiseeVersion')]",
         "ADMINACCOUNTNAME":"[parameters('ProfiseeAdminUserAccount')]",
         "LICENSEDATA":"[parameters('ProfiseeLicense')]",
-        "ACRUSER":"[parameters('ProfiseeACRUserName')]",
-        "ACRUSERPASSWORD":"[parameters('ProfiseeACRPassword')]",
+        "ACRUSER":"",
+        "ACRUSERPASSWORD":"",
 
         "UPDATEAAD":"[parameters('ActiveDirectoryCreateApp')]",
         "CLIENTID":"[parameters('ActiveDirectoryClientId')]",
