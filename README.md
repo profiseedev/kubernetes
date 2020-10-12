@@ -115,7 +115,7 @@ Coming soon
 	#get settings.yaml from the secret its stored in
 	kubectl get secret profisee-settings -o jsonpath="{.data.Settings\.yaml}" | base64 --decode > Settings.yaml
 	#note the name is now jsut called profiseeplatform without the release name in it like 2020r1 and image.tag will vary based on the minor release.  now its preview but it will be 0 which will be GA
-	helm install profiseeplatform profisee/profisee-platform --values Settings.yaml --set image.repository=profiseeplatform2020r2 --set image.tag=X
+	helm install profiseeplatform profisee/profisee-platform --values Settings.yaml --set image.repository=profiseeplatform --set image.tag=2020r2.0
 	
 ## Upgrade from one version to another
 
