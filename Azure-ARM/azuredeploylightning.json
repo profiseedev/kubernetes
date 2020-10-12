@@ -865,7 +865,8 @@
         "DNSUpdate":"No",
         
         "SQLServerCreateNew" : "Yes",
-        "SQLNAME": "[if(equals(variables('SQLServerCreateNew'),'Yes'), concat(parameters('SQLServerName'),'.database.windows.net'),parameters('SQLServerName'))]",
+        "SQLServerName":"[parameters('SQLServerName')]",
+        "SQLNAME": "[if(equals(variables('SQLServerCreateNew'),'Yes'), concat(variables('SQLServerName'),'.database.windows.net'),variables('SQLServerName'))]",
         "SQLDBNAME":"Profisee",
         "SQLUSERPASSWORD":"[parameters('SQLServerPassword')]",
         "SQLUSERNAME":"[parameters('SQLServerUser')]",
@@ -994,7 +995,7 @@
         },
         {
             "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
-            "name": "[tolower(variables('SQLNAME'))]",
+            "name": "[tolower(variables('SQLServerName'))]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
             "apiVersion": "2019-06-01-preview",
@@ -1014,7 +1015,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-05-01-preview",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', tolower(variables('SQLNAME')))]"
+                        "[concat('Microsoft.Sql/servers/', tolower(variables('SQLServerName')))]"
                     ],
                     "properties": {
                         "startIpAddress": "0.0.0.0",

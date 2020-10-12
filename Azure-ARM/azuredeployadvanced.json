@@ -1031,7 +1031,8 @@
         "DNSUpdate":"[parameters('DNSUpdate')]",
         
         "SQLServerCreateNew" : "[parameters('SQLServerCreateNew')]",
-        "SQLNAME": "[if(equals(variables('SQLServerCreateNew'),'Yes'), concat(parameters('SQLServerName'),'.database.windows.net'),parameters('SQLServerName'))]",
+        "SQLServerName":"[parameters('SQLServerName')]",
+        "SQLNAME": "[if(equals(variables('SQLServerCreateNew'),'Yes'), concat(variables('SQLServerName'),'.database.windows.net'),variables('SQLServerName'))]",
         "SQLDBNAME":"[parameters('SQLServerDatabaseName')]",
         "SQLUSERPASSWORD":"[parameters('SQLServerPassword')]",
         "SQLUSERNAME":"[parameters('SQLServerUser')]",
