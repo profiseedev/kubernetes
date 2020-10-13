@@ -73,9 +73,11 @@ curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
 helm uninstall nginx
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
+	echo $"Installing nginx for Lets Encrypt and setting the dns name for its IP."
 	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 else
-	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP
+	echo $"Installing nginx not for Lets Encrypt and not setting the dns name for its IP."
+	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP	
 fi
 
 echo $"Installing nginx finished";
@@ -143,10 +145,13 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 fi
 
 #get storage account pw - if not supplied
-if ["$FILEREPOPASSWORD" = "" ]; then
+if [ "$FILEREPOPASSWORD" = "" ]; then
+	echo $"FILEREPOPASSWORD was not passed in, getting it from the storage acount."
 	FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
 	#clean file repo password - remove quotes
 	FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
+else
+	echo $"FILEREPOPASSWORD was passed in, using it."
 fi
 
 #storage vars
