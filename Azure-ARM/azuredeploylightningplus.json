@@ -916,7 +916,7 @@
         "TLSCERT":"[parameters('HttpsCertificate')]",
         "TLSKEY":"[parameters('HttpsCertificatePrivateKey')]",
                 
-        "USELETSENCRYPT":"Yes"
+        "USELETSENCRYPT":"No"
     },
     "resources": [
         {
