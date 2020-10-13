@@ -56,8 +56,8 @@ if ["$ACRUSERINLIC"=""]; then
 	ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 else
 	echo $"ACRUSER is empty, pulling from license."
-	ACRUSER=ACRUSERINLIC
-	ACRUSERPASSWORD=ACRUSERPASSWORDINLIC
+	ACRUSER=$ACRUSERINLIC
+	ACRUSERPASSWORD=$ACRUSERPASSWORDINLIC
 fi
 echo $"Getting values from license finished";
 
