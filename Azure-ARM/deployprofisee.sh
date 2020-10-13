@@ -55,6 +55,8 @@ if [ "$ACRUSER" = ""]; then
 else
 	echo $"ACRUSER is not empty, using it."
 	echo $"ACRUSER is $ACRUSER";
+	ACRUSERL=${#ACRUSER}
+	echo "Length of '$ACRUSER' is $ACRUSERL"
 fi
 echo $"Getting values from license finished";
 
