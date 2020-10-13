@@ -47,16 +47,17 @@ echo $"EXTERNALDNSURL is $EXTERNALDNSURL";
 echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
 echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
+ACRUSERINLIC=$(<ACRUserName.txt)
+ACRUSERPASSWORDINLIC=$(<ACRUserPassword.txt)
 #If acr info is passed in (via legacy script) use it, otherwise pull it from license
-if [-z "${ACRUSER}"] || ["$ACRUSER"=""]; then
-	echo $"ACRUSER is empty, pulling from license"
+if ["$ACRUSERINLIC"=""]; then
+	echo $"ACRUSERINLIC is empty, using value passed in"
 	ACRUSER=$(<ACRUserName.txt)
 	ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 else
-	echo $"ACRUSER is not empty, using it."
-	echo $"ACRUSER is $ACRUSER";
-	ACRUSERL=${#ACRUSER}
-	echo "Length of '$ACRUSER' is $ACRUSERL"
+	echo $"ACRUSER is empty, pulling from license."
+	ACRUSER=ACRUSERINLIC
+	ACRUSERPASSWORD=ACRUSERPASSWORDINLIC
 fi
 echo $"Getting values from license finished";
 
