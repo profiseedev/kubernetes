@@ -1,2 +1,4 @@
 Azure-ARM/azuredeploy_chuck.json
 Azure-ARM/azuredeploy_aksdemo.json
+Azure-ARM-LE/mi.json
+Azure-ARM-LE/appgw.txt
