@@ -1,27 +1,27 @@
 # Profisee development - Deploy platform on to AKS
 
-#### 'Lightning' Deploy Profisee platform.  Use this for a brand new deplyment.  Https via Let's Encrypt.  Azure DNS (abc.eastus.cloudapps.azure.com).  New sql and storage repositories.
+#### 'Lightning' deployment of the Profisee platform.  Use this for a brand new deplyment.  Https via Let's Encrypt.  Azure DNS (abc.eastus.cloudapps.azure.com).  New sql and storage repositories.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightning.json)
 
-#### 'Lightning plus' Deploy Profisee platform (Lightning plus user defined dns and https)....
+#### 'Lightning plus' deployment of the Profisee platform. (Lightning plus user defined dns and https)....
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightningplus.json)
 
-#### 'Quick' Deploy Profisee platform (Lightning but existing repositories)....
+#### 'Quick' deployment of the Profisee platform. (Lightning but existing repositories)....
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployquick.json)
 
-#### 'Quick plus' Deploy Profisee platform (Quick plus user defined dns and https)....
+#### 'Quick plus' deployment of the Profisee platform. (Quick plus user defined dns and https)....
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployquickplus.json)
 
 
-#### 'Advanced' Deploy Profisee platform (custom kubernetes, networking, certificated and dns)....
+#### 'Advanced' deployment of the Profisee platform. (custom kubernetes, networking, certificated and dns)....
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployadvanced.json)
 
-#### 'Legacy' Deploy Profisee platform (Advacned with ACR username and password for old licenses)....
+#### 'Legacy' deployment of the Profisee platform. (Advacned with ACR username and password for old licenses)....
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylegacy.json)
 
