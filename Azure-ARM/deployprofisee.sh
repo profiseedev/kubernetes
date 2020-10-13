@@ -53,7 +53,8 @@ if [ "$ACRUSER" = ""]; then
 	ACRUSER=$(<ACRUserName.txt)
 	ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 else
-	echo $"ACRUSER is not empty, using it"
+	echo $"ACRUSER is not empty, using it."
+	echo $"ACRUSER is $ACRUSER";
 fi
 echo $"Getting values from license finished";
 
