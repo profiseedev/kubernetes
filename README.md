@@ -112,6 +112,24 @@ Coming soon
 
 	((Get-Content -path C:\profisee\services\auth\appsettings.json -Raw) -replace 'Warning','Debug') | Set-Content -Path C:\profisee\services\auth\appsettings.json
 
+## Upgrade from one version to another via Azure portal
+
+	Goto the kubernetes cluster
+	Click on Workloads (preview) on left under Kubernetes resources
+	Click Stateful sets
+	Click on profisee
+	Click on YAML on left
+	Replace the value for image: to use the new release
+		Not the image names have changed going forward.  They are always profiseeplatform:releasename.version.
+		Example
+			Old - 'profisee.azurecr.io/profisee2020r1:0'
+			New - 'profisee.azurecr.io/profiseeplatform:2020r1.1'
+			New - 'profisee.azurecr.io/profiseeplatform:2020r2.0'
+	Click Review + Save
+	Check confirm
+	Save
+		
+	
 ## Upgrade from one version to another via uninstall/reinstall
 
 	helm repo add profisee https://profisee.github.io/kubernetes
