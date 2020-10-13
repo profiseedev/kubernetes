@@ -48,8 +48,8 @@ echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
 echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
 #If acr info is passed in (via legacy script) use it, otherwise pull it from license
-if [ "$USEACRINLICENSE" = "Yes"]; then
-	echo $"ACR info in license is being used"
+if [ "$USEACRINLICENSE" = "Yes" ]; then
+	echo $"ACR info in license is being used."
 	ACRUSER=$(<ACRUserName.txt)
 	ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 else
@@ -143,7 +143,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 fi
 
 #get storage account pw - if not supplied
-if ["$USEFILEREPOPASSWORD" = "No"]; then
+if ["$USEFILEREPOPASSWORD" = "No" ]; then
 	FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
 	#clean file repo password - remove quotes
 	FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
