@@ -47,18 +47,17 @@ echo $"EXTERNALDNSURL is $EXTERNALDNSURL";
 echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
 echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
-ACRUSERINLIC=$(<ACRUserName.txt)
-ACRUSERPASSWORDINLIC=$(<ACRUserPassword.txt)
 #If acr info is passed in (via legacy script) use it, otherwise pull it from license
-if ["$ACRUSERINLIC"=""]; then
-	echo $"ACRUSERINLIC is empty, using value passed in"
+if [ "$USEACRINLICENSE" = "Yes"]; then
+	echo $"ACR info in license is being used"
 	ACRUSER=$(<ACRUserName.txt)
 	ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 else
-	echo $"ACRUSER is empty, pulling from license."
-	ACRUSER=$ACRUSERINLIC
-	ACRUSERPASSWORD=$ACRUSERPASSWORDINLIC
+	echo $"ACR info that was passed in is being used."
 fi
+echo $"ACRUSER is $ACRUSER";
+echo $"ACRUSERPASSWORD is $ACRUSERPASSWORD";
+
 echo $"Getting values from license finished";
 
 #install helm
@@ -144,7 +143,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 fi
 
 #get storage account pw - if not supplied
-if ["$FILEREPOPASSWORD" = ""]; then
+if ["$USEFILEREPOPASSWORD" = "No"]; then
 	FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
 	#clean file repo password - remove quotes
 	FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')

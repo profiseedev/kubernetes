@@ -1047,7 +1047,9 @@
         "TLSCERT":"[parameters('HttpsCertificate')]",
         "TLSKEY":"[parameters('HttpsCertificatePrivateKey')]",
                 
-        "USELETSENCRYPT":"No"
+        "USELETSENCRYPT":"No",
+        "USEACRINLICENSE":"Yes",
+        "USEFILEREPOPASSWORD":"[if(empty(variables('FILEREPOPASSWORD')), 'No','Yes')]"
     },
     "resources": [
         {
@@ -1345,7 +1347,16 @@
                 {
                     "name": "USELETSENCRYPT",
                     "value": "[variables('USELETSENCRYPT')]"
+                },
+                {
+                    "name": "USEACRINLICENSE",
+                    "value": "[variables('USEACRINLICENSE')]"
+                },
+                {
+                    "name": "USEFILEREPOPASSWORD",
+                    "value": "[variables('USEFILEREPOPASSWORD')]"
                 }
+
 
             ],
             "primaryScriptUri": "[variables('ScriptURL')]"            
