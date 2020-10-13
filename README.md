@@ -180,6 +180,8 @@ Patch it
 	Click on YAML on left
 	Replace the value under profisee.plic: >- with the new license string.  Be sure to keep the 4 spaces at the begining of the line
 	Click Review + Save
+	Check confirm
+	Save
 	
 
 ## Scale to more than one container
@@ -218,8 +220,22 @@ Patch it
 	sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
 	kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
 
+## If your SQL password has changed, then you need to update it in kubernetees
 
-
+	Secrets are base64 encoded, so you first need to get the base64 version of the password.
+		$OrigString="MyPassword"
+		$B64String =[Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($OrigString)) 
+		write-host $B64String 
+	Goto the kubernetes cluster
+	Click on Configuration (preview) on left under Kubernetes resources
+	Click Secrets
+	Click on profisee-secrets
+	Click on YAML on left
+	Find ProfiseeSqlPassword and replace it with the base64 version of hte password.
+	Click Review + Save
+	Check confirm
+	Save
+	
 # Debug with Lens
 
 ## Install Lens (Kubernetes IDE)
