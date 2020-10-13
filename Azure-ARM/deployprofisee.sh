@@ -35,7 +35,7 @@ echo $"Getting values from license started";
 
 #use whats in the license otherwise use whats passed in which is a generated hostname
 EXTERNALDNSURLLICENSE=$(<ExternalDnsUrl.txt)
-if [ "$EXTERNALDNSURLLICENSE" = ""]; then
+if [ "$EXTERNALDNSURLLICENSE" = "" ]; then
 	echo $"EXTERNALDNSURLLICENSE is empty"
 else	
 	echo $"EXTERNALDNSURLLICENSE is not empty"
@@ -143,7 +143,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 fi
 
 #get storage account pw - if not supplied
-if ["$USEFILEREPOPASSWORD" = "No" ]; then
+if ["$FILEREPOPASSWORD" = "" ]; then
 	FILEREPOPASSWORD=$(az storage account keys list --resource-group $RESOURCEGROUPNAME --account-name $STORAGEACCOUNTNAME --query '[0].value');
 	#clean file repo password - remove quotes
 	FILEREPOPASSWORD=$(echo "$FILEREPOPASSWORD" | tr -d '"')
