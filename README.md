@@ -152,7 +152,18 @@ Patch it
 	#get settings.yaml from the secret its stored in
 	kubectl get secret profisee-settings -o jsonpath="{.data.Settings\.yaml}" | base64 --decode > Settings.yaml
 	helm install profiseeplatform profisee/profisee-platform --values Settings.yaml --set licenseFileData=PastedBase64LicenseString
+
+## Replace license via Azure portal
+
+	Goto the kubernetes cluster
+	Click on Configuration (preview) on left under Kubernetes resources
+	Click Secrets
+	Click on profisee-files
+	Click on YAML on left
+	Replace the value under profisee.plic: >- with the new license string.  Be sure to keep the 4 spaces at the begining of the line
+	Click Review + Save
 	
+
 ## Scale to more than one container
 
 	#this will add another pod (container) to have two servers that are completely load balanced
