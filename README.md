@@ -4,7 +4,7 @@
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightning.json)
 
-#### 'Lightning plus' deployment of the Profisee platform. (Lightning plus user defined dns and https)....
+#### 'Lightning plus' deployment of the Profisee platform. Use this for a brand new deplyment and you want to use your own dns and https certificates.  New sql and storage repositories.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightningplus.json)
 
