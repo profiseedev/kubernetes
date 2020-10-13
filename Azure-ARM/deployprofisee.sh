@@ -48,7 +48,8 @@ echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
 echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
 #If acr info is passed in (via legacy script) use it, otherwise pull it from license
-if ["$ACRUSER"=""]; then
+if [-z "${ACRUSER}"]; then
+#if ["$ACRUSER"=""]; then
 	echo $"ACRUSER is empty, pulling from license"
 	ACRUSER=$(<ACRUserName.txt)
 	ACRUSERPASSWORD=$(<ACRUserPassword.txt)
