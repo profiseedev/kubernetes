@@ -237,6 +237,12 @@ Patch it
 	Check confirm
 	Save
 	
+##View container config manager logs in kubernetes
+
+	Starting with 2020R2, the configuration manager log (startup) is now streamed to kubernetes
+	you can view it by running this, the -f is "follow" and will stream it as it goes (tail)
+	kubectl logs profisee-0 -f
+	
 # Debug with Lens
 
 ## Install Lens (Kubernetes IDE)
