@@ -183,6 +183,8 @@ Patch it
 	Click Review + Save
 	Check confirm
 	Save
+	Then you need to delete the pod
+	
 	
 
 ## Scale to more than one container
