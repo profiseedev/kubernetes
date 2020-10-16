@@ -213,12 +213,13 @@ Patch it
 	"goto sql server firewall and add it
 
 ## Add FileShare volume to container
-	#This can happen if using g an old deployment of 2020r1 before the fileshare was added
-	#set the vars that get set during the deployment
+	#This can happen if using g an old deployment of 2020r1 before the fileshare was added (before 9/14/2020)
+	#set these variables
 	STORAGEACCOUNTNAME="MyStorageAccountName"
 	FILEREPOPASSWORD="MyStorageAccountAccessKey"
 	STORAGEACCOUNTFILESHARENAME="files"
 
+	#run this for azure cloud shell
 	curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml";
 	STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
 	FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
