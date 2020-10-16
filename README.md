@@ -184,7 +184,11 @@ Patch it
 	Check confirm
 	Save
 	Then you need to delete the pod
-	
+	Click on Workloads (preview) on left under Kubernetes resources
+	Click on Pods
+	Check the checkbox for Profisee-0
+	Click Delete on Top
+	Confirm
 	
 
 ## Scale to more than one container
