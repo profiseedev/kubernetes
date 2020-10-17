@@ -162,6 +162,8 @@ if [ "$SQLSERVERCREATENEW" = "Yes" ]; then
 	IFS='.' read -r -a sqlString <<< "$SQLNAME"
 	sqlServerName=${sqlString[0],,}; #lowercase is the ,,
 	OutIP=$(az network public-ip list -g $AKSINFRARESOURCEGROUPNAME --query "[0].ipAddress");
+	#clean OutIP - remove quotes
+	OutIP=$(echo "$OutIP" | tr -d '"')
 	az sql server firewall-rule create --resource-group $RESOURCEGROUPNAME --server $sqlServerName --name "aks lb ip" --start-ip-address $OutIP --end-ip-address $OutIP
 	echo "Adding firewall rule to sql finished";
 fi
