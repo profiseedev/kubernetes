@@ -1072,11 +1072,7 @@
                 {
                     "name": "RESOURCEGROUPNAME",
                     "value": "[resourceGroup().name]"
-                },
-                {
-                    "name": "AKSINFRARESOURCEGROUPNAME",
-                    "value": "[variables('KubenetesInfrastructureResourceGroupName')]"
-                },
+                },               
                 {
                     "name": "CLUSTERNAME",
                     "value": "[variables('KubernetesClusterName')]"
@@ -1184,6 +1180,10 @@
                     "value": "[variables('USELETSENCRYPT')]"
                 }
                 ,
+                 {
+                    "name": "AKSINFRARESOURCEGROUPNAME",
+                    "value": "[variables('KubenetesInfrastructureResourceGroupName')]"
+                },
                 {
                     "name": "SQLSERVERCREATENEW",
                     "value": "[variables('SQLServerCreateNew')]"
