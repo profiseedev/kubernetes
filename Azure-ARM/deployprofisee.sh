@@ -154,6 +154,19 @@ else
 	echo $"FILEREPOPASSWORD was passed in, using it."
 fi
 
+
+#If creating a new sql database, create firewall rule for sql server - add outbound ip of aks cluster 
+if [ "$SQLSERVERCREATENEW" = "Yes" ]; then
+	echo "Adding firewall rule to sql started";
+	#strip off .database.windows.net
+	IFS='.' read -r -a sqlString <<< "$SQLNAME"
+	sqlServerName=${sqlString[0],,}; #lowercase is the ,,
+	$OutIP=$(az network public-ip list -g $AKSINFRARESOURCEGROUPNAME --query "[0].ipAddress");
+	az sql server firewall-rule create --resource-group $RESOURCEGROUPNAME --server $sqlServerName --name "aks lb ip" --start-ip-address $OutIP --end-ip-address $OutIP
+	echo "Adding firewall rule to sql finished";
+fi
+
+
 #storage vars
 FILEREPOUSERNAME="Azure\\\\\\\\${STORAGEACCOUNTNAME}"
 FILEREPOURL="\\\\\\\\\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\\\\\${STORAGEACCOUNTFILESHARENAME}"

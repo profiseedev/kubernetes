@@ -879,7 +879,8 @@
         "TLSCERT":"",
         "TLSKEY":"",
                 
-        "USELETSENCRYPT":"Yes"
+        "USELETSENCRYPT":"Yes",
+        "KubenetesInfrastructureResourceGroupName":"[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]"
     },
     "resources": [
         {
@@ -937,7 +938,7 @@
                     "adminUsername": "winadmin",
                     "adminPassword": "Ple@seCh@ngeMe1234!"
                 },                
-                "nodeResourceGroup": "[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]",
+                "nodeResourceGroup": "[variables('KubenetesInfrastructureResourceGroupName')]",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "azure",
@@ -1073,6 +1074,10 @@
                     "value": "[resourceGroup().name]"
                 },
                 {
+                    "name": "AKSINFRARESOURCEGROUPNAME",
+                    "value": "[variables('KubenetesInfrastructureResourceGroupName')]"
+                },
+                {
                     "name": "CLUSTERNAME",
                     "value": "[variables('KubernetesClusterName')]"
                 },
@@ -1177,6 +1182,11 @@
                 {
                     "name": "USELETSENCRYPT",
                     "value": "[variables('USELETSENCRYPT')]"
+                }
+                ,
+                {
+                    "name": "SQLSERVERCREATENEW",
+                    "value": "[variables('SQLServerCreateNew')]"
                 }
 
             ],
