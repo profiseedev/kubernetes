@@ -261,6 +261,8 @@ Patch it
 	#if there is an about the cluster issuer, make sure there is one, if not, run this
 	curl -fsSL -o clusterissuer.yaml "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/clusterissuer.yaml";
 	kubectl apply -f clusterissuer.yaml
+	#more info
+	https://cert-manager.io/docs/faq/troubleshooting/
 	
 # Debug with Lens
 
