@@ -4,7 +4,7 @@ This repository contains all the ways to deploy the Profisee platform to Kuberne
 
 ## AWS-ELS-CLI
 
-Home for all the scripts needed to deploy Profisee Platform to AWS EKS (Elastic Kubernetes services) via the aws cli.
+[Home](https://github.com/profiseedev/kubernetes/tree/master/AWS-EKS-CLI#deploy-profisee-platform-on-to-aws-elastic-kubernetes-services-eks) for all the scripts needed to deploy Profisee Platform to AWS EKS (Elastic Kubernetes services) via the aws cli.
 
 ## Azure-ARM
 
@@ -12,8 +12,8 @@ Home for all the scripts needed to deploy Profisee Platform to AWS EKS (Elastic 
 
 ## Azure-Powershell
 
-Home for all the scripts needed to deploy Profisee Platform to AKS via Azure Powershell.
+[Home](https://github.com/profiseedev/kubernetes/tree/master/Azure-Powershell#deploy-profisee-platform-to-aks-using-powershell) for all the scripts needed to deploy Profisee Platform to AKS via Azure Powershell.
 
 ## GCP-CLI
 
-Home for all the scripts needed to deploy Profisee Platform to Google Cloud Platform (GCP) Kubernetes via the gcp cli.
+[Home](https://github.com/profiseedev/kubernetes/tree/master/GCP-CLI#deploy-profisee-platform-on-to-google-cloud-platform-gcp-kubernetes) for all the scripts needed to deploy Profisee Platform to Google Cloud Platform (GCP) Kubernetes via the gcp cli.
