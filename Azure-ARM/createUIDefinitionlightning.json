@@ -34,8 +34,8 @@
                                 "value": "2020R1.1"
                             },
                             {
-                                "label": "2020R2.Preview",
-                                "value": "2020R2.Preview"
+                                "label": "2020R2.0",
+                                "value": "2020R2.0"
                             }
                         ]
                     },
@@ -62,32 +62,6 @@
                     "toolTip": "Profisee plaform license string supplied by Profisee support.",
                     "constraints": {
                         "required": true,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "ProfiseeACRUserName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "ACR User Name",
-                    "defaultValue": "",
-                    "toolTip": "User name supplied by Profisee support.",
-                    "constraints": {
-                        "required": true,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "ProfiseeACRPassword",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "ACR Password",
-                    "defaultValue": "",
-                    "toolTip": "User password supplied by Profisee support.",
-                    "constraints": {
-                        "required": false,
                         "regex": "",
                         "validationMessage": ""
                     },
@@ -119,32 +93,22 @@
                         ]
                     },
                     "visible": true
-                },
-                {
-                    "name": "ActiveDirectoryClientId",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Application Registration Client Id",
-                    "defaultValue": "",
-                    "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
+                },                
                 {
                     "name": "ManagedIdentityName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Managed Identity Name",
-                    "defaultValue": "",
-                    "toolTip": "Existing user assigned Managed Identity with contributer access at the subscription level or contributor access to the resoure group this is deployed to and the resource group the domain is in if updating dns.  If Active Directory Create Application is Yes, then it must also have Application Developer role in order to create and configure the azure active directory application.",
-                    "constraints": {
-                        "required": true,
-                        "regex": "",
-                        "validationMessage": ""
+                    "type": "Microsoft.ManagedIdentity.IdentitySelector",
+                    "label": "Managed Identity Configuration",
+                    "toolTip": {
+                        "systemAssignedIdentity": "Enable system assigned identity to grant the resource access to other existing resources.",
+                        "userAssignedIdentity": "Add user assigned identities to grant the resource access to other existing resources."
                     },
-                    "visible": true
+                    "defaultValue": {
+                        "systemAssignedIdentity": "Off"
+                    },
+                    "options": {
+                        "hideSystemAssignedIdentity": false,
+                        "hideUserAssignedIdentity": false
+                    }
                 },
                 {
                     "name": "ManagedIdentityResourceGroup",
@@ -165,19 +129,7 @@
             "name": "kubernetes",
             "label": "Kubernetes",
             "elements": [
-                {
-                    "name": "KubernetesClusterName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Cluster Name",
-                    "defaultValue": "MyAKSCluster",
-                    "toolTip": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },               
+             
                 {
                     "name": "KubernetesLinuxVMSize",
                     "type": "Microsoft.Common.Section",
@@ -197,20 +149,28 @@
                             "options": {
                                 "hideDiskTypeFilter": false
                             },
-                            "osPlatform": "Windows",
-                            "imageReference": {
-                                "publisher": "MicrosoftWindowsServer",
-                                "offer": "WindowsServer",
-                                "sku": "2019-Datacenter"
-                            },
+                            "osPlatform": "Linux",
                             "count": 2,
                             "visible": true
                         }
                     ],
                     "visible": true
-                },               
+                },   
                 {
-                    "name": "KubernetesWindowsVMSize1",
+                    "name": "KubernetesLinuxNodeCount",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Linux node count",
+                    "defaultValue": "1",
+                    "toolTip": "Amount of the nodes to create in the Linux node pool.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },             
+                {
+                    "name": "KubernetesWindowsNodeSize",
                     "type": "Microsoft.Common.Section",
                     "label": "Windows VM",
                     "elements": [
@@ -241,87 +201,11 @@
                     "visible": true
                 },
                 {
-                    "name": "KubernetesVersion",
+                    "name": "KubernetesWindowsNodeCount",
                     "type": "Microsoft.Common.TextBox",
-                    "label": "Version",
-                    "defaultValue": "",
-                    "toolTip": "Version of kubernetes to use. Leave blank to use the default version from Microsoft.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },                
-                {
-                    "name": "VNet name",
-                    "type": "Microsoft.Network.VirtualNetworkCombo",
-                    "label": {
-                        "virtualNetwork": "Virtual network",
-                        "subnets": "Subnets"
-                    },
-                    "toolTip": {
-                        "virtualNetwork": "",
-                        "subnets": ""
-                    },
-                    "defaultValue": {
-                        "name": "vnet01",
-                        "addressPrefixSize": "/16"
-                    },
-                    "constraints": {
-                        "minAddressPrefixSize": "/16"
-                    },
-                    "options": {
-                        "hideExisting": false
-                    },
-                    "subnets": {
-                        "subnet1": {
-                            "label": "Subnet",
-                            "defaultValue": {
-                                "name": "subnet-1",
-                                "addressPrefixSize": "/24"
-                            },
-                            "constraints": {
-                                "minAddressPrefixSize": "/24",
-                                "minAddressCount": 12,
-                                "requireContiguousAddresses": true
-                            }
-                        }
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "KubernetesServiceCidr",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Service Cidr",
-                    "defaultValue": "10.0.0.0/16",
-                    "toolTip": "A CIDR notation IP range from which to assign service cluster IPs.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "KubernetesDNSServiceIP",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "DNS Service IP",
-                    "defaultValue": "10.0.0.10",
-                    "toolTip": "Containers DNS server IP address.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "KubernetesDockerBridgeCidr",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Docker Bridge Cidr",
-                    "defaultValue": "172.17.0.1/16",
-                    "toolTip": "A CIDR notation IP for Docker bridge.",
+                    "label": "Linux node count",
+                    "defaultValue": "1",
+                    "toolTip": "Amount of the nodes to create in the Windows node pool.",
                     "constraints": {
                         "required": false,
                         "regex": "",
@@ -335,27 +219,7 @@
             "name": "sql",
             "label": "SQL",
             "elements": [
-                {
-                    "name": "SQLServerCreateNew",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Create New Sql Server",
-                    "defaultValue": "Yes",
-                    "toolTip": "If you select No, you must enter the FQDN of an existing sql server accessable by this azure subscription",
-                    "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
-                            },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
-                    },
-                    "visible": true
-                },
+                
                 {
                     "name": "SQLServerName",
                     "type": "Microsoft.Common.TextBox",
@@ -399,19 +263,6 @@
                         "hideConfirmation": true
                     },
                     "visible": true
-                },
-                {
-                    "name": "SQLServerDatabaseName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Database Name",
-                    "defaultValue": "Profisee",
-                    "toolTip": "Name of database to create and/or use.  Name should not match special pattern and has a length of at most 128.  Should not contain reserved words.  No database with the same name exists in the server",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
                 }
             ]
         },  
@@ -420,28 +271,7 @@
             "label": "Storage",
             "elements": [
                 {
-                    "name": "StorageAccountCreateNew",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Storage Account Create New",
-                    "defaultValue": "Yes",
-                    "toolTip": "If you select No, you must enter the information for an existing storage account including password.  If you choose Yes, password is not required and will be ignored.",
-                    "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
-                            },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "sectionStorage1",
+                    "name": "StorageAccountName",
                     "type": "Microsoft.Common.Section",
                     "label": "Storage Account Name",
                     "elements": [
@@ -463,137 +293,6 @@
                                 "visible": true
                         }
                     ],
-                    "visible": true
-                },                
-                {
-                    "name": "StorageAccountFileShareName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Storage Account File Share Name",
-                    "defaultValue": "files",
-                    "toolTip": "Name of file share in the storage account to create and/or use.   Can contain only lowercase letters, numbers, and hyphens, and must begin and end with a letter or a number. The name cannot contain two consecutive hyphens.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                }
-            ]
-        },          
-        {
-            "name": "dns",
-            "label": "DNS",
-            "elements": [
-                {
-                    "name": "DNSUpdate",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "DNS Update",
-                    "defaultValue": "Yes",
-                    "toolTip": "If Yes then your dns zone must be in Azure.  If No then you have to update the dns record yourself.  Use the IP adress that is output from the InstallProfiseePlatform deploymnet step",
-                    "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
-                            },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "DNSHostName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "DNS Host Name",
-                    "defaultValue": "myprofiseehostname",
-                    "toolTip": "Host name to use/create.  Required if updating DNS.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "DNSDomainName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "DNS Domain Name",
-                    "defaultValue": "mydomain.com",
-                    "toolTip": "Domain name name to use.  Required if updating DNS.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "DNSDomainResourceGroup",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "DNS Domain Resource Group",
-                    "defaultValue": "mydnszoneresourcegroup",
-                    "toolTip": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                }
-            ]
-        },{
-            "name": "https",
-            "label": "Https",
-            "elements": [
-                {
-                    "name": "HttpsConfigure",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Https Configure",
-                    "defaultValue": "Yes",
-                    "toolTip": "If Yes, then you must supply the certificate informtion.  If No then you web traffic is not secure and only works over http.",
-                    "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
-                            },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "HttpsCertificate",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Https Certificate",
-                    "defaultValue": "",
-                    "toolTip": "Required if using Https.  Paste the text from TLS certificate. Starts with    -----BEGIN CERTIFICATE-----",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "HttpsCertificatePrivateKey",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Https Certificate Private Key",
-                    "defaultValue": "",
-                    "toolTip": "Required if using Https.  Paste the text from private key for your TLS certificate. Starts with    -----BEGIN PRIVATE KEY-----",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
                     "visible": true
                 }
             ]
