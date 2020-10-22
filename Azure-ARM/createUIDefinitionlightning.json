@@ -125,17 +125,19 @@
                 },   
                 {
                     "name": "KubernetesLinuxNodeCount",
-                    "type": "Microsoft.Common.TextBox",
+                    "type": "Microsoft.Common.Slider",
+                    "min": 1,
+                    "max": 12,
                     "label": "Linux node count",
-                    "defaultValue": "1",
-                    "toolTip": "Amount of the nodes to create in the Linux node pool.",
+                    "subLabel": "",
+                    "defaultValue": 1,
+                    "showStepMarkers": false,
+                    "toolTip": "Pick the amount of nodes",
                     "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
+                        "required": false
                     },
                     "visible": true
-                },             
+                },           
                 {
                     "name": "KubernetesWindowsNodeSize",
                     "type": "Microsoft.Common.Section",
@@ -169,14 +171,16 @@
                 },
                 {
                     "name": "KubernetesWindowsNodeCount",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Linux node count",
-                    "defaultValue": "1",
-                    "toolTip": "Amount of the nodes to create in the Windows node pool.",
+                    "type": "Microsoft.Common.Slider",
+                    "min": 1,
+                    "max": 12,
+                    "label": "Windows node count",
+                    "subLabel": "",
+                    "defaultValue": 1,
+                    "showStepMarkers": false,
+                    "toolTip": "Pick the amount of nodes",
                     "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
+                        "required": false
                     },
                     "visible": true
                 }
