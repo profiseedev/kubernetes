@@ -73,27 +73,7 @@
             "name": "ad",
             "label": "Active Direcotry",
             "elements": [ 
-                {
-                    "name": "ActiveDirectoryCreateApp",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Create Application Registration",
-                    "defaultValue": "Yes",
-                    "toolTip": "The Active Directory App Registration will be created and configured.  If No, then you must supply an existing clientid and register the reply url manually.  example - https://profisee.company.com/profisee/auth/signin-microsoft",
-                    "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
-                            },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
-                    },
-                    "visible": true
-                },                
+                             
                 {
                     "name": "ManagedIdentityName",
                     "type": "Microsoft.ManagedIdentity.IdentitySelector",
