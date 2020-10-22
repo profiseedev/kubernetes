@@ -109,20 +109,7 @@
                         "hideSystemAssignedIdentity": false,
                         "hideUserAssignedIdentity": false
                     }
-                },
-                {
-                    "name": "ManagedIdentityResourceGroup",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Managed Identity Resource Group",
-                    "defaultValue": "[[resourceGroup().name]",
-                    "toolTip": "Resource group the managed identiy was created in.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                }                   
+                }                 
             ]
         },            
         {
