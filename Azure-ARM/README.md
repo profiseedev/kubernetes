@@ -39,4 +39,4 @@ Click the "Deploy to Azure" button under the deployment option you want to use
 
 ## Troubleshooting
 
-All troubleshooting is in the Wiki
+All troubleshooting is in the [Wiki](https://github.com/profiseedev/kubernetes/wiki)
