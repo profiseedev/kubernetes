@@ -250,6 +250,20 @@ Patch it
 	you can view it by running this, the -f is "follow" and will stream it as it goes (tail)
 	kubectl logs profisee-0 -f
 	
+## Certificate issues with Let's Encrypt
+
+	#look at the certificate
+	kubectl get certificate
+	#if Ready is false, then get details
+	kubectl describe certificate
+	#if error, look at the request
+	kubectl describe certificaterequest
+	#if there is an about the cluster issuer, make sure there is one, if not, run this
+	curl -fsSL -o clusterissuer.yaml "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/clusterissuer.yaml";
+	kubectl apply -f clusterissuer.yaml
+	#more info
+	https://cert-manager.io/docs/faq/troubleshooting/
+	
 # Debug with Lens
 
 ## Install Lens (Kubernetes IDE)
