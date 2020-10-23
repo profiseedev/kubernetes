@@ -9,7 +9,6 @@
             }
         },
         "ProfiseeAdminUserAccount": {
-            "defaultValue": "first.last@company.com",
             "type": "String",
             "metadata": {
                 "description": "Name of the account of the first super user who will be registered in the Profisee platform, who will be able to logon and add other users."
@@ -26,66 +25,50 @@
             "metadata": {
                 "description": "Existing user assigned Managed Identity with contributer access at the subscription level or contributor access to the resource group this is deployed to and the resource group the domain is in if updating dns.  If Active Directory Create Application is Yes, then it must also have Application Developer role in order to create and configure the azure active directory application."
             }
-        },
-         "ManagedIdentityResourceGroup": {
-            "defaultValue": "[resourceGroup().name]",
-            "type": "String",
-            "metadata": {
-                "description": "Resource group the managed identity was created in."
-            }
         },        
         "KubernetesLinuxNodeSize": {
-            "defaultValue": "Standard_D2_v3",
             "type": "String",
             "metadata": {
                 "description": "Size of the VM to use for the linux node(s) in the kubernetes cluster."
             }
         },
         "KubernetesLinuxNodeCount": {
-            "defaultValue": "1",
             "type": "String",            
             "metadata": {
                 "description": "Amount of the nodes to create in the Linux node pool."
             }
         },
         "KubernetesWindowsNodeSize": {
-            "defaultValue": "Standard_D4_v3",
             "type": "String",
             "metadata": {
                 "description": "Size of the VM to use for the Windows node(s) in the kubernetes cluster."
             }
         }, 
         "KubernetesWindowsNodeCount": {
-            "defaultValue": "1",
             "type": "String",            
             "metadata": {
                 "description": "Amount of the nodes to create in the Windows node pool."
             }
         },               
         "SQLServerName": {
-            "defaultValue": "mysqlservername",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure"
             }
         },        
         "SQLServerUser": {
-            "defaultValue":"sqladmin",
             "type": "string",
-            "minLength": 1,
             "metadata": {
                 "description": "Administrator SQL login name to create with the new sql server or to use to connect to existing sql server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols"
             }
         },
         "SQLServerPassword": {
             "type": "securestring",
-            "defaultValue":"mypw",
             "metadata": {
                 "description": "Password for sql server user.  The password does not contain the account name of the user and must be at least eight characters long and be no more than 128 characters in length.  The password contains characters from three of the following four categories: Latin uppercase letters (A through Z).  Latin lowercase letters (a through z).  Base 10 digits (0 through 9).  Non-alphanumeric characters such as: exclamation point (!), dollar sign ($), number sign (#), or percent (%)."
             }
         },        
         "StorageAccountName": {
-            "defaultValue": "mystorageaccountname",
             "type": "String",
             "metadata": {
                 "description": "Enter a unique name.  Can contain only lowercase letters and numbers. Name must be between 3 and 24 characters.  Storage account names are globally unique in Azure"
