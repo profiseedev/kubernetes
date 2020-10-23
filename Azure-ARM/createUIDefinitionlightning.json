@@ -248,7 +248,7 @@
                         "validationMessage": ""
                     },
                     "options": {
-                        "hideConfirmation": true
+                        "hideConfirmation": false
                     },
                     "visible": true
                 }
@@ -289,40 +289,16 @@
             "ProfiseeVersion": "[steps('profisee').ProfiseeVersion]",
             "ProfiseeAdminUserAccount": "[steps('profisee').ProfiseeAdminUserAccount]",
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
-            "ProfiseeACRUserName": "[steps('profisee').ProfiseeACRUserName]",
-            "ProfiseeACRPassword": "[steps('profisee').ProfiseeACRPassword]",
-            "ActiveDirectoryCreateApp": "[steps('ad').ActiveDirectoryCreateApp]",
-            "ActiveDirectoryClientId": "[steps('ad').ActiveDirectoryClientId]",
             "ManagedIdentityName": "[steps('ad').ManagedIdentityName].userAssignedIdentities",
-            "ManagedIdentityName2": "[parse(concat('{\"Type\":\"UserAssigned\",\"UserAssignedIdentities\":{',string(steps('ad').ManagedIdentityName),':{}}}'))]",
-            "ManagedIdentityResourceGroup": "[steps('ad').ManagedIdentityResourceGroup]",
-            "KubernetesClusterName": "[kubernetes('KubernetesClusterName')]",
             "KubernetesLinuxVMSize": "[kubernetes('KubernetesLinuxVMSize')]",
+            "KubernetesLinuxNodeCount": "[kubernetes('KubernetesLinuxNodeCount')]",
             "KubernetesWindowsVMSize": "[kubernetes('KubernetesWindowsVMSize')]",
-            "KubernetesVersion": "[kubernetes('KubernetesVersion')]",
-            "KubernetesVnetName": "[kubernetes('KubernetesVnetName')]",
-            "KubernetesVnetResourceGroup": "[kubernetes('KubernetesVnetResourceGroup')]",
-            "KubernetesSubnetName": "[kubernetes('KubernetesSubnetName')]",
-            "KubernetesServiceCidr": "[kubernetes('KubernetesServiceCidr')]",
-            "KubernetesDNSServiceIP": "[kubernetes('KubernetesDNSServiceIP')]",
-            "KubernetesDockerBridgeCidr": "[kubernetes('KubernetesDockerBridgeCidr')]",
-            "SQLServerCreateNew": "[sql('SQLServerCreateNew')]",
+            "KubernetesWindowsNodeCount": "[kubernetes('KubernetesWindowsNodeCount')]",
             "SQLServerName": "[sql('SQLServerName')]",
             "SQLServerUser": "[sql('SQLServerUser')]",
-            "SQLServerPassword": "[sql('SQLServerPassword')]",
+            "SQLServerPassword": "[sql('SQLServerPassword').password]",
             "SQLServerDatabaseName": "[sql('SQLServerDatabaseName')]",
-            "StorageAccountCreateNew": "[storage('StorageAccountCreateNew')]",
-            "StorageAccountName": "[storage('StorageAccountName').name]",
-            "StorageAccountAccessKey": "[storage('StorageAccountAccessKey')]",
-            "StorageAccountType": "[storage('StorageAccountType')]",
-            "StorageAccountFileShareName": "[basistoragecs('StorageAccountFileShareName')]",
-            "DNSUpdate": "[dns('DNSUpdate')]",
-            "DNSHostName": "[dns('DNSHostName')]",
-            "DNSDomainName": "[dns('DNSDomainName')]",
-            "DNSDomainResourceGroup": "[dns('DNSDomainResourceGroup')]",
-            "HttpsConfigure": "[https('HttpsConfigure')]",
-            "HttpsCertificate": "[https('HttpsCertificate')]",
-            "HttpsCertificatePrivateKey": "[https('HttpsCertificatePrivateKey')]"
+            "StorageAccountName": "[storage('StorageAccountName').name]"
         }
     }
 }
