@@ -290,15 +290,15 @@
             "ProfiseeAdminUserAccount": "[steps('profisee').ProfiseeAdminUserAccount]",
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
             "ManagedIdentityName": "[steps('ad').ManagedIdentityName].userAssignedIdentities",
-            "KubernetesLinuxVMSize": "[kubernetes('KubernetesLinuxVMSize')]",
-            "KubernetesLinuxNodeSize": "[kubernetes('KubernetesLinuxNodeSize')]",
-            "KubernetesWindowsVMSize": "[kubernetes('KubernetesWindowsVMSize')]",
-            "KubernetesWindowsNodeSize": "[kubernetes('KubernetesWindowsNodeSize')]",
-            "SQLServerName": "[sql('SQLServerName')]",
-            "SQLServerUser": "[sql('SQLServerUser')]",
-            "SQLServerPassword": "[sql('SQLServerPassword')]",
-            "SQLServerDatabaseName": "[sql('SQLServerDatabaseName')]",
-            "StorageAccountName": "[storage('StorageAccountName').name]"
+            "KubernetesLinuxVMSize": "[steps('kubernetes').KubernetesLinuxVMSize)]",
+            "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSize)]",
+            "KubernetesWindowsVMSize": "[steps('kubernetes').KubernetesWindowsVMSize)]",
+            "KubernetesWindowsNodeSize": "[steps('kubernetes').KubernetesWindowsNodeSize)]",
+            "SQLServerName": "[steps('sql').SQLServerName]",
+            "SQLServerUser": "[steps('sql').SQLServerUser]",
+            "SQLServerPassword": "[steps('sql').SQLServerPassword]",
+            "SQLServerDatabaseName": "[steps('sql').SQLServerDatabaseName]",
+            "StorageAccountName": "[steps('storage').StorageAccountName.name]"
         }
     }
 }
