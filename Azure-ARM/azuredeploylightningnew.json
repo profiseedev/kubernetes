@@ -3,7 +3,6 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ProfiseeVersion": {
-            "defaultValue": "2020R2.0",
             "type": "String",
             "metadata": {
                 "description": "Version of the Profisee platform to use."
