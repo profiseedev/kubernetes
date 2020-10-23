@@ -103,7 +103,7 @@
                         "systemAssignedIdentity": "Off"
                     },
                     "options": {
-                        "hideSystemAssignedIdentity": false,
+                        "hideSystemAssignedIdentity": true,
                         "hideUserAssignedIdentity": false
                     }
                 }                 
