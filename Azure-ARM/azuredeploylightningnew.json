@@ -78,7 +78,8 @@
             }
         },
         "SQLServerPassword": {
-            "type": "string",
+            "type": "securestring",
+            "defaultValue":"mypw",
             "metadata": {
                 "description": "Password for sql server user.  The password does not contain the account name of the user and must be at least eight characters long and be no more than 128 characters in length.  The password contains characters from three of the following four categories: Latin uppercase letters (A through Z).  Latin lowercase letters (a through z).  Base 10 digits (0 through 9).  Non-alphanumeric characters such as: exclamation point (!), dollar sign ($), number sign (#), or percent (%)."
             }
