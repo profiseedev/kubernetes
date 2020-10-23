@@ -259,12 +259,12 @@
             "label": "Storage",
             "elements": [
                 {
-                    "name": "StorageAccountName",
+                    "name": "StorageAccountNameSection",
                     "type": "Microsoft.Common.Section",
                     "label": "Storage Account Name",
                     "elements": [
                         {
-                            "name": "singleStorage",
+                            "name": "StorageAccountName",
                                 "type": "Microsoft.Storage.StorageAccountSelector",
                                 "label": "Storage account",
                                 "toolTip": "",
