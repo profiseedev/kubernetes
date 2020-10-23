@@ -290,15 +290,15 @@
             "ProfiseeAdminUserAccount": "[steps('profisee').ProfiseeAdminUserAccount]",
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
             "ManagedIdentityName": "[steps('ad').ManagedIdentityName.userAssignedIdentities]",
-            "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSize]",
+            "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSizeSection.KubernetesLinuxNodeSize]",
             "KubernetesLinuxNodeCount": "[steps('kubernetes').KubernetesLinuxNodeCount]",
-            "KubernetesWindowsNodeSize": "[steps('kubernetes').KubernetesWindowsNodeSize]",
+            "KubernetesWindowsNodeSize": "[steps('kubernetes').KubernetesWindowsNodeSizeSection.KubernetesWindowsNodeSize]",
             "KubernetesWindowsNodeCount": "[steps('kubernetes').KubernetesWindowsNodeCount]",
             "SQLServerName": "[steps('sql').SQLServerName]",
             "SQLServerUser": "[steps('sql').SQLServerUser]",
             "SQLServerPassword": "[steps('sql').SQLServerPassword]",
             "SQLServerDatabaseName": "[steps('sql').SQLServerDatabaseName]",
-            "StorageAccountName": "[steps('storage').StorageAccountName.name]"
+            "StorageAccountName": "[steps('storage').StorageAccountNameSection.StorageAccountName.name]"
         }
     }
 }
