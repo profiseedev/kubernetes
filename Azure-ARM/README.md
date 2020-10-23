@@ -2,7 +2,7 @@
 
 'Lightning NEW sexy UI - in development' deployment of the Profisee platform.  Use this for a brand new deplyment.  Https via Let's Encrypt.  Azure DNS (abc.eastus.cloudapps.azure.com).  New sql and storage repositories using a new azure resource manager ui.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightning.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinitionlightning.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightningnew.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinitionlightning.json)
 
 
 'Lightning' deployment of the Profisee platform.  Use this for a brand new deplyment.  Https via Let's Encrypt.  Azure DNS (abc.eastus.cloudapps.azure.com).  New sql and storage repositories.
