@@ -292,7 +292,8 @@
                     }
                 },
                 {
-                "type": "Microsoft.Sql/servers/databases",
+                "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+                "type": "databases",
                 "apiVersion": "2020-08-01-preview",
                 "name": "Profisee",
                 "location": "[resourceGroup().location]",
@@ -342,7 +343,7 @@
         "identity": {
             "type": "userAssigned",
             "userAssignedIdentities": {
-                "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',variables('ManagedIdentityResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',variables('ManagedIdentityName'))]":{}
+                "[variables('ManagedIdentityName')]":{}
             }
         },
         "properties": {
