@@ -141,7 +141,7 @@
                     "visible": true
                 },   
                 {
-                    "name": "KubernetesLinuxNodeCount",
+                    "name": "KubernetesLinuxNodeSize",
                     "type": "Microsoft.Common.Slider",
                     "min": 1,
                     "max": 12,
@@ -156,7 +156,7 @@
                     "visible": true
                 },           
                 {
-                    "name": "KubernetesWindowsNodeSize",
+                    "name": "KubernetesWindowsVMSize",
                     "type": "Microsoft.Common.Section",
                     "label": "Windows VM",
                     "elements": [
@@ -187,7 +187,7 @@
                     "visible": true
                 },
                 {
-                    "name": "KubernetesWindowsNodeCount",
+                    "name": "KubernetesWindowsNodeSize",
                     "type": "Microsoft.Common.Slider",
                     "min": 1,
                     "max": 12,
@@ -291,9 +291,9 @@
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
             "ManagedIdentityName": "[steps('ad').ManagedIdentityName].userAssignedIdentities",
             "KubernetesLinuxVMSize": "[kubernetes('KubernetesLinuxVMSize')]",
-            "KubernetesLinuxNodeCount": "[kubernetes('KubernetesLinuxNodeCount')]",
+            "KubernetesLinuxNodeSize": "[kubernetes('KubernetesLinuxNodeSize')]",
             "KubernetesWindowsVMSize": "[kubernetes('KubernetesWindowsVMSize')]",
-            "KubernetesWindowsNodeCount": "[kubernetes('KubernetesWindowsNodeCount')]",
+            "KubernetesWindowsNodeSize": "[kubernetes('KubernetesWindowsNodeSize')]",
             "SQLServerName": "[sql('SQLServerName')]",
             "SQLServerUser": "[sql('SQLServerUser')]",
             "SQLServerPassword": "[sql('SQLServerPassword')]",
