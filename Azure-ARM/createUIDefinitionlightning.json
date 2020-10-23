@@ -20,7 +20,7 @@
                     "name": "ProfiseeVersion",
                     "type": "Microsoft.Common.DropDown",
                     "label": "Version",
-                    "defaultValue": "2020R1.1",
+                    "defaultValue": "2020R2.0",
                     "toolTip": "Version of the Profisee platform to use.",
                     "constraints": {
                         "required": false,
@@ -296,7 +296,7 @@
             "KubernetesWindowsNodeCount": "[kubernetes('KubernetesWindowsNodeCount')]",
             "SQLServerName": "[sql('SQLServerName')]",
             "SQLServerUser": "[sql('SQLServerUser')]",
-            "SQLServerPassword": "[sql('SQLServerPassword').password]",
+            "SQLServerPassword": "[sql('SQLServerPassword')]",
             "SQLServerDatabaseName": "[sql('SQLServerDatabaseName')]",
             "StorageAccountName": "[storage('StorageAccountName').name]"
         }

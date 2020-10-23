@@ -5,11 +5,6 @@
         "ProfiseeVersion": {
             "defaultValue": "2020R2.0",
             "type": "String",
-            "allowedValues": [
-                "2020R1.0",
-				"2020R1.1",
-                "2020R2.0"
-            ],
             "metadata": {
                 "description": "Version of the Profisee platform to use."
             }
@@ -123,7 +118,6 @@
         "KubernetesWindowsNodeCount": "[int(parameters('KubernetesWindowsNodeCount'))]",
         "KubernetesWindowsNodeSize": "[parameters('KubernetesWindowsNodeSize')]",
 
-        "ManagedIdentityResourceGroup": "[parameters('ManagedIdentityResourceGroup')]",
         "ManagedIdentityName": "[parameters('ManagedIdentityName')]",
 
         "DNSHostName": "",
