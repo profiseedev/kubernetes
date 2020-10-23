@@ -61,7 +61,7 @@
                     "defaultValue": "",
                     "toolTip": "Profisee plaform license string supplied by Profisee support.",
                     "constraints": {
-                        "required": true,
+                        "required": false,
                         "regex": "",
                         "validationMessage": ""
                     },
