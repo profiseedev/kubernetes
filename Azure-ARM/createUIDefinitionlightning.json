@@ -115,12 +115,12 @@
             "elements": [
              
                 {
-                    "name": "KubernetesLinuxNodeSize",
+                    "name": "KubernetesLinuxNodeSizeSection",
                     "type": "Microsoft.Common.Section",
                     "label": "Linux VM",
                     "elements": [
                         {
-                            "name": "vmSize",
+                            "name": "KubernetesLinuxNodeSize",
                             "type": "Microsoft.Compute.SizeSelector",
                             "label": "Size",
                             "toolTip": "",
@@ -156,12 +156,12 @@
                     "visible": true
                 },           
                 {
-                    "name": "KubernetesWindowsNodeSize",
+                    "name": "KubernetesWindowsNodeSizeSection",
                     "type": "Microsoft.Common.Section",
                     "label": "Windows VM",
                     "elements": [
                         {
-                            "name": "vmSize",
+                            "name": "KubernetesWindowsNodeSize",
                             "type": "Microsoft.Compute.SizeSelector",
                             "label": "Size",
                             "toolTip": "",
