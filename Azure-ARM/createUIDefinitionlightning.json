@@ -289,7 +289,7 @@
             "ProfiseeVersion": "[steps('profisee').ProfiseeVersion]",
             "ProfiseeAdminUserAccount": "[steps('profisee').ProfiseeAdminUserAccount]",
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
-            "ManagedIdentityName": "[steps('ad').ManagedIdentityName.userAssignedIdentities",
+            "ManagedIdentityName": "[steps('ad').ManagedIdentityName.userAssignedIdentities]",
             "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSize]",
             "KubernetesLinuxNodeCount": "[steps('kubernetes').KubernetesLinuxNodeCount]",
             "KubernetesWindowsNodeSize": "[steps('kubernetes').KubernetesWindowsNodeSize]",
