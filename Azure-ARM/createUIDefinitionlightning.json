@@ -108,7 +108,7 @@
                             "label": "Size",
                             "toolTip": "",
                             "recommendedSizes": [
-                                "Standard_D2_v3"
+                                "Standard_D2s_v3"
                             ],
                             "constraints": {
                                 "allowedSizes": []
@@ -117,7 +117,7 @@
                                 "hideDiskTypeFilter": false
                             },
                             "osPlatform": "Linux",
-                            "count": 2,
+                            "count": 1,
                             "visible": true
                         }
                     ],
@@ -149,7 +149,7 @@
                             "label": "Size",
                             "toolTip": "",
                             "recommendedSizes": [
-                                "Standard_D4_v3"
+                                "Standard_D4s_v3"
                             ],
                             "constraints": {
                                 "allowedSizes": []
@@ -163,7 +163,7 @@
                                 "offer": "WindowsServer",
                                 "sku": "2019-Datacenter"
                             },
-                            "count": 2,
+                            "count": 1,
                             "visible": true
                         }
                     ],
