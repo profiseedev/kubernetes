@@ -66,7 +66,24 @@
                         "validationMessage": ""
                     },
                     "visible": true
-                }
+                },
+                {
+                    "name": "ProfiseeLicense2",
+                    "type": "Microsoft.Common.FileUpload",
+                    "label": "License file",
+                    "toolTip": "",
+                    "constraints": {
+                      "required": true,
+                      "accept": ".txt"
+                    },
+                    "options": {
+                      "multiple": false,
+                      "uploadMode": "file",
+                      "openMode": "text",
+                      "encoding": "UTF-8"
+                    },
+                    "visible": true
+                  }
             ]
         },
         {
