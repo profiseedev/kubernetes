@@ -372,6 +372,19 @@
                     "visible": true
                 },
                 {
+                    "name": "sql servers",
+                    "type": "Microsoft.Solutions.ResourceSelector",
+                    "label": "Select storage accounts",
+                    "resourceType": "Microsoft.Sql/servers",
+                    "options": {
+                        "filter": {
+                            "subscription": "All",
+                            "location": "All"
+                        }
+                    },
+                    "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
+                },
+                {
                     "name": "SQLServerName",
                     "type": "Microsoft.Common.TextBox",
                     "label": "Server Name",
