@@ -385,6 +385,15 @@
                     "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
                 },
                 {
+                    "name": "nameApi",
+                    "type": "Microsoft.Solutions.ArmApiControl",
+                    "request": {
+                        "method": "POST",
+                        "path": "[concat(subscription().id, '/providers/Microsoft.Sql/checkNameAvailability?api-version=2019-06-01')]",
+                        "body": "[parse(concat('{\"name\": \"', steps('sql').SQLServerName, '\", \"type\": \"Microsoft.Sql/servers\"}'))]"
+                    }
+                },
+                {
                     "name": "SQLServerName",
                     "type": "Microsoft.Common.TextBox",
                     "label": "Server Name",
@@ -393,7 +402,13 @@
                     "constraints": {
                         "required": false,
                         "regex": "",
-                        "validationMessage": ""
+                        "validationMessage": "",
+                         "validations": [
+                            {
+                                "isValid": "[not(equals(basics('nameApi').nameAvailable, false))]",
+                                "message": "[concat('Name unavailable: ', basics('txtStorageName'))]"
+                            }
+                        ]
                     },
                     "visible": true
                 },
