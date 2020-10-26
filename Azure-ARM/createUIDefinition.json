@@ -351,19 +351,19 @@
             "elements": [
                 {
                     "name": "SQLServerCreateNew",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Create New Sql Server",
+                    "type": "Microsoft.Common.OptionsGroup",
+                    "label": "Do you want the deployment process to create an SQL Server and configure it for you?",
                     "defaultValue": "Yes",
                     "toolTip": "If you select No, you must enter the FQDN of an existing sql server accessable by this azure subscription",
                     "constraints": {
                         "required": false,
                         "allowedValues": [
                             {
-                                "label": "Yes",
+                                "label": "Yes, create a new SQL server",
                                 "value": "Yes"
                             },
                             {
-                                "label": "No",
+                                "label": "No, I will provide the fully qualified name of the existing SQL Server",
                                 "value": "No"
                             }
                         ]
@@ -410,7 +410,7 @@
                         "validationMessage": ""
                     },
                     "options": {
-                        "hideConfirmation": true
+                        "hideConfirmation": "[equals(steps('sql').SQLServerCreateNew,'No')]"
                     },
                     "visible": true
                 },
@@ -425,7 +425,7 @@
                         "regex": "",
                         "validationMessage": ""
                     },
-                    "visible": true
+                    "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
                 }
             ]
         },  
