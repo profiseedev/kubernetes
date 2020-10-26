@@ -537,51 +537,60 @@
             "elements": [
                 {
                     "name": "HttpsConfigure",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Https Configure",
-                    "defaultValue": "Yes",
-                    "toolTip": "If Yes, then you must supply the certificate informtion.  If No then you web traffic is not secure and only works over http.",
+                    "type": "Microsoft.Common.OptionsGroup",
+                    "label": "You can choose to use Let's Encrypt for https or supply your own certificates",
+                    "defaultValue": "Use Let's Encrypt",
+                    "toolTip": "",
                     "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
+                      "allowedValues": [
+                        {
+                          "label": "Use Let's Encrypt",
+                          "value": "No"
+                        },
+                        {
+                          "label": "Use my own certificates",
+                          "value": "Yes"
+                        }
+                      ],
+                      "required": true
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "UserDefinedHTTPS",
+                    "type": "Microsoft.Common.Section",
+                    "label": "User defined https",
+                    "elements": [
+                        {
+                            "name": "HttpsCertificate",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Https Certificate",
+                            "defaultValue": "",
+                            "toolTip": "Required if using Https.  Paste the text from TLS certificate. Starts with    -----BEGIN CERTIFICATE-----",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
                             },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "HttpsCertificate",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Https Certificate",
-                    "defaultValue": "",
-                    "toolTip": "Required if using Https.  Paste the text from TLS certificate. Starts with    -----BEGIN CERTIFICATE-----",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "HttpsCertificatePrivateKey",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Https Certificate Private Key",
-                    "defaultValue": "",
-                    "toolTip": "Required if using Https.  Paste the text from private key for your TLS certificate. Starts with    -----BEGIN PRIVATE KEY-----",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                }
+                            "visible": true
+                        },
+                        {
+                            "name": "HttpsCertificatePrivateKey",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Https Certificate Private Key",
+                            "defaultValue": "",
+                            "toolTip": "Required if using Https.  Paste the text from private key for your TLS certificate. Starts with    -----BEGIN PRIVATE KEY-----",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        }
+                    ],
+                    "visible": "[equals(steps('https').HttpsConfigure,'Yes')]"
+                }               
+                
             ]
         }],
         "outputs": {
