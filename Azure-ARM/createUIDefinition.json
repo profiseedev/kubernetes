@@ -461,10 +461,11 @@
             "label": "DNS",
             "elements": [
                 {
+                    
                     "name": "DNSUpdate",
                     "type": "Microsoft.Common.DropDown",
                     "label": "DNS Update",
-                    "defaultValue": "Yes",
+                    "defaultValue": "No",
                     "toolTip": "If Yes then your dns zone must be in Azure.  If No then you have to update the dns record yourself.  Use the IP adress that is output from the InstallProfiseePlatform deploymnet step",
                     "constraints": {
                         "required": false,
@@ -482,44 +483,54 @@
                     "visible": true
                 },
                 {
-                    "name": "DNSHostName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "DNS Host Name",
-                    "defaultValue": "myprofiseehostname",
-                    "toolTip": "Host name to use/create.  Required if updating DNS.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "DNSDomainName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "DNS Domain Name",
-                    "defaultValue": "mydomain.com",
-                    "toolTip": "Domain name name to use.  Required if updating DNS.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "DNSDomainResourceGroup",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "DNS Domain Resource Group",
-                    "defaultValue": "mydnszoneresourcegroup",
-                    "toolTip": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
+                    "name": "UserDefinedDNS",
+                    "type": "Microsoft.Common.Section",
+                    "label": "User Defined DNS",
+                    "elements": [
+                        {
+                            "name": "DNSHostName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "DNS Host Name",
+                            "defaultValue": "myprofiseehostname",
+                            "toolTip": "Host name to use/create.  Required if updating DNS.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "DNSDomainName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "DNS Domain Name",
+                            "defaultValue": "mydomain.com",
+                            "toolTip": "Domain name name to use.  Required if updating DNS.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "DNSDomainResourceGroup",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "DNS Domain Resource Group",
+                            "defaultValue": "mydnszoneresourcegroup",
+                            "toolTip": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        }
+                    ],
+                    "visible": "[equals(steps('dns').DNSUpdate,'Yes')]"
                 }
+                
+                
             ]
         },{
             "name": "https",
