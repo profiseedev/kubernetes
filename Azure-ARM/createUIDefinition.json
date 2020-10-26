@@ -10,7 +10,6 @@
             "microsoft.resources/deploymentscripts",
             "microsoft.resources/resourcegroups"
         ],
-        "isWizard": true,
         "basics": [            
         ],
         "steps": [ {
@@ -401,8 +400,6 @@
                     "toolTip": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure",
                     "constraints": {
                         "required": false,
-                        "regex": "",
-                        "validationMessage": "",
                          "validations": [
                             {
                                 "isValid": "[not(equals(basics('nameApi').nameAvailable, false))]",
