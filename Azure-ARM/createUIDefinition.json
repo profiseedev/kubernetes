@@ -233,12 +233,12 @@
                     "name": "KubernetesAdvancedYesNo",
                     "type": "Microsoft.Common.OptionsGroup",
                     "label": "Do you need to configure advanced kubernetes neteworking settings, vnet's, subnets, etc..",
-                    "defaultValue": "No, use efault settings.",
+                    "defaultValue": "No, use default settings.",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
-                          "label": "No, use efault settings.",
+                          "label": "No, use default settings.",
                           "value": "No"
                         },
                         {
