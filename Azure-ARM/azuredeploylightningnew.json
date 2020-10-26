@@ -33,7 +33,7 @@
             }
         },
         "KubernetesLinuxNodeCount": {
-            "type": "String",            
+            "type": "int",            
             "metadata": {
                 "description": "Amount of the nodes to create in the Linux node pool."
             }
@@ -45,7 +45,7 @@
             }
         }, 
         "KubernetesWindowsNodeCount": {
-            "type": "String",            
+            "type": "int",            
             "metadata": {
                 "description": "Amount of the nodes to create in the Windows node pool."
             }
