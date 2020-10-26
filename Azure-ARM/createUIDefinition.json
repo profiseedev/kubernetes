@@ -71,7 +71,7 @@
         },
         {
             "name": "ad",
-            "label": "Active Direcotry",
+            "label": "Active Directory",
             "elements": [ 
                 {
                     "name": "ActiveDirectoryCreateApp",
