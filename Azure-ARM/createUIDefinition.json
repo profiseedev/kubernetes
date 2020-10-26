@@ -232,8 +232,8 @@
                 {
                     "name": "KubernetesAdvancedYesNo",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Do you need to configure advanced kubernetes neteworking settingsYou can choose to use Let's Encrypt for https or supply your own certificates",
-                    "defaultValue": "Yes, configure advanced settings",
+                    "label": "Do you need to configure advanced kubernetes neteworking settings, vnet's, subnets, etc..",
+                    "defaultValue": "No, use efault settings.",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
