@@ -402,7 +402,7 @@
                         "required": false,
                         "validations":[
                             {
-                            "isValid":"[not(equals(steps('sql').nameApi.nameAvailable,false))]",
+                            "isValid":"[not(equals(steps('sql').nameApi.available,true))]",
                             "message":"[concat('Name unavailable:', steps('sql').SQLServerName)]"
                             }
                             ]
