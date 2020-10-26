@@ -1,0 +1,616 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "resourceTypes": [
+            "microsoft.containerservice/managedclusters",
+            "microsoft.sql/servers",
+            "microsoft.storage/storageaccounts",
+            "microsoft.resources/deploymentscripts",
+            "microsoft.resources/resourcegroups"
+        ],
+        "basics": [            
+        ],
+        "steps": [ {
+            "name": "profisee",
+            "label": "Profisee",
+            "elements": [
+                {
+                    "name": "ProfiseeVersion",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "Version",
+                    "defaultValue": "2020R2.0",
+                    "toolTip": "Version of the Profisee platform to use.",
+                    "constraints": {
+                        "required": false,
+                        "allowedValues": [
+                            {
+                                "label": "2020R1.0",
+                                "value": "2020R1.0"
+                            },
+                            {
+                                "label": "2020R1.1",
+                                "value": "2020R1.1"
+                            },
+                            {
+                                "label": "2020R2.0",
+                                "value": "2020R2.0"
+                            }
+                        ]
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "ProfiseeAdminUserAccount",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Admin User Account",
+                    "defaultValue": "first.last@company.com",
+                    "toolTip": "Name of the account of the first super user who will be registered in the Profisee platform, who will be able to logon and add other users.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "ProfiseeLicense",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "License",
+                    "defaultValue": "",
+                    "toolTip": "Profisee plaform license string supplied by Profisee support.",
+                    "constraints": {
+                        "required": true,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                }
+            ]
+        },
+        {
+            "name": "ad",
+            "label": "Active Direcotry",
+            "elements": [ 
+                {
+                    "name": "ActiveDirectoryCreateApp",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "Create Application Registration",
+                    "defaultValue": "Yes",
+                    "toolTip": "The Active Directory App Registration will be created and configured.  If No, then you must supply an existing clientid and register the reply url manually.  example - https://profisee.company.com/profisee/auth/signin-microsoft",
+                    "constraints": {
+                        "required": false,
+                        "allowedValues": [
+                            {
+                                "label": "Yes",
+                                "value": "Yes"
+                            },
+                            {
+                                "label": "No",
+                                "value": "No"
+                            }
+                        ]
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "ActiveDirectoryClientId",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Application Registration Client Id",
+                    "defaultValue": "",
+                    "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "ManagedIdentityName",
+                    "type": "Microsoft.ManagedIdentity.IdentitySelector",
+                    "label": "Managed Identity Configuration",
+                    "toolTip": {
+                        "systemAssignedIdentity": "Enable system assigned identity to grant the resource access to other existing resources.",
+                        "userAssignedIdentity": "Add user assigned identities to grant the resource access to other existing resources."
+                    },
+                    "defaultValue": {
+                        "systemAssignedIdentity": "OffOnly"
+                    },
+                    "options": {
+                        "hideSystemAssignedIdentity": true,
+                        "hideUserAssignedIdentity": false
+                    }
+                }                          
+            ]
+        },            
+        {
+            "name": "kubernetes",
+            "label": "Kubernetes",
+            "elements": [
+                {
+                    "name": "KubernetesClusterName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Cluster Name",
+                    "defaultValue": "MyAKSCluster",
+                    "toolTip": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },               
+                {
+                    "name": "KubernetesLinuxNodeSizeSection",
+                    "type": "Microsoft.Common.Section",
+                    "label": "Linux VM",
+                    "elements": [
+                        {
+                            "name": "KubernetesLinuxNodeSize",
+                            "type": "Microsoft.Compute.SizeSelector",
+                            "label": "Size",
+                            "toolTip": "",
+                            "recommendedSizes": [
+                                "Standard_D2s_v3"
+                            ],
+                            "constraints": {
+                                "allowedSizes": []
+                            },
+                            "options": {
+                                "hideDiskTypeFilter": false
+                            },
+                            "osPlatform": "Linux",
+                            "count": 1,
+                            "visible": true
+                        }
+                    ],
+                    "visible": true
+                },   
+                {
+                    "name": "KubernetesLinuxNodeCount",
+                    "type": "Microsoft.Common.Slider",
+                    "min": 1,
+                    "max": 12,
+                    "label": "Linux node count",
+                    "subLabel": "",
+                    "defaultValue": 1,
+                    "showStepMarkers": false,
+                    "toolTip": "Pick the amount of nodes",
+                    "constraints": {
+                        "required": false
+                    },
+                    "visible": true
+                },           
+                {
+                    "name": "KubernetesWindowsNodeSizeSection",
+                    "type": "Microsoft.Common.Section",
+                    "label": "Windows VM",
+                    "elements": [
+                        {
+                            "name": "KubernetesWindowsNodeSize",
+                            "type": "Microsoft.Compute.SizeSelector",
+                            "label": "Size",
+                            "toolTip": "",
+                            "recommendedSizes": [
+                                "Standard_D4s_v3"
+                            ],
+                            "constraints": {
+                                "allowedSizes": []
+                            },
+                            "options": {
+                                "hideDiskTypeFilter": false
+                            },
+                            "osPlatform": "Windows",
+                            "imageReference": {
+                                "publisher": "MicrosoftWindowsServer",
+                                "offer": "WindowsServer",
+                                "sku": "2019-Datacenter"
+                            },
+                            "count": 1,
+                            "visible": true
+                        }
+                    ],
+                    "visible": true
+                },
+                {
+                    "name": "KubernetesWindowsNodeCount",
+                    "type": "Microsoft.Common.Slider",
+                    "min": 1,
+                    "max": 12,
+                    "label": "Windows node count",
+                    "subLabel": "",
+                    "defaultValue": 1,
+                    "showStepMarkers": false,
+                    "toolTip": "Pick the amount of nodes",
+                    "constraints": {
+                        "required": false
+                    },
+                    "visible": true
+                },             
+                {
+                    "name": "VNet name",
+                    "type": "Microsoft.Network.VirtualNetworkCombo",
+                    "label": {
+                        "virtualNetwork": "Virtual network",
+                        "subnets": "Subnets"
+                    },
+                    "toolTip": {
+                        "virtualNetwork": "",
+                        "subnets": ""
+                    },
+                    "defaultValue": {
+                        "name": "vnet01",
+                        "addressPrefixSize": "/16"
+                    },
+                    "constraints": {
+                        "minAddressPrefixSize": "/16"
+                    },
+                    "options": {
+                        "hideExisting": false
+                    },
+                    "subnets": {
+                        "subnet1": {
+                            "label": "Subnet",
+                            "defaultValue": {
+                                "name": "subnet-1",
+                                "addressPrefixSize": "/24"
+                            },
+                            "constraints": {
+                                "minAddressPrefixSize": "/24",
+                                "minAddressCount": 12,
+                                "requireContiguousAddresses": true
+                            }
+                        }
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "KubernetesServiceCidr",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Service Cidr",
+                    "defaultValue": "10.0.0.0/16",
+                    "toolTip": "A CIDR notation IP range from which to assign service cluster IPs.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "KubernetesDNSServiceIP",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "DNS Service IP",
+                    "defaultValue": "10.0.0.10",
+                    "toolTip": "Containers DNS server IP address.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "KubernetesDockerBridgeCidr",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Docker Bridge Cidr",
+                    "defaultValue": "172.17.0.1/16",
+                    "toolTip": "A CIDR notation IP for Docker bridge.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                }
+            ]
+        },        
+        {
+            "name": "sql",
+            "label": "SQL",
+            "elements": [
+                {
+                    "name": "SQLServerCreateNew",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "Create New Sql Server",
+                    "defaultValue": "Yes",
+                    "toolTip": "If you select No, you must enter the FQDN of an existing sql server accessable by this azure subscription",
+                    "constraints": {
+                        "required": false,
+                        "allowedValues": [
+                            {
+                                "label": "Yes",
+                                "value": "Yes"
+                            },
+                            {
+                                "label": "No",
+                                "value": "No"
+                            }
+                        ]
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "SQLServerName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Server Name",
+                    "defaultValue": "mysqlservername",
+                    "toolTip": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "SQLServerUser",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "User",
+                    "defaultValue": "sqladmin",
+                    "toolTip": "Administrator SQL login name to create with the new sql server or to use to connect to existing sql server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "SQLServerPassword",
+                    "type": "Microsoft.Common.PasswordBox",
+                    "label": {
+                        "password": "Password",
+                        "confirmPassword": "Confirm password"
+                    },
+                    "toolTip": "Password for sql server user.  The password does not contain the account name of the user and must be at least eight characters long and be no more than 128 characters in length.  The password contains characters from three of the following four categories: Latin uppercase letters (A through Z).  Latin lowercase letters (a through z).  Base 10 digits (0 through 9).  Non-alphanumeric characters such as: exclamation point (!), dollar sign ($), number sign (#), or percent (%).",
+                    "constraints": {
+                        "required": true,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "options": {
+                        "hideConfirmation": true
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "SQLServerDatabaseName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Database Name",
+                    "defaultValue": "Profisee",
+                    "toolTip": "Name of database to create and/or use.  Name should not match special pattern and has a length of at most 128.  Should not contain reserved words.  No database with the same name exists in the server",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                }
+            ]
+        },  
+        {
+            "name": "storage",
+            "label": "Storage",
+            "elements": [
+                {
+                    "name": "StorageAccountCreateNew",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "Storage Account Create New",
+                    "defaultValue": "Yes",
+                    "toolTip": "If you select No, you must enter the information for an existing storage account including password.  If you choose Yes, password is not required and will be ignored.",
+                    "constraints": {
+                        "required": false,
+                        "allowedValues": [
+                            {
+                                "label": "Yes",
+                                "value": "Yes"
+                            },
+                            {
+                                "label": "No",
+                                "value": "No"
+                            }
+                        ]
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "sectionStorage1",
+                    "type": "Microsoft.Common.Section",
+                    "label": "Storage Account Name",
+                    "elements": [
+                        {
+                            "name": "singleStorage",
+                                "type": "Microsoft.Storage.StorageAccountSelector",
+                                "label": "Storage account",
+                                "toolTip": "",
+                                "defaultValue": {
+                                    "name": "uniquestorageaccount01",
+                                    "type": "Premium_LRS"
+                                },
+                                "constraints": {
+                                    "allowedTypes": []
+                                },
+                                "options": {
+                                    "hideExisting": false
+                                },
+                                "visible": true
+                        }
+                    ],
+                    "visible": true
+                },                
+                {
+                    "name": "StorageAccountFileShareName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Storage Account File Share Name",
+                    "defaultValue": "files",
+                    "toolTip": "Name of file share in the storage account to create and/or use.   Can contain only lowercase letters, numbers, and hyphens, and must begin and end with a letter or a number. The name cannot contain two consecutive hyphens.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                }
+            ]
+        },          
+        {
+            "name": "dns",
+            "label": "DNS",
+            "elements": [
+                {
+                    "name": "DNSUpdate",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "DNS Update",
+                    "defaultValue": "Yes",
+                    "toolTip": "If Yes then your dns zone must be in Azure.  If No then you have to update the dns record yourself.  Use the IP adress that is output from the InstallProfiseePlatform deploymnet step",
+                    "constraints": {
+                        "required": false,
+                        "allowedValues": [
+                            {
+                                "label": "Yes",
+                                "value": "Yes"
+                            },
+                            {
+                                "label": "No",
+                                "value": "No"
+                            }
+                        ]
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "DNSHostName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "DNS Host Name",
+                    "defaultValue": "myprofiseehostname",
+                    "toolTip": "Host name to use/create.  Required if updating DNS.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "DNSDomainName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "DNS Domain Name",
+                    "defaultValue": "mydomain.com",
+                    "toolTip": "Domain name name to use.  Required if updating DNS.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "DNSDomainResourceGroup",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "DNS Domain Resource Group",
+                    "defaultValue": "mydnszoneresourcegroup",
+                    "toolTip": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS.",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                }
+            ]
+        },{
+            "name": "https",
+            "label": "Https",
+            "elements": [
+                {
+                    "name": "HttpsConfigure",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "Https Configure",
+                    "defaultValue": "Yes",
+                    "toolTip": "If Yes, then you must supply the certificate informtion.  If No then you web traffic is not secure and only works over http.",
+                    "constraints": {
+                        "required": false,
+                        "allowedValues": [
+                            {
+                                "label": "Yes",
+                                "value": "Yes"
+                            },
+                            {
+                                "label": "No",
+                                "value": "No"
+                            }
+                        ]
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "HttpsCertificate",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Https Certificate",
+                    "defaultValue": "",
+                    "toolTip": "Required if using Https.  Paste the text from TLS certificate. Starts with    -----BEGIN CERTIFICATE-----",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "HttpsCertificatePrivateKey",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Https Certificate Private Key",
+                    "defaultValue": "",
+                    "toolTip": "Required if using Https.  Paste the text from private key for your TLS certificate. Starts with    -----BEGIN PRIVATE KEY-----",
+                    "constraints": {
+                        "required": false,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
+                }
+            ]
+        }],
+        "outputs": {
+            "ProfiseeVersion": "[steps('profisee').ProfiseeVersion]",
+            "ProfiseeAdminUserAccount": "[steps('profisee').ProfiseeAdminUserAccount]",
+            "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
+            "ProfiseeACRUserName": "[steps('profisee').ProfiseeACRUserName]",
+            "ProfiseeACRPassword": "[steps('profisee').ProfiseeACRPassword]",
+            "ActiveDirectoryCreateApp": "[steps('ad').ActiveDirectoryCreateApp]",
+            "ActiveDirectoryClientId": "[steps('ad').ActiveDirectoryClientId]",
+            "ManagedIdentityName": "[steps('ad').ManagedIdentityName]",
+            "ManagedIdentityResourceGroup": "[steps('ad').ManagedIdentityResourceGroup]",
+            "KubernetesClusterName": "[kubernetes('KubernetesClusterName')]",
+            "KubernetesLinuxVMSize": "[kubernetes('KubernetesLinuxVMSize')]",
+            "KubernetesWindowsVMSize": "[kubernetes('KubernetesWindowsVMSize')]",
+            "KubernetesVersion": "[kubernetes('KubernetesVersion')]",
+            "KubernetesVnetName": "[kubernetes('KubernetesVnetName')]",
+            "KubernetesVnetResourceGroup": "[kubernetes('KubernetesVnetResourceGroup')]",
+            "KubernetesSubnetName": "[kubernetes('KubernetesSubnetName')]",
+            "KubernetesServiceCidr": "[kubernetes('KubernetesServiceCidr')]",
+            "KubernetesDNSServiceIP": "[kubernetes('KubernetesDNSServiceIP')]",
+            "KubernetesDockerBridgeCidr": "[kubernetes('KubernetesDockerBridgeCidr')]",
+            "SQLServerCreateNew": "[sql('SQLServerCreateNew')]",
+            "SQLServerName": "[sql('SQLServerName')]",
+            "SQLServerUser": "[sql('SQLServerUser')]",
+            "SQLServerPassword": "[sql('SQLServerPassword')]",
+            "SQLServerDatabaseName": "[sql('SQLServerDatabaseName')]",
+            "StorageAccountCreateNew": "[storage('StorageAccountCreateNew')]",
+            "StorageAccountName": "[storage('StorageAccountName')]",
+            "StorageAccountAccessKey": "[storage('StorageAccountAccessKey')]",
+            "StorageAccountType": "[storage('StorageAccountType')]",
+            "StorageAccountFileShareName": "[basistoragecs('StorageAccountFileShareName')]",
+            "DNSUpdate": "[dns('DNSUpdate')]",
+            "DNSHostName": "[dns('DNSHostName')]",
+            "DNSDomainName": "[dns('DNSDomainName')]",
+            "DNSDomainResourceGroup": "[dns('DNSDomainResourceGroup')]",
+            "HttpsConfigure": "[https('HttpsConfigure')]",
+            "HttpsCertificate": "[https('HttpsCertificate')]",
+            "HttpsCertificatePrivateKey": "[https('HttpsCertificatePrivateKey')]"
+        }
+    }
+}
