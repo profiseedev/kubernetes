@@ -403,7 +403,7 @@
                         "validations":[
                             {
                             "isValid":"[not(equals(basics('nameApi').nameAvailable,false))]",
-                            "message":"[concat('Name unavailable:', basics('txtStorageName'))]"
+                            "message":"[concat('Name unavailable:', steps('sql').SQLServerName)]"
                             }
                             ]
                     },
