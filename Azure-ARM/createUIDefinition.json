@@ -353,7 +353,7 @@
                     "name": "SQLServerCreateNew",
                     "type": "Microsoft.Common.OptionsGroup",
                     "label": "Do you want the deployment process to create an SQL Server and configure it for you?",
-                    "defaultValue": "YYes, create a new SQL server",
+                    "defaultValue": "Yes, create a new SQL server",
                     "toolTip": "If you select No, you must enter the FQDN of an existing sql server accessable by this azure subscription",
                     "constraints": {
                         "required": false,
