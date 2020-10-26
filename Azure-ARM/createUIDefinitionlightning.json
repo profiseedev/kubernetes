@@ -223,7 +223,7 @@
                 },
                 {
                     "name": "SQLServerUser",
-                    "type": "Microsoft.Common.TextBox",
+                    "type": "Microsoft.Compute.UserNameTextBox",
                     "label": "User",
                     "defaultValue": "sqladmin",
                     "toolTip": "Administrator SQL login name to create with the new sql server or to use to connect to existing sql server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols",
