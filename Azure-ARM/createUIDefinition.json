@@ -461,24 +461,23 @@
             "label": "DNS",
             "elements": [
                 {
-                    
                     "name": "DNSUpdate",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "DNS Update",
+                    "type": "Microsoft.Common.OptionsGroup",
+                    "label": "User defined dns",
                     "defaultValue": "No",
-                    "toolTip": "If Yes then your dns zone must be in Azure.  If No then you have to update the dns record yourself.  Use the IP adress that is output from the InstallProfiseePlatform deploymnet step",
+                    "toolTip": "",
                     "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
-                            },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
+                      "allowedValues": [
+                        {
+                          "label": "Use Azure DNS (myprofisee.(reqion).cloudapps.azure.com",
+                          "value": "No"
+                        },
+                        {
+                          "label": "Use my own DNS entries and domain name",
+                          "value": "Yes"
+                        }
+                      ],
+                      "required": true
                     },
                     "visible": true
                 },
