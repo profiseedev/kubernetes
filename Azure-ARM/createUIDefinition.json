@@ -10,6 +10,7 @@
             "microsoft.resources/deploymentscripts",
             "microsoft.resources/resourcegroups"
         ],
+        "isWizard": true,
         "basics": [            
         ],
         "steps": [ {
