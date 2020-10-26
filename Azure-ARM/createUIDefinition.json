@@ -75,37 +75,45 @@
             "elements": [ 
                 {
                     "name": "ActiveDirectoryCreateApp",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Create Application Registration",
-                    "defaultValue": "Yes",
-                    "toolTip": "The Active Directory App Registration will be created and configured.  If No, then you must supply an existing clientid and register the reply url manually.  example - https://profisee.company.com/profisee/auth/signin-microsoft",
+                    "type": "Microsoft.Common.OptionsGroup",
+                    "label": "Do you want the deployment process to create an Azure application registration and configure it for you or do you want to supply your own client id?",
+                    "defaultValue": "No, use default settings.",
+                    "toolTip": "Yes, create and configure the Azure application registration.",
                     "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
-                            },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
+                      "allowedValues": [
+                        {
+                          "label": "Yes, create and configure the Azure application registration.",
+                          "value": "Yes"
+                        },
+                        {
+                          "label": "No, I want to supply an existing azure application registration client id.",
+                          "value": "No"
+                        }
+                      ],
+                      "required": true
                     },
                     "visible": true
-                },
+                }, 
                 {
-                    "name": "ActiveDirectoryClientId",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Application Registration Client Id",
-                    "defaultValue": "",
-                    "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
+                    "name": "UserSuppliedClientyId",
+                    "type": "Microsoft.Common.Section",
+                    "label": "",
+                    "elements": [
+                        {
+                            "name": "ActiveDirectoryClientId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Application Registration Client Id",
+                            "defaultValue": "",
+                            "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        }
+                    ],
+                    "visible": "[equals(steps('ad').ActiveDirectoryCreateApp,'No')]"
                 },
                 {
                     "name": "ManagedIdentityName",
