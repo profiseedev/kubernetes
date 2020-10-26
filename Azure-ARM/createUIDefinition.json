@@ -580,6 +580,23 @@
                             "visible": true
                         },
                         {
+                            "name": "HttpsCertificate2",
+                            "type": "Microsoft.Common.FileUpload",
+                            "label": "Https Certificate",
+                            "toolTip": "",
+                            "constraints": {
+                              "required": false,
+                              "accept": ".txt,.crt"
+                            },
+                            "options": {
+                              "multiple": false,
+                              "uploadMode": "file",
+                              "openMode": "text",
+                              "encoding": "UTF-8"
+                            },
+                            "visible": true
+                        },
+                        {
                             "name": "HttpsCertificatePrivateKey",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Https Certificate Private Key",
@@ -589,6 +606,23 @@
                                 "required": false,
                                 "regex": "",
                                 "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "HttpsCertificatePrivateKey2",
+                            "type": "Microsoft.Common.FileUpload",
+                            "label": "Https Certificate Private Key",
+                            "toolTip": "",
+                            "constraints": {
+                              "required": false,
+                              "accept": ".txt,.key"
+                            },
+                            "options": {
+                              "multiple": false,
+                              "uploadMode": "file",
+                              "openMode": "text",
+                              "encoding": "UTF-8"
                             },
                             "visible": true
                         }
