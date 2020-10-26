@@ -21,7 +21,7 @@
             }
         },                      
          "ManagedIdentityName": {
-            "type": "String",
+            "type": "object",
             "metadata": {
                 "description": "Existing user assigned Managed Identity with contributer access at the subscription level or contributor access to the resource group this is deployed to and the resource group the domain is in if updating dns.  If Active Directory Create Application is Yes, then it must also have Application Developer role in order to create and configure the azure active directory application."
             }
@@ -317,12 +317,7 @@
          "dependsOn": [
                 "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
-        "identity": {
-            "type": "userAssigned",
-            "userAssignedIdentities": {
-                "[variables('ManagedIdentityName')]":{}
-            }
-        },
+        "identity": "[variables('ManagedIdentityName')]",
         "properties": {
             "forceUpdateTag": "[guid(resourceGroup().id)]",
             "azCliVersion": "2.0.80",
