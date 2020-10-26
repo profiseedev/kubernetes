@@ -433,34 +433,14 @@
             "name": "storage",
             "label": "Storage",
             "elements": [
+                
                 {
-                    "name": "StorageAccountCreateNew",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Storage Account Create New",
-                    "defaultValue": "Yes",
-                    "toolTip": "If you select No, you must enter the information for an existing storage account including password.  If you choose Yes, password is not required and will be ignored.",
-                    "constraints": {
-                        "required": false,
-                        "allowedValues": [
-                            {
-                                "label": "Yes",
-                                "value": "Yes"
-                            },
-                            {
-                                "label": "No",
-                                "value": "No"
-                            }
-                        ]
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "sectionStorage1",
+                    "name": "StorageAccountNameSection",
                     "type": "Microsoft.Common.Section",
                     "label": "Storage Account Name",
                     "elements": [
                         {
-                            "name": "singleStorage",
+                            "name": "StorageAccountName",
                                 "type": "Microsoft.Storage.StorageAccountSelector",
                                 "label": "Storage account",
                                 "toolTip": "",
@@ -477,19 +457,6 @@
                                 "visible": true
                         }
                     ],
-                    "visible": true
-                },                
-                {
-                    "name": "StorageAccountFileShareName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Storage Account File Share Name",
-                    "defaultValue": "files",
-                    "toolTip": "Name of file share in the storage account to create and/or use.   Can contain only lowercase letters, numbers, and hyphens, and must begin and end with a letter or a number. The name cannot contain two consecutive hyphens.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
                     "visible": true
                 }
             ]
