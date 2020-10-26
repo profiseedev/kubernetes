@@ -232,7 +232,8 @@
                         "regex": "",
                         "validationMessage": ""
                     },
-                    "visible": true
+                    "visible": true,
+                    "osPlatform": "Windows"
                 },
                 {
                     "name": "SQLServerPassword",
