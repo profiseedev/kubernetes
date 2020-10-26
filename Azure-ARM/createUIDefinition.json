@@ -76,9 +76,9 @@
                 {
                     "name": "ActiveDirectoryCreateApp",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Do you want the deployment process to create an Azure application registration and configure it for you or do you want to supply your own client id?",
-                    "defaultValue": "No, use default settings.",
-                    "toolTip": "Yes, create and configure the Azure application registration.",
+                    "label": "Do you want the deployment process to create an Azure application registration and configure it for you?",
+                    "defaultValue": "Yes, create and configure the Azure application registration.",
+                    "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
