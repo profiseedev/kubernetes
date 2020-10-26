@@ -382,7 +382,16 @@
                         }
                     },
                     "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
-                },                
+                },  
+                {
+                    "name":"nameApi",
+                    "type":"Microsoft.Solutions.ArmApiControl",
+                    "request":{
+        "method": "POST",
+        "path": "[concat(subscription().id,'/providers/Microsoft.Sql/checkNameAvailability?api-version=2019-06-01')]",
+        "body": "[parse(concat('{\"name\":\"',steps('sql').SQLServerName,'\",\"type\":\"Microsoft.Sql/servers\"}'))]"
+        }
+        },              
                 {
                     "name": "SQLServerName",
                     "type": "Microsoft.Common.TextBox",
@@ -391,12 +400,12 @@
                     "toolTip": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure",
                     "constraints": {
                         "required": false,
-                         "validations": [
-                            {
-                                "isValid": "[not(equals(basics('nameApi').nameAvailable, false))]",
-                                "message": "[concat('Name unavailable: ', basics('txtStorageName'))]"
-                            }
-                        ]
+                        "validations":[
+                            {
+                            "isValid":"[not(equals(basics('nameApi').nameAvailable,false))]",
+                            "message":"[concat('Name unavailable:', basics('txtStorageName'))]"
+                            }
+                            ]
                     },
                     "visible": true
                 },
