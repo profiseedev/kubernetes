@@ -228,83 +228,113 @@
                         "required": false
                     },
                     "visible": true
-                },             
+                },  
                 {
-                    "name": "VNet name",
-                    "type": "Microsoft.Network.VirtualNetworkCombo",
-                    "label": {
-                        "virtualNetwork": "Virtual network",
-                        "subnets": "Subnets"
-                    },
-                    "toolTip": {
-                        "virtualNetwork": "",
-                        "subnets": ""
-                    },
-                    "defaultValue": {
-                        "name": "vnet01",
-                        "addressPrefixSize": "/16"
-                    },
+                    "name": "KubernetesAdvancedYesNo",
+                    "type": "Microsoft.Common.OptionsGroup",
+                    "label": "Do you need to configure advanced kubernetes neteworking settingsYou can choose to use Let's Encrypt for https or supply your own certificates",
+                    "defaultValue": "Yes, configure advanced settings",
+                    "toolTip": "",
                     "constraints": {
-                        "minAddressPrefixSize": "/16"
+                      "allowedValues": [
+                        {
+                          "label": "No, use efault settings.",
+                          "value": "No"
+                        },
+                        {
+                          "label": "Yes, configure advanced settings",
+                          "value": "Yes"
+                        }
+                      ],
+                      "required": true
                     },
-                    "options": {
-                        "hideExisting": false
-                    },
-                    "subnets": {
-                        "subnet1": {
-                            "label": "Subnet",
+                    "visible": true
+                }, 
+                {
+                    "name": "KubernetesAdvanced",
+                    "type": "Microsoft.Common.Section",
+                    "label": "Advanced kubernetes settings",
+                    "elements": [
+                        {
+                            "name": "VNet name",
+                            "type": "Microsoft.Network.VirtualNetworkCombo",
+                            "label": {
+                                "virtualNetwork": "Virtual network",
+                                "subnets": "Subnets"
+                            },
+                            "toolTip": {
+                                "virtualNetwork": "",
+                                "subnets": ""
+                            },
                             "defaultValue": {
-                                "name": "subnet-1",
-                                "addressPrefixSize": "/24"
+                                "name": "vnet01",
+                                "addressPrefixSize": "/16"
                             },
                             "constraints": {
-                                "minAddressPrefixSize": "/24",
-                                "minAddressCount": 12,
-                                "requireContiguousAddresses": true
-                            }
+                                "minAddressPrefixSize": "/16"
+                            },
+                            "options": {
+                                "hideExisting": false
+                            },
+                            "subnets": {
+                                "subnet1": {
+                                    "label": "Subnet",
+                                    "defaultValue": {
+                                        "name": "subnet-1",
+                                        "addressPrefixSize": "/24"
+                                    },
+                                    "constraints": {
+                                        "minAddressPrefixSize": "/24",
+                                        "minAddressCount": 12,
+                                        "requireContiguousAddresses": true
+                                    }
+                                }
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "KubernetesServiceCidr",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Service Cidr",
+                            "defaultValue": "10.0.0.0/16",
+                            "toolTip": "A CIDR notation IP range from which to assign service cluster IPs.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "KubernetesDNSServiceIP",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "DNS Service IP",
+                            "defaultValue": "10.0.0.10",
+                            "toolTip": "Containers DNS server IP address.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "KubernetesDockerBridgeCidr",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Docker Bridge Cidr",
+                            "defaultValue": "172.17.0.1/16",
+                            "toolTip": "A CIDR notation IP for Docker bridge.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
                         }
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "KubernetesServiceCidr",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Service Cidr",
-                    "defaultValue": "10.0.0.0/16",
-                    "toolTip": "A CIDR notation IP range from which to assign service cluster IPs.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "KubernetesDNSServiceIP",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "DNS Service IP",
-                    "defaultValue": "10.0.0.10",
-                    "toolTip": "Containers DNS server IP address.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                },
-                {
-                    "name": "KubernetesDockerBridgeCidr",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Docker Bridge Cidr",
-                    "defaultValue": "172.17.0.1/16",
-                    "toolTip": "A CIDR notation IP for Docker bridge.",
-                    "constraints": {
-                        "required": false,
-                        "regex": "",
-                        "validationMessage": ""
-                    },
-                    "visible": true
-                }
+                    ],
+                    "visible": "[equals(steps('kubernetes').KubernetesAdvancedYesNo,'Yes')]"
+                }         
+                
             ]
         },        
         {
