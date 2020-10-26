@@ -1,5 +1,10 @@
 # Deploy Profisee platform on to AKS using ARM template
 
+'ALL - NEW sexy UI - in development' deployment of the Profisee platform.
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployadvanced.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinition.json)
+
+
 'Lightning NEW sexy UI - in development' deployment of the Profisee platform.  Use this for a brand new deplyment.  Https via Let's Encrypt.  Azure DNS (abc.eastus.cloudapps.azure.com).  New sql and storage repositories using a new azure resource manager ui.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightningnew.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinitionlightning.json)
@@ -28,10 +33,6 @@
 'Legacy' deployment of the Profisee platform. Use this if you are using a license prior to the 2020R2 rlease.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylegacy.json)
-
-'ALL - NEW sexy UI - in development' deployment of the Profisee platform.
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployadvanced.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinition.json)
 
 ## Prerequisites
 
