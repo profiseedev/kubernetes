@@ -461,9 +461,31 @@
             "label": "DNS",
             "elements": [
                 {
+                    
+                    "name": "DNSUpdate1",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "DNS Update",
+                    "defaultValue": "No",
+                    "toolTip": "If Yes then your dns zone must be in Azure.  If No then you have to update the dns record yourself.  Use the IP adress that is output from the InstallProfiseePlatform deploymnet step",
+                    "constraints": {
+                        "required": false,
+                        "allowedValues": [
+                            {
+                                "label": "Yes",
+                                "value": "Yes"
+                            },
+                            {
+                                "label": "No",
+                                "value": "No"
+                            }
+                        ]
+                    },
+                    "visible": true
+                },
+                {
                     "name": "DNSUpdate",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "User defined dns",
+                    "label": "You can choose to use azure dns or user defined dns",
                     "defaultValue": "No",
                     "toolTip": "",
                     "constraints": {
@@ -473,7 +495,7 @@
                           "value": "No"
                         },
                         {
-                          "label": "Use my own DNS entries and domain name",
+                          "label": "Use my own DNS hostname and domain name",
                           "value": "Yes"
                         }
                       ],
