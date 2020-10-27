@@ -595,7 +595,7 @@
                       ],
                       "required": true
                     },
-                    "visible": true
+                    "visible": "[equals(steps('networking').DNSUpdate,'Yes')]"
                 },
                 {
                     "name": "UserDefinedHTTPS",
