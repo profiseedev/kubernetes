@@ -136,14 +136,18 @@
                 },
                 {
                     "name": "ProfiseeLicense",
-                    "type": "Microsoft.Common.TextBox",
+                    "type": "Microsoft.Common.FileUpload",
                     "label": "License",
-                    "defaultValue": "",
-                    "toolTip": "Profisee plaform license string supplied by Profisee support.",
+                    "toolTip": "",
                     "constraints": {
-                        "required": true,
-                        "regex": "",
-                        "validationMessage": ""
+                      "required": false,
+                      "accept": ".txt"
+                    },
+                    "options": {
+                      "multiple": false,
+                      "uploadMode": "file",
+                      "openMode": "text",
+                      "encoding": "UTF-8"
                     },
                     "visible": true
                 }
@@ -604,22 +608,9 @@
                     "name": "UserDefinedHTTPS",
                     "type": "Microsoft.Common.Section",
                     "label": "User defined https",
-                    "elements": [
+                    "elements": [                        
                         {
                             "name": "HttpsCertificate",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Https Certificate",
-                            "defaultValue": "",
-                            "toolTip": "Required if using Https.  Paste the text from TLS certificate. Starts with    -----BEGIN CERTIFICATE-----",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
-                        {
-                            "name": "HttpsCertificate2",
                             "type": "Microsoft.Common.FileUpload",
                             "label": "Https Certificate",
                             "toolTip": "",
@@ -637,19 +628,6 @@
                         },
                         {
                             "name": "HttpsCertificatePrivateKey",
-                            "type": "Microsoft.Common.TextBox",
-                            "label": "Https Certificate Private Key",
-                            "defaultValue": "",
-                            "toolTip": "Required if using Https.  Paste the text from private key for your TLS certificate. Starts with    -----BEGIN PRIVATE KEY-----",
-                            "constraints": {
-                                "required": false,
-                                "regex": "",
-                                "validationMessage": ""
-                            },
-                            "visible": true
-                        },
-                        {
-                            "name": "HttpsCertificatePrivateKey2",
                             "type": "Microsoft.Common.FileUpload",
                             "label": "Https Certificate Private Key",
                             "toolTip": "",
