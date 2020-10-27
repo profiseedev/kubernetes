@@ -15,12 +15,12 @@
                 "name": "ManagedIdentityCreate",
                 "type": "Microsoft.Common.OptionsGroup",
                 "label": "Do you want the deployment process to create a managed identity and az Azure application registration and configure it for you?",
-                "defaultValue": "Yes, create the managed identity and configure the Azure application registration.",
+                "defaultValue": "Yes, create the managed identity and the Azure application registration.",
                 "toolTip": "",
                 "constraints": {
                   "allowedValues": [
                     {
-                      "label": "Yes, create the managed identity and configure the Azure application registration.",
+                      "label": "Yes, create the managed identity and the Azure application registration.",
                       "value": "Yes"
                     },
                     {
