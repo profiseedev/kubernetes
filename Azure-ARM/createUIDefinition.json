@@ -488,8 +488,8 @@
             ]
         },          
         {
-            "name": "dns",
-            "label": "DNS",
+            "name": "networking",
+            "label": "Networking",
             "elements": [
                 {
                     "name": "DNSUpdate",
@@ -557,15 +557,8 @@
                             "visible": true
                         }
                     ],
-                    "visible": "[equals(steps('dns').DNSUpdate,'Yes')]"
-                }
-                
-                
-            ]
-        },{
-            "name": "https",
-            "label": "Https",
-            "elements": [
+                    "visible": "[equals(steps('networking').DNSUpdate,'Yes')]"
+                },
                 {
                     "name": "HttpsConfigure",
                     "type": "Microsoft.Common.OptionsGroup",
@@ -653,8 +646,8 @@
                             "visible": true
                         }
                     ],
-                    "visible": "[equals(steps('https').HttpsConfigure,'Yes')]"
-                }               
+                    "visible": "[equals(steps('networking').HttpsConfigure,'Yes')]"
+                }         
                 
             ]
         }],
