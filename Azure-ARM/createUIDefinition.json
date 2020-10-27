@@ -10,7 +10,65 @@
             "microsoft.resources/deploymentscripts",
             "microsoft.resources/resourcegroups"
         ],
-        "basics": [            
+        "basics": [ 
+            {
+                "name": "ActiveDirectoryCreateApp",
+                "type": "Microsoft.Common.OptionsGroup",
+                "label": "Do you want the deployment process to create an Azure application registration and configure it for you?",
+                "defaultValue": "Yes, create and configure the Azure application registration.",
+                "toolTip": "",
+                "constraints": {
+                  "allowedValues": [
+                    {
+                      "label": "Yes, create and configure the Azure application registration.",
+                      "value": "Yes"
+                    },
+                    {
+                      "label": "No, I want to supply an existing azure application registration client id.",
+                      "value": "No"
+                    }
+                  ],
+                  "required": true
+                },
+                "visible": true
+            }, 
+            {
+                "name": "UserSuppliedClientyId",
+                "type": "Microsoft.Common.Section",
+                "label": "",
+                "elements": [
+                    {
+                        "name": "ActiveDirectoryClientId",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Application Registration Client Id",
+                        "defaultValue": "",
+                        "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication.",
+                        "constraints": {
+                            "required": false,
+                            "regex": "",
+                            "validationMessage": ""
+                        },
+                        "visible": true
+                    }
+                ],
+                "visible": "[equals(steps('ad').ActiveDirectoryCreateApp,'No')]"
+            },
+            {
+                "name": "ManagedIdentityName",
+                "type": "Microsoft.ManagedIdentity.IdentitySelector",
+                "label": "Managed Identity Configuration",
+                "toolTip": {
+                    "systemAssignedIdentity": "Enable system assigned identity to grant the resource access to other existing resources.",
+                    "userAssignedIdentity": "Add user assigned identities to grant the resource access to other existing resources."
+                },
+                "defaultValue": {
+                    "systemAssignedIdentity": "OffOnly"
+                },
+                "options": {
+                    "hideSystemAssignedIdentity": true,
+                    "hideUserAssignedIdentity": false
+                }
+            }            
         ],
         "steps": [ {
             "name": "profisee",
