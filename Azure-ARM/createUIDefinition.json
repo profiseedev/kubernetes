@@ -436,7 +436,7 @@
                         "validationMessage": ""
                     },
                     "options": {
-                        "hideConfirmation": "[equals(steps('sql').SQLServerCreateNew,'No')]"
+                        "hideConfirmation": "[equals(steps('sql').SQLServerCreateNew,'Yes')]"
                     },
                     "visible": true
                 },
