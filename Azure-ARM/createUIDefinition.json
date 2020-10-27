@@ -31,7 +31,24 @@
                   "required": true
                 },
                 "visible": true
-            }, 
+            },            
+            {
+                "name": "ManagedIdentityName",
+                "type": "Microsoft.ManagedIdentity.IdentitySelector",
+                "label": "Managed Identity Configuration",
+                "toolTip": {
+                    "systemAssignedIdentity": "Enable system assigned identity to grant the resource access to other existing resources.",
+                    "userAssignedIdentity": "Add user assigned identities to grant the resource access to other existing resources."
+                },
+                "defaultValue": {
+                    "systemAssignedIdentity": "OffOnly"
+                },
+                "options": {
+                    "hideSystemAssignedIdentity": true,
+                    "hideUserAssignedIdentity": false
+                },
+                "visible": "[equals(basics('ManagedIdentityCreate'),'No')]"
+            },
             {
                 "name": "ActiveDirectoryCreateApp",
                 "type": "Microsoft.Common.OptionsGroup",
@@ -73,23 +90,6 @@
                     }
                 ],
                 "visible": "[equals(basics('ActiveDirectoryCreateApp'),'No')]"
-            },
-            {
-                "name": "ManagedIdentityName",
-                "type": "Microsoft.ManagedIdentity.IdentitySelector",
-                "label": "Managed Identity Configuration",
-                "toolTip": {
-                    "systemAssignedIdentity": "Enable system assigned identity to grant the resource access to other existing resources.",
-                    "userAssignedIdentity": "Add user assigned identities to grant the resource access to other existing resources."
-                },
-                "defaultValue": {
-                    "systemAssignedIdentity": "OffOnly"
-                },
-                "options": {
-                    "hideSystemAssignedIdentity": true,
-                    "hideUserAssignedIdentity": false
-                },
-                "visible": "[equals(basics('ManagedIdentityCreate'),'No')]"
             }            
         ],
         "steps": [ {
