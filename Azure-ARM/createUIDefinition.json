@@ -12,6 +12,27 @@
         ],
         "basics": [ 
             {
+                "name": "ManagedIdentityCreate",
+                "type": "Microsoft.Common.OptionsGroup",
+                "label": "Do you want the deployment process to create a managed identity and az Azure application registration and configure it for you?",
+                "defaultValue": "Yes, create the managed identity and configure the Azure application registration.",
+                "toolTip": "",
+                "constraints": {
+                  "allowedValues": [
+                    {
+                      "label": "Yes, create the managed identity and configure the Azure application registration.",
+                      "value": "Yes"
+                    },
+                    {
+                      "label": "No, I want to pick an existing managed identity.",
+                      "value": "No"
+                    }
+                  ],
+                  "required": true
+                },
+                "visible": true
+            }, 
+            {
                 "name": "ActiveDirectoryCreateApp",
                 "type": "Microsoft.Common.OptionsGroup",
                 "label": "Do you want the deployment process to create an Azure application registration and configure it for you?",
@@ -30,7 +51,7 @@
                   ],
                   "required": true
                 },
-                "visible": true
+                "visible": "[equals(basics('ManagedIdentityCreate'),'No')]"
             }, 
             {
                 "name": "UserSuppliedClientyId",
