@@ -407,7 +407,7 @@
                             }
                             ]
                     },
-                    "visible": true
+                    "visible": "[equals(steps('sql').SQLServerCreateNew,'Yes')]"
                 },
                 {
                     "name": "SQLServerUser",
@@ -420,7 +420,7 @@
                         "regex": "",
                         "validationMessage": ""
                     },
-                    "visible": "[equals(steps('sql').SQLServerCreateNew,'Yes')]"
+                    "visible": true
                 },
                 {
                     "name": "SQLServerPassword",
