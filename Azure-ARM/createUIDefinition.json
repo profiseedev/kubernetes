@@ -450,7 +450,7 @@
                     "constraints": {
                         "required": true,
                         "regex": "^((?=.*[A-Z])(?=.*\\d)(?=.*[~`!@#$%^&*()\\-_+={[}\\]|\\\\:;\"'<,>.?\\\/])|(?=.*[a-z])(?=.*\\d)(?=.*[~`!@#$%^&*()\\-_+={[}\\]|\\\\:;\"'<,>.?\\\/])|(?=.*[a-z])(?=.*\\d)(?=.*[A-Z])|(?=.*[a-z])(?=.*[~`!@#$%^&*()\\-_+={[}\\]|\\\\:;\"'<,>.?\\\/])(?=.*[A-Z]))[\\w~`!@#$%^&*()\\-+={[}\\]|\\\\:;\"'<,>.?\\\/]{8,128}$",
-                        "validationMessage": "Password for sql server user.  The password does not contain the account name of the user and must be at least eight characters long and be no more than 128 characters in length.  The password contains characters from three of the following four categories: Latin uppercase letters (A through Z).  Latin lowercase letters (a through z).  Base 10 digits (0 through 9).  Non-alphanumeric characters such as: exclamation point (!), dollar sign ($), number sign (#), or percent (%)."
+                        "validationMessage": "Your password must be at least 8 characters in length.  Your password must be no more than 128 characters in length.  Your password must contain characters from three of the following categories – English uppercase letters, English lowercase letters, numbers (0-9), and non-alphanumeric characters (!, $, #, %, etc.).  Your password cannot contain all or part of the login name. Part of a login name is defined as three or more consecutive alphanumeric characters."
                     },
                     "options": {
                         "hideConfirmation": "[equals(steps('sql').SQLServerCreateNew,'No')]"
