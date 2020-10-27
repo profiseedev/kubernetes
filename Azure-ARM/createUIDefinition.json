@@ -387,11 +387,11 @@
                     "name":"nameApi",
                     "type":"Microsoft.Solutions.ArmApiControl",
                     "request":{
-        "method": "POST",
-        "path": "[concat(subscription().id,'/providers/Microsoft.Sql/checkNameAvailability?api-version=2014-04-01')]",
-        "body": "[parse(concat('{\"name\":\"',steps('sql').SQLServerName,'\",\"type\":\"Microsoft.Sql/servers\"}'))]"
-        }
-        },              
+                    "method": "POST",
+                    "path": "[concat(subscription().id,'/providers/Microsoft.Sql/checkNameAvailability?api-version=2014-04-01')]",
+                    "body": "[parse(concat('{\"name\":\"',steps('sql').SQLServerName,'\",\"type\":\"Microsoft.Sql/servers\"}'))]"
+                    }
+                },              
                 {
                     "name": "SQLServerName",
                     "type": "Microsoft.Common.TextBox",
@@ -420,7 +420,7 @@
                         "regex": "",
                         "validationMessage": ""
                     },
-                    "visible": true
+                    "visible": "[equals(steps('sql').SQLServerCreateNew,'Yes')]"
                 },
                 {
                     "name": "SQLServerPassword",
