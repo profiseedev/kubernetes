@@ -88,7 +88,8 @@
                 "options": {
                     "hideSystemAssignedIdentity": true,
                     "hideUserAssignedIdentity": false
-                }
+                },
+                "visible": "[equals(basics('ManagedIdentityCreate'),'No')]"
             }            
         ],
         "steps": [ {
