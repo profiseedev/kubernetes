@@ -363,7 +363,7 @@
                                 "value": "Yes"
                             },
                             {
-                                "label": "No, I will provide the fully qualified name of the existing SQL Server",
+                                "label": "No, I will pick and existing SQL Server in Azure",
                                 "value": "No"
                             }
                         ]
@@ -399,7 +399,7 @@
                     "defaultValue": "mysqlservername",
                     "toolTip": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure",
                     "constraints": {
-                        "required": false,
+                        "required": true,
                         "validations":[
                             {
                             "isValid":"[equals(steps('sql').nameApi.available,true)]",
@@ -416,7 +416,7 @@
                     "defaultValue": "sqladmin",
                     "toolTip": "Administrator SQL login name to create with the new sql server or to use to connect to existing sql server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols",
                     "constraints": {
-                        "required": false,
+                        "required": true,
                         "regex": "",
                         "validationMessage": ""
                     },
@@ -447,7 +447,7 @@
                     "defaultValue": "Profisee",
                     "toolTip": "Name of database to create and/or use.  Name should not match special pattern and has a length of at most 128.  Should not contain reserved words.  No database with the same name exists in the server",
                     "constraints": {
-                        "required": false,
+                        "required": true,
                         "regex": "",
                         "validationMessage": ""
                     },
