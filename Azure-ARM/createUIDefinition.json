@@ -371,9 +371,9 @@
                     "visible": true
                 },
                 {
-                    "name": "sql servers",
+                    "name": "ExistingSqlServers",
                     "type": "Microsoft.Solutions.ResourceSelector",
-                    "label": "Select storage accounts",
+                    "label": "Select Sql Server",
                     "resourceType": "Microsoft.Sql/servers",
                     "options": {
                         "filter": {
