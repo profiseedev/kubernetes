@@ -51,7 +51,7 @@
                         "visible": true
                     }
                 ],
-                "visible": "[equals(steps('ad').ActiveDirectoryCreateApp,'No')]"
+                "visible": "[equals(basics('ActiveDirectoryCreateApp'),'No')]"
             },
             {
                 "name": "ManagedIdentityName",
