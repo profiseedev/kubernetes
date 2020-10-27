@@ -453,7 +453,7 @@
                         "validationMessage": ""
                     },
                     "options": {
-                        "hideConfirmation": "[not(equals(steps('sql').SQLServerCreateNew,'Yes'))]"
+                        "hideConfirmation": "[equals(steps('sql').SQLServerCreateNew,'No')]"
                     },
                     "visible": true
                 },
@@ -468,7 +468,7 @@
                         "regex": "",
                         "validationMessage": ""
                     },
-                    "visible": "[not(equals(steps('sql').SQLServerCreateNew,'Yes'))]"
+                    "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
                 }
             ]
         },  
