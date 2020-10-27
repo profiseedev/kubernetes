@@ -386,7 +386,7 @@
                         ]
                     },
                     "visible": true
-                },
+                },                
                 {
                     "name": "ExistingSqlServers",
                     "type": "Microsoft.Solutions.ResourceSelector",
@@ -425,7 +425,7 @@
                             ]
                     },
                     "visible": "[equals(steps('sql').SQLServerCreateNew,'Yes')]"
-                },
+                },                
                 {
                     "name": "SQLServerUser",
                     "type": "Microsoft.Common.TextBox",
@@ -453,7 +453,7 @@
                         "validationMessage": "Your password must be at least 8 characters in length.  Your password must be no more than 128 characters in length.  Your password must contain characters from three of the following categories – English uppercase letters, English lowercase letters, numbers (0-9), and non-alphanumeric characters (!, $, #, %, etc.).  Your password cannot contain all or part of the login name. Part of a login name is defined as three or more consecutive alphanumeric characters."
                     },
                     "options": {
-                        "hideConfirmation": "[equals(steps('sql').SQLServerCreateNew,'No')]"
+                        "hideConfirmation": false
                     },
                     "visible": true
                 },
@@ -468,8 +468,11 @@
                         "regex": "",
                         "validationMessage": ""
                     },
-                    "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
-                }
+                    "visible": true
+                } 
+                
+
+                               
             ]
         },  
         {
@@ -512,12 +515,12 @@
                     "name": "DNSUpdate",
                     "type": "Microsoft.Common.OptionsGroup",
                     "label": "You can choose to use azure dns or user defined dns",
-                    "defaultValue": "Use Azure DNS.  myprofisee.(reqion).cloudapps.azure.com",
+                    "defaultValue": "Use Azure DNS - myprofisee.(reqion).cloudapps.azure.com and Let's Encrypt for https certificates.",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
-                          "label": "Use Azure DNS.  myprofisee.(reqion).cloudapps.azure.com",
+                          "label": "Use Azure DNS - myprofisee.(reqion).cloudapps.azure.com and Let's Encrypt for https certificates.",
                           "value": "No"
                         },
                         {
