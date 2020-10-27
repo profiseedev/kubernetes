@@ -403,7 +403,7 @@
                         "validations":[
                             {
                             "isValid":"[equals(steps('sql').nameApi.available,true)]",
-                            "message":"[concat('Name unavailable:', steps('sql').SQLServerName,steps('sql').nameApi.Reason, steps('sql').nameApi.Message)]"
+                            "message":"[concat('Name unavailable: ', steps('sql').SQLServerName,steps('sql').nameApi.reason, steps('sql').nameApi.message)]"
                             }
                             ]
                     },
