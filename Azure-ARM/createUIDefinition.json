@@ -514,6 +514,26 @@
                         "required": true
                     },
                     "visible": "[equals(steps('storage').StorageAccountNameSection.StorageAccountName.newOrExisting, 'existing')]"
+                },
+                {
+                    "name":"GetStorageFileSharesRestApiResponse",
+                    "type":"Microsoft.Solutions.ArmApiControl",
+                    "request":{
+                    "method": "POST",
+                    "path": "[concat(subscription().id,'/resourceGroups/',steps('storage').StorageAccountNameSection.StorageAccountName.resourceGroup,'/providers/Microsoft.Storage/storageAccounts/',steps('storage').StorageAccountNameSection.StorageAccountName.name,'/fileServices/default/shares?api-version=2019-06-01')]",
+                    "body": ""
+                    }
+                },              
+                {
+                    "name": "StorageAccountFileShareName",
+                    "type": "Microsoft.Common.DropDown",
+                    "label": "File share",
+                    "toolTip": "",
+                    "constraints": {
+                        "allowedValues": "[map(steps('storage').GetStorageFileSharesRestApiResponse.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.name, '\"}')))]",
+                        "required": true
+                    },
+                    "visible": "[equals(steps('storage').StorageAccountNameSection.StorageAccountName.newOrExisting, 'existing')]"
                 }
             ]
         },          
