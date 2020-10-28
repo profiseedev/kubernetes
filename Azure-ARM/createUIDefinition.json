@@ -85,7 +85,7 @@
                     "defaultValue": "2020R2.0",
                     "toolTip": "Version of the Profisee platform to use.",
                     "constraints": {
-                        "required": false,
+                        "required": true,
                         "allowedValues": [
                             {
                                 "label": "2020R1.0",
@@ -110,7 +110,7 @@
                     "defaultValue": "first.last@company.com",
                     "toolTip": "Name of the account of the first super user who will be registered in the Profisee platform, who will be able to logon and add other users.",
                     "constraints": {
-                        "required": false,
+                        "required": true,
                         "regex": "",
                         "validationMessage": ""
                     },
@@ -122,7 +122,7 @@
                     "label": "License",
                     "toolTip": "",
                     "constraints": {
-                      "required": false,
+                      "required": true,
                       "accept": ".txt"
                     },
                     "options": {
@@ -147,7 +147,7 @@
                     "defaultValue": "MyAKSCluster",
                     "toolTip": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group",
                     "constraints": {
-                        "required": false,
+                        "required": true,
                         "regex": "",
                         "validationMessage": ""
                     },
@@ -359,7 +359,7 @@
                     "defaultValue": "Yes, create a new SQL server",
                     "toolTip": "If you select No, you must enter the FQDN of an existing sql server accessable by this azure subscription",
                     "constraints": {
-                        "required": false,
+                        "required": true,
                         "allowedValues": [
                             {
                                 "label": "Yes, create a new SQL server",
@@ -399,7 +399,6 @@
                     "name": "SQLServerName",
                     "type": "Microsoft.Common.TextBox",
                     "label": "Server Name",
-                    "defaultValue": "mysqlservername",
                     "toolTip": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure",
                     "constraints": {
                         "required": true,
@@ -530,7 +529,7 @@
                             "defaultValue": "myprofiseehostname",
                             "toolTip": "Host name to use/create.  Required if updating DNS.",
                             "constraints": {
-                                "required": false,
+                                "required": true,
                                 "regex": "",
                                 "validationMessage": ""
                             },
@@ -543,7 +542,7 @@
                             "defaultValue": "mydomain.com",
                             "toolTip": "Domain name name to use.  Required if updating DNS.",
                             "constraints": {
-                                "required": false,
+                                "required": true,
                                 "regex": "",
                                 "validationMessage": ""
                             },
@@ -556,7 +555,7 @@
                             "defaultValue": "mydnszoneresourcegroup",
                             "toolTip": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS.",
                             "constraints": {
-                                "required": false,
+                                "required": true,
                                 "regex": "",
                                 "validationMessage": ""
                             },
@@ -597,7 +596,7 @@
                             "label": "Https Certificate",
                             "toolTip": "",
                             "constraints": {
-                              "required": false,
+                              "required": true,
                               "accept": ".txt,.crt"
                             },
                             "options": {
@@ -614,7 +613,7 @@
                             "label": "Https Certificate Private Key",
                             "toolTip": "",
                             "constraints": {
-                              "required": false,
+                              "required": true,
                               "accept": ".txt,.key"
                             },
                             "options": {
