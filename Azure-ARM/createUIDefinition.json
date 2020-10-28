@@ -645,7 +645,7 @@
             "KubernetesWindowsNodeCount": "[steps('kubernetes').KubernetesWindowsNodeCount]",
 
             "KubernetesVnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.name]",
-            "KubernetesVnetResourceGroup": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.resourceGroup",
+            "KubernetesVnetResourceGroup": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.resourceGroup]",
             "KubernetesSubnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.subnet1.name]",
 
             "KubernetesServiceCidr": "[steps('kubernetes').KubernetesServiceCidr]",
@@ -653,7 +653,7 @@
             "KubernetesDockerBridgeCidr": "[steps('kubernetes').KubernetesDockerBridgeCidr]",
 
             "SQLServerCreateNew": "[steps('sql').SQLServerCreateNew]",
-            "SQLServerName": "if(equals(steps('sql').SQLServerCreateNew, 'Yes''), steps('sql').SQLServerName, steps('sql').SQLServerNameExisting)",
+            "SQLServerName": "[if(equals(steps('sql').SQLServerCreateNew, 'Yes''), steps('sql').SQLServerName, steps('sql').SQLServerNameExisting)]",
             "SQLServerUser": "[steps('sql').SQLServerUser]",
             "SQLServerPassword": "[steps('sql').SQLServerPassword]",
             "SQLServerDatabaseName": "[steps('sql').SQLServerDatabaseName]",
