@@ -264,7 +264,7 @@
                     "label": "Advanced kubernetes settings",
                     "elements": [
                         {
-                            "name": "VNet name",
+                            "name": "KubernetesVnetName",
                             "type": "Microsoft.Network.VirtualNetworkCombo",
                             "label": {
                                 "virtualNetwork": "Virtual network",
@@ -644,13 +644,13 @@
             "KubernetesWindowsNodeSize": "[steps('kubernetes').KubernetesWindowsNodeSizeSection.KubernetesWindowsNodeSize]",
             "KubernetesWindowsNodeCount": "[steps('kubernetes').KubernetesWindowsNodeCount]",
 
-            "KubernetesVersion": "[kubernetes('KubernetesVersion')]",
-            "KubernetesVnetName": "[kubernetes('KubernetesVnetName')]",
-            "KubernetesVnetResourceGroup": "[kubernetes('KubernetesVnetResourceGroup')]",
-            "KubernetesSubnetName": "[kubernetes('KubernetesSubnetName')]",
-            "KubernetesServiceCidr": "[kubernetes('KubernetesServiceCidr')]",
-            "KubernetesDNSServiceIP": "[kubernetes('KubernetesDNSServiceIP')]",
-            "KubernetesDockerBridgeCidr": "[kubernetes('KubernetesDockerBridgeCidr')]",
+            "KubernetesVnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.name]",
+            "KubernetesVnetResourceGroup": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.resourceGroup",
+            "KubernetesSubnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.subnet1.name]",
+
+            "KubernetesServiceCidr": "[steps('kubernetes').KubernetesServiceCidr]",
+            "KubernetesDNSServiceIP": "[steps('kubernetes').KubernetesDNSServiceIP]",
+            "KubernetesDockerBridgeCidr": "[steps('kubernetes').KubernetesDockerBridgeCidr]",
 
             "SQLServerCreateNew": "[steps('sql').SQLServerCreateNew]",
             "SQLServerName": "[steps('sql').SQLServerName]",

@@ -128,7 +128,6 @@
         "KubernetesWindowsNodeCount": "[int(parameters('KubernetesWindowsNodeCount'))]",
         "KubernetesWindowsNodeSize": "[parameters('KubernetesWindowsNodeSize')]",
 
-        "ManagedIdentityResourceGroup": "[parameters('ManagedIdentityResourceGroup')]",
         "ManagedIdentityName": "[parameters('ManagedIdentityName')]",
 
         "DNSHostName": "[parameters('DNSHostName')]",
