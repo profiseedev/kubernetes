@@ -648,9 +648,9 @@
             "KubernetesVnetResourceGroup": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.resourceGroup]",
             "KubernetesSubnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.subnet1.name]",
 
-            "KubernetesServiceCidr": "[steps('kubernetes').KubernetesServiceCidr]",
-            "KubernetesDNSServiceIP": "[steps('kubernetes').KubernetesDNSServiceIP]",
-            "KubernetesDockerBridgeCidr": "[steps('kubernetes').KubernetesDockerBridgeCidr]",
+            "KubernetesServiceCidr": "[steps('kubernetes').KubernetesAdvanced.KubernetesServiceCidr]",
+            "KubernetesDNSServiceIP": "[steps('kubernetes').KubernetesAdvanced.KubernetesDNSServiceIP]",
+            "KubernetesDockerBridgeCidr": "[steps('kubernetes').KubernetesAdvanced.KubernetesDockerBridgeCidr]",
 
             "SQLServerCreateNew": "[steps('sql').SQLServerCreateNew]",
             "SQLServerName": "[if(equals(steps('sql').SQLServerCreateNew, 'Yes'), steps('sql').SQLServerName, steps('sql').SQLServerNameExisting.name)]",
