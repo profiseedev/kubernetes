@@ -371,7 +371,7 @@
                     "visible": true
                 },                
                 {
-                    "name": "SQLServerName",
+                    "name": "SQLServerNameExisting",
                     "type": "Microsoft.Solutions.ResourceSelector",
                     "label": "Select Sql Server",
                     "resourceType": "Microsoft.Sql/servers",
@@ -649,6 +649,7 @@
             "KubernetesDockerBridgeCidr": "[kubernetes('KubernetesDockerBridgeCidr')]",
             "SQLServerCreateNew": "[steps('sql').SQLServerCreateNew]",
             "SQLServerName": "[steps('sql').SQLServerName]",
+            "SQLServerNameExisting": "[steps('sql').SQLServerNameExisting]",
             "SQLServerUser": "[steps('sql').SQLServerUser]",
             "SQLServerPassword": "[steps('sql').SQLServerPassword]",
             "SQLServerDatabaseName": "[steps('sql').SQLServerDatabaseName]",
