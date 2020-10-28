@@ -17,7 +17,7 @@
                 "label": "Managed Identity Configuration",
                 "toolTip": {
                     "systemAssignedIdentity": "",
-                    "userAssignedIdentity": "tst test"
+                    "userAssignedIdentity": "The managed identity must have Contributor role for the resource group, and the DNS zone resource group if using your own DNS. This can be done by assigning the contributor role to each individual resource group, or assigning the at the subscription level. If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it."
                 },
                 "defaultValue": {
                     "systemAssignedIdentity": "OffOnly"
@@ -658,13 +658,13 @@
             "StorageAccountAccessKey": "[storage('StorageAccountAccessKey')]",
             "StorageAccountType": "[storage('StorageAccountType')]",
             "StorageAccountFileShareName": "[basistoragecs('StorageAccountFileShareName')]",
-            "DNSUpdate": "[dns('DNSUpdate')]",
-            "DNSHostName": "[dns('DNSHostName')]",
-            "DNSDomainName": "[dns('DNSDomainName')]",
-            "DNSDomainResourceGroup": "[dns('DNSDomainResourceGroup')]",
-            "HttpsConfigure": "[https('HttpsConfigure')]",
-            "HttpsCertificate": "[https('HttpsCertificate')]",
-            "HttpsCertificatePrivateKey": "[https('HttpsCertificatePrivateKey')]"
+            "DNSUpdate": "[steps('networking').DNSUpdate]",
+            "DNSHostName": "[steps('networking').DNSHostName]",
+            "DNSDomainName": "[steps('networking').DNSDomainName]",
+            "DNSDomainResourceGroup": "[steps('networking').DNSDomainResourceGroup]",
+            "HttpsConfigure": "[steps('networking').HttpsConfigure]",
+            "HttpsCertificate": "[steps('networking').HttpsCertificate]",
+            "HttpsCertificatePrivateKey": "[steps('networking').HttpsCertificatePrivateKey]"
         }
     }
 }
