@@ -53,6 +53,9 @@
         "KubernetesDockerBridgeCidr": {
             "type": "string"
         },
+        "SQLServerCreateNew": {
+            "type": "String"
+        }, 
         "SQLServerName": {
             "type": "String"
         },        
@@ -143,14 +146,15 @@
         "SQLServerCreateNew" : "[parameters('SQLServerCreateNew')]",
         "SQLServerName":"[parameters('SQLServerName')]",
         "SQLNAME": "[if(equals(variables('SQLServerCreateNew'),'Yes'), concat(variables('SQLServerName'),'.database.windows.net'),variables('SQLServerName'))]",
-        "SQLDBNAME":"[parameters('SQLServerDatabaseName')]",
+        "SQLServerDatabaseName":"[parameters('SQLServerDatabaseName')]",
         "SQLUSERPASSWORD":"[parameters('SQLServerPassword')]",
         "SQLUSERNAME":"[parameters('SQLServerUser')]",
 
         "StorageAccountCreateNew" : "[parameters('StorageAccountCreateNew')]",
-        "STORAGEACCOUNTNAME":"[parameters('StorageAccountName')]",
+        "StorageAccountName":"[parameters('StorageAccountName')]",
         "FILEREPOPASSWORD":"[parameters('StorageAccountAccessKey')]",
-        "STORAGEACCOUNTFILESHARENAME":"[parameters('StorageAccountFileShareName')]",
+        "StorageAccountFileShareName":"[parameters('StorageAccountFileShareName')]",
+        "StorageAccountType":"[parameters('StorageAccountType')]",
         
         
         "CONFIGUREHTTPS":"[parameters('HttpsConfigure')]",
@@ -298,6 +302,16 @@
                         "startIpAddress": "0.0.0.0",
                         "endIpAddress": "0.0.0.0"
                     }
+                },
+                {
+                "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+                "type": "databases",
+                "apiVersion": "2020-08-01-preview",
+                "name": "[variables('SQLServerDatabaseName')]",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[resourceId('Microsoft.Sql/servers', concat(variables('SQLServerName')))]"
+                ]
                 }
             ]
         },
@@ -312,7 +326,7 @@
                 "displayName": "[variables('StorageAccountName')]"
             },
             "sku": {
-                "name": "Standard_LRS"
+                "name": "[variables('StorageAccountType')]"
             },
             "kind": "StorageV2"
         },
@@ -364,7 +378,7 @@
                 },
                 {
                     "name": "SQLDBNAME",
-                    "value": "[variables('SQLDBNAME')]"
+                    "value": "[variables('SQLServerDatabaseName')]"
                 },
                 {
                     "name": "STORAGEACCOUNTNAME",
