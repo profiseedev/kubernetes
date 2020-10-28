@@ -658,8 +658,7 @@
             "SQLServerUser": "[steps('sql').SQLServerUser]",
             "SQLServerPassword": "[steps('sql').SQLServerPassword]",
             "SQLServerDatabaseName": "[steps('sql').SQLServerDatabaseName]",
-
-            "StorageAccountCreateNew": "[steps('storage').StorageAccountNameSection.StorageAccountName.name]",
+            "StorageAccountCreateNew": "[if(equals(steps('storage').StorageAccountNameSection.StorageAccountName.newOrExisting, 'new''), 'Yes', 'No')]",
             "StorageAccountName": "[steps('storage').StorageAccountNameSection.StorageAccountName.name]",
             "StorageAccountAccessKey": "[steps('storage').StorageAccountNameSection.StorageAccountName.name]",
             "StorageAccountType": "[steps('storage').StorageAccountNameSection.StorageAccountName.type]",
