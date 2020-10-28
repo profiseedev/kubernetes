@@ -646,7 +646,7 @@
 
             "KubernetesVnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.name]",
             "KubernetesVnetResourceGroup": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.resourceGroup]",
-            "KubernetesSubnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.subnet1.name]",
+            "KubernetesSubnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.subnets.subnet1.name]",
 
             "KubernetesServiceCidr": "[steps('kubernetes').KubernetesAdvanced.KubernetesServiceCidr]",
             "KubernetesDNSServiceIP": "[steps('kubernetes').KubernetesAdvanced.KubernetesDNSServiceIP]",
