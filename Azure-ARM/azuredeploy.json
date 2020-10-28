@@ -1224,12 +1224,7 @@
          "dependsOn": [
                 "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
-        "identity": {
-            "type": "userAssigned",
-            "userAssignedIdentities": {
-                "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',variables('ManagedIdentityResourceGroup'),'/providers/Microsoft.ManagedIdentity/userAssignedIdentities/',variables('ManagedIdentityName'))]":{}
-            }
-        },
+        "identity": "[variables('ManagedIdentityName')]",
         "properties": {
             "forceUpdateTag": "[guid(resourceGroup().id)]",
             "azCliVersion": "2.0.80",
