@@ -506,7 +506,7 @@
                     "toolTip": "",
                     "multiselect":false,
                     "selectAll":false,
-                    "filter":true,
+                    "filter":false,
                     "filterPlaceholder":"Filter items ...",
                     "multiLine":false,
                     "constraints": {
