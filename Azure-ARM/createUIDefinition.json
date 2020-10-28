@@ -653,7 +653,7 @@
             "KubernetesDockerBridgeCidr": "[steps('kubernetes').KubernetesDockerBridgeCidr]",
 
             "SQLServerCreateNew": "[steps('sql').SQLServerCreateNew]",
-            "SQLServerName": "[if(equals(steps('sql').SQLServerCreateNew, 'Yes'), steps('sql').SQLServerName, steps('sql').SQLServerNameExisting)]",
+            "SQLServerName": "[if(equals(steps('sql').SQLServerCreateNew, 'Yes'), steps('sql').SQLServerName, steps('sql').SQLServerNameExisting.name)]",
             "SQLServerUser": "[steps('sql').SQLServerUser]",
             "SQLServerPassword": "[steps('sql').SQLServerPassword]",
             "SQLServerDatabaseName": "[steps('sql').SQLServerDatabaseName]",
