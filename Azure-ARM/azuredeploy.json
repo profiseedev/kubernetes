@@ -53,9 +53,6 @@
         "KubernetesDockerBridgeCidr": {
             "type": "string"
         },
-        "SQLServerCreateNew": {
-            "type": "String"
-        },
         "SQLServerName": {
             "type": "String"
         },        
