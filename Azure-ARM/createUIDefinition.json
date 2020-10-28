@@ -12,63 +12,12 @@
         ],
         "basics": [ 
             {
-                "name": "ServicePrincipal",
-                "type": "Microsoft.Common.ServicePrincipalSelector",
-                "label": {
-                  "principalId": "App Id",
-                  "password": "Password",
-                  "certificateThumbprint": "Certificate thumbprint",
-                  "authenticationType": "Authentication Type",
-                  "sectionHeader": "Service Principal"
-                },
-                "toolTip": {
-                  "principalId": "App Id",
-                  "password": "Password",
-                  "certificateThumbprint": "Certificate thumbprint",
-                  "authenticationType": "Authentication Type"
-                },
-                "defaultValue": {
-                  "principalId": "<default guid>",
-                  "name": "(New) default App Id"
-                },
-                "constraints": {
-                  "required": false,
-                  "regex": "^[a-zA-Z0-9]{8,}$",
-                  "validationMessage": "Password must be at least 8 characters long, contain only numbers and letters"
-                },
-                "options": {
-                  "hideCertificate": true
-                },
-                "visible": true
-              },
-            {
-                "name": "ManagedIdentityCreate",
-                "type": "Microsoft.Common.OptionsGroup",
-                "label": "Do you want the deployment process to create a managed identity and az Azure application registration and configure it for you?",
-                "defaultValue": "Yes, create the managed identity and the Azure application registration.",
-                "toolTip": "",
-                "constraints": {
-                  "allowedValues": [
-                    {
-                      "label": "Yes, create the managed identity and the Azure application registration.",
-                      "value": "Yes"
-                    },
-                    {
-                      "label": "No, I want to pick an existing managed identity.",
-                      "value": "No"
-                    }
-                  ],
-                  "required": true
-                },
-                "visible": true
-            },            
-            {
                 "name": "ManagedIdentityName",
                 "type": "Microsoft.ManagedIdentity.IdentitySelector",
                 "label": "Managed Identity Configuration",
                 "toolTip": {
                     "systemAssignedIdentity": "",
-                    "userAssignedIdentity": ""
+                    "userAssignedIdentity": "tst test"
                 },
                 "defaultValue": {
                     "systemAssignedIdentity": "OffOnly"
@@ -77,7 +26,7 @@
                     "hideSystemAssignedIdentity": true,
                     "hideUserAssignedIdentity": false
                 },
-                "visible": "[equals(basics('ManagedIdentityCreate'),'No')]"
+                "visible": true
             },
             {
                 "name": "ActiveDirectoryCreateApp",
@@ -98,7 +47,7 @@
                   ],
                   "required": true
                 },
-                "visible": "[equals(basics('ManagedIdentityCreate'),'No')]"
+                "visible": true
             }, 
             {
                 "name": "UserSuppliedClientyId",
