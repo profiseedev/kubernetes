@@ -387,7 +387,7 @@
                     "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
                 },  
                 {
-                    "name":"nameApi",
+                    "name":"CheckSqlNameRestApiResponse",
                     "type":"Microsoft.Solutions.ArmApiControl",
                     "request":{
                     "method": "POST",
@@ -404,8 +404,8 @@
                         "required": true,
                         "validations":[
                             {
-                            "isValid":"[equals(steps('sql').nameApi.available,true)]",
-                            "message":"[steps('sql').nameApi.message]"
+                            "isValid":"[equals(steps('sql').CheckSqlNameRestApiResponse.available,true)]",
+                            "message":"[steps('sql').CheckSqlNameRestApiResponse.message]"
                             }
                             ]
                     },
@@ -489,7 +489,32 @@
                         }
                     ],
                     "visible": true
-                }
+                },
+                {
+                    "name":"GetStorageAccessKeysRestApiResponse",
+                    "type":"Microsoft.Solutions.ArmApiControl",
+                    "request":{
+                    "method": "POST",
+                    "path": "[concat(subscription().id,'/resourceGroups/',steps('storage').StorageAccountNameSection.StorageAccountName.resourceGroup,'/providers/Microsoft.Storage/storageAccounts/',steps('storage').StorageAccountNameSection.StorageAccountName.name,'/listKeys?api-version=2019-06-01')]",
+                    "body": ""
+                    }
+                },              
+                {
+                    "name": "StorageAccountAccessKey",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Access Key",
+                    "toolTip": "",
+                    "constraints": {
+                        "required": true,
+                        "validations":[
+                            {
+                            "isValid":"false",
+                            "message":"[steps('storage').GetStorageAccessKeysRestApiResponse.keys[0]]"
+                            }
+                            ]
+                    },
+                    "visible": "[equals(steps('sql').SQLServerCreateNew,'Yes')]"
+                }, 
             ]
         },          
         {
