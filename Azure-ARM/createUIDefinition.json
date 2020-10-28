@@ -682,7 +682,7 @@
             "StorageAccountCreateNew": "[if(equals(steps('storage').StorageAccountNameSection.StorageAccountName.newOrExisting, 'new'), 'Yes', 'No')]",
             "StorageAccountName": "[steps('storage').StorageAccountNameSection.StorageAccountName.name]",
             "StorageAccountResourceGroupName": "[coalesce(steps('storage').StorageAccountNameSection.StorageAccountName.resourceGroup,resourceGroup().name)]",
-            "StorageAccountAccessKey": "",
+            "StorageAccountAccessKey": "[steps('storage').StorageAccountAccessKey]",
             "StorageAccountType": "[steps('storage').StorageAccountNameSection.StorageAccountName.type]",
             "StorageAccountFileShareName": "files",
 
