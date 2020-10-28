@@ -514,7 +514,7 @@
                             ]
                     },
                     "visible": "[equals(steps('sql').SQLServerCreateNew,'Yes')]"
-                }, 
+                }
             ]
         },          
         {
