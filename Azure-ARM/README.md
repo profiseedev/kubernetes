@@ -2,27 +2,11 @@
 
 'ALL - NEW sexy UI - in development' deployment of the Profisee platform.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployadvanced.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinition.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinition.json)
 
 'Lightning' deployment of the Profisee platform.  Use this for a brand new deplyment.  Https via Let's Encrypt.  Azure DNS (abc.eastus.cloudapps.azure.com).  New sql and storage repositories.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightning.json)
-
-'Lightning plus' deployment of the Profisee platform. Use this for a brand new deplyment and you want to use your own dns and https certificates.  New sql and storage repositories.
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploylightningplus.json)
-
-'Quick' deployment of the Profisee platform. Use this is you have existing sql and/or storage repositories.  Https via Let's Encrypt.  Azure DNS (abc.eastus.cloudapps.azure.com).  New or existing sql and storage repositories.
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployquick.json)
-
-'Quick plus' deployment of the Profisee platform. Use this is you have existing sql and/or storage repositories and you want to use your own dns and https certificates.  New or existing sql and storage repositories.
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployquickplus.json)
-
-'Advanced' deployment of the Profisee platform.  Use this if you need custom networking and or kubernetes settings and you want to use your own dns and https certificates.  New or existing sql and storage repositories.
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeployadvanced.json)
 
 'Legacy' deployment of the Profisee platform. Use this if you are using a license prior to the 2020R2 rlease.
 
