@@ -81,7 +81,7 @@ else
 	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP	
 fi
 
-echo $"Installing nginx finished";
+echo $"Installing nginx finished, sleeping for 30s to wait for its IP";
 
 #wait for the ip to be available.  usually a few seconds
 sleep 30;
