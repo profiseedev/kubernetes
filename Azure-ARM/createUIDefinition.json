@@ -504,11 +504,6 @@
                     "type": "Microsoft.Common.DropDown",
                     "label": "Access Keys",
                     "toolTip": "",
-                    "multiselect":false,
-                    "selectAll":false,
-                    "filter":false,
-                    "filterPlaceholder":"Filter items ...",
-                    "multiLine":false,
                     "constraints": {
                         "allowedValues": "[map(steps('storage').GetStorageAccessKeysRestApiResponse.keys, (item) => parse(concat('{\"label\":\"', item.keyName, '\",\"value\":\"', item.value, '\"}')))]",
                         "required": true
@@ -519,7 +514,7 @@
                     "name":"GetStorageFileSharesRestApiResponse",
                     "type":"Microsoft.Solutions.ArmApiControl",
                     "request":{
-                    "method": "POST",
+                    "method": "GET",
                     "path": "[concat(subscription().id,'/resourceGroups/',steps('storage').StorageAccountNameSection.StorageAccountName.resourceGroup,'/providers/Microsoft.Storage/storageAccounts/',steps('storage').StorageAccountNameSection.StorageAccountName.name,'/fileServices/default/shares?api-version=2019-06-01')]",
                     "body": ""
                     }
