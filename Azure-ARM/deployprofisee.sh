@@ -144,6 +144,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	echo "Update AAD started";
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
 	echo $"azureClientName is $azureClientName";
+	echo $"azureAppReplyUrl is $azureAppReplyUrl";
 	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
 	#clean client id - remove quotes
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
