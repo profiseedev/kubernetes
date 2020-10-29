@@ -68,7 +68,7 @@ chmod 700 get_helm.sh;
 
 #install nginx
 echo $"Installing nginx started";
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/;
+helm repo add stable https://charts.helm.sh/stable;
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
 helm uninstall nginx
