@@ -103,7 +103,7 @@ if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 else    
     echo '    NA' > tls.cert;
 fi
-rm a.cert
+rm -f a.cert
 
 #key
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
@@ -112,12 +112,14 @@ if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 else
 	echo '    NA' > tls.key;	    
 fi
-rm a.key
+rm -f a.key
 
 #set dns
 if [ "$UPDATEDNS" = "Yes" ]; then
+	echo "Update DNS started";
 	az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes;
 	az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5;
+	echo "Update DNS finished";
 fi
 echo $"fix tls variables finished";
 
@@ -133,17 +135,19 @@ sed -i -e 's/$ACRAUTH/'"$auth"'/g' Settings.yaml
 sed -e '/$TLSCERT/ {' -e 'r tls.cert' -e 'd' -e '}' -i Settings.yaml
 sed -e '/$TLSKEY/ {' -e 'r tls.key' -e 'd' -e '}' -i Settings.yaml
 
-rm tls.cert
-rm tls.key
+rm -f tls.cert
+rm -f tls.key
 
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
 	echo "Update AAD started";
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
+	echo $"azureClientName is $azureClientName";
 	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
 	#clean client id - remove quotes
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
+	echo $"CLIENTID is $CLIENTID";
 	#add a Graph API permission of "Sign in and read user profile"
 	az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
 	az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
