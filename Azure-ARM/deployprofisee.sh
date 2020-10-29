@@ -87,10 +87,15 @@ echo $"Installing nginx finished";
 sleep 30;
 #get ip for nginx
 nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
+
+if [ -z "$nginxip" ]; then
+    echo $"nginx is not configure properly because the LB IP is null.  Exiting with error";
+	exit 1
+fi
 echo $"nginx LB IP is $nginxip";
 
 #fix tls variables
-echo $"fix tls variables started\n";
+echo $"fix tls variables started";
 #cert
 if [ "$CONFIGUREHTTPS" = "Yes" ]; then
 	printf '%s\n' "$TLSCERT" | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' >> a.cert;
@@ -114,7 +119,7 @@ if [ "$UPDATEDNS" = "Yes" ]; then
 	az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes;
 	az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5;
 fi
-echo $"fix tls variables finished\n";
+echo $"fix tls variables finished";
 
 #install profisee platform
 echo $"install profisee platform statrted";
