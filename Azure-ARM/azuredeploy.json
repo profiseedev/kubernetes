@@ -85,10 +85,8 @@
         "StorageAccountType": {
             "type": "String"
         },
-        "StorageAccountResourceGroupName": {
-            "type": "String"
-        }, 
-         "StorageAccountAccessKey": {
+        "StorageAccountAccessKey": {
+            "defaultValue": "",
             "type": "securestring"
         },
         "StorageAccountFileShareName": {
