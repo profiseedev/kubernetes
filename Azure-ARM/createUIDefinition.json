@@ -144,7 +144,7 @@
                     "name": "KubernetesClusterName",
                     "type": "Microsoft.Common.TextBox",
                     "label": "Cluster Name",
-                    "defaultValue": "MyAKSCluster",
+                    "defaultValue": "ProfiseeAKSCluster",
                     "toolTip": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group",
                     "constraints": {
                         "required": true,
