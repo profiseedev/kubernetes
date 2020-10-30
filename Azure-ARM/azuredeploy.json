@@ -21,6 +21,9 @@
          "ManagedIdentityName": {
             "type": "object"
         },
+        "KubernetesClusterName": {
+            "type": "String"
+        },
         "KubernetesLinuxNodeSize": {
             "type": "String"
         },
@@ -138,7 +141,7 @@
         "OIDCURL":"[concat('https://login.microsoftonline.com/',subscription().tenantId)]",
 
         "KubernetesVersion":"[parameters('KubernetesVersion')]",
-        "KubernetesClusterName": "[concat(resourceGroup().name,'ProfiseeCluster')]",
+        "KubernetesClusterName": "[parameters('KubernetesClusterName')]",
 
         "KubernetesServiceCidr": "[parameters('KubernetesServiceCidr')]",
         "KubernetesDNSServiceIP": "[parameters('KubernetesDNSServiceIP')]",
