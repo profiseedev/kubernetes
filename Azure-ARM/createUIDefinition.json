@@ -64,7 +64,7 @@
                         "defaultValue": "",
                         "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication.",
                         "constraints": {
-                            "required": "[equals(basics('ActiveDirectoryCreateApp'),'No')]",
+                            "required": false,
                             "regex": "",
                             "validationMessage": ""
                         },
