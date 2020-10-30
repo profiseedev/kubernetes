@@ -15,6 +15,7 @@
             "type": "String"
         },
         "ActiveDirectoryClientId": {
+            "defaultValue": "",
             "type": "String"
         },
          "ManagedIdentityName": {
