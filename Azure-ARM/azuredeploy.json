@@ -19,7 +19,7 @@
             "type": "String"
         },
          "ManagedIdentityName": {
-            "type": "String"
+            "type": "object"
         },
         "KubernetesLinuxNodeSize": {
             "type": "String"
