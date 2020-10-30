@@ -117,6 +117,9 @@
         "HttpsCertificatePrivateKey": {
             "defaultValue": "",
             "type": "String"
+        },
+        "UseLetsEncrypt": {
+            "type": "String"
         }
     },
     "variables": 
@@ -156,7 +159,7 @@
         
         "SQLServerCreateNew" : "[parameters('SQLServerCreateNew')]",
         "SQLServerName":"[parameters('SQLServerName')]",
-        "SQLNAME": "[if(equals(variables('SQLServerCreateNew'),'Yes'), concat(variables('SQLServerName'),'.database.windows.net'),variables('SQLServerName'))]",
+        "SQLNAME": "[concat(variables('SQLServerName'),'.database.windows.net')]",
         "SQLServerDatabaseName":"[parameters('SQLServerDatabaseName')]",
         "SQLUSERPASSWORD":"[parameters('SQLServerPassword')]",
         "SQLUSERNAME":"[parameters('SQLServerUser')]",
@@ -172,7 +175,7 @@
         "TLSCERT":"[parameters('HttpsCertificate')]",
         "TLSKEY":"[parameters('HttpsCertificatePrivateKey')]",
                 
-        "USELETSENCRYPT":"No",
+        "USELETSENCRYPT":"[parameters('UseLetsEncrypt')]",
         "KubenetesInfrastructureResourceGroupName":"[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]"
     },
     "resources": [
