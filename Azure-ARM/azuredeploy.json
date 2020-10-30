@@ -34,24 +34,31 @@
             "type": "int"
         },
         "KubernetesVersion": {
+            "defaultValue": "",
             "type": "String"
         },
         "KubernetesVnetName": {
+            "defaultValue": "",
             "type": "string"
         },
         "KubernetesVnetResourceGroup": {
+            "defaultValue": "",
             "type": "string"
         },
         "KubernetesSubnetName": {
+            "defaultValue": "",
             "type": "string"
         },
         "KubernetesServiceCidr": {
+            "defaultValue": "",
             "type": "string"
         },
         "KubernetesDNSServiceIP": {
+            "defaultValue": "",
             "type": "string"
         },
         "KubernetesDockerBridgeCidr": {
+            "defaultValue": "",
             "type": "string"
         },
         "SQLServerCreateNew": {
@@ -91,21 +98,26 @@
             "type": "String"
         },
         "DNSHostName": {
+            "defaultValue": "",
             "type": "String"
         },
         "DNSDomainName": {
+            "defaultValue": "",
             "type": "String"
         },
         "DNSDomainResourceGroup": {
+            "defaultValue": "",
             "type": "String"
         },   
         "HttpsConfigure": {
             "type": "String"
         }, 
         "HttpsCertificate": {
+            "defaultValue": "",
             "type": "String"
         },
         "HttpsCertificatePrivateKey": {
+            "defaultValue": "",
             "type": "String"
         }
     },
