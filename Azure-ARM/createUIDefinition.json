@@ -477,7 +477,7 @@
                                 "toolTip": "",
                                 "defaultValue": {
                                     "name": "uniquestorageaccount01",
-                                    "type": "Premium_LRS"
+                                    "type": "Standard_LRS"
                                 },
                                 "constraints": {
                                     "allowedTypes": []
