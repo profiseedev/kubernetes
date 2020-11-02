@@ -17,7 +17,7 @@
                 "label": "Managed Identity Configuration",
                 "toolTip": {
                     "systemAssignedIdentity": "",
-                    "userAssignedIdentity": "The managed identity must have Contributor role for the resource group, and the DNS zone resource group if using your own DNS. This can be done by assigning the contributor role to each individual resource group, or assigning the at the subscription level. If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it."
+                    "userAssignedIdentity": "The managed identity must have Contributor role for the resource group, and the DNS zone resource group if using your own DNS. This can be done by assigning the contributor role to each individual resource group, or assigning at the subscription level. If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it."
                 },
                 "defaultValue": {
                     "systemAssignedIdentity": "OffOnly"
@@ -44,7 +44,7 @@
                       "value": "Yes"
                     },
                     {
-                      "label": "No, I want to supply an existing azure application registration client id.",
+                      "label": "No, I want to supply an existing Azure application registration client id.",
                       "value": "No"
                     }
                   ],
@@ -62,7 +62,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Application Registration Client Id",
                         "defaultValue": "",
-                        "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the profisee platform for authentication.",
+                        "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the Profisee platform for authentication.",
                         "constraints": {
                             "required": "[equals(basics('ActiveDirectoryCreateApp'),'No')]",
                             "regex": "",
@@ -243,7 +243,7 @@
                 {
                     "name": "KubernetesAdvancedYesNo",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Do you need to configure advanced kubernetes neteworking settings, vnet's, subnets, etc..",
+                    "label": "Do you need to configure advanced Kubernetes neteworking settings, vnet's, subnets, etc..",
                     "defaultValue": "No, use default settings.",
                     "toolTip": "",
                     "constraints": {
@@ -355,14 +355,14 @@
                 {
                     "name": "SQLServerCreateNew",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Do you want the deployment process to create an SQL Server and configure it for you?",
+                    "label": "Do you want the deployment process to create a SQL Server and configure it for you?",
                     "defaultValue": "Yes, create a new SQL server",
                     "toolTip": "If you select No, you must enter the FQDN of an existing sql server accessable by this azure subscription",
                     "constraints": {
                         "required": true,
                         "allowedValues": [
                             {
-                                "label": "Yes, create a new SQL server",
+                                "label": "Yes, create a new SQL Server",
                                 "value": "Yes"
                             },
                             {
@@ -399,7 +399,7 @@
                     "name": "SQLServerName",
                     "type": "Microsoft.Common.TextBox",
                     "label": "Server Name",
-                    "toolTip": "Enter a unique sql server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in azure.  SQL Server names are globally unique in Azure",
+                    "toolTip": "Enter a unique SQL Server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in Azure.  SQL Server names are globally unique in Azure",
                     "constraints": {
                         "required": true,
                         "validations":[
@@ -416,7 +416,7 @@
                     "type": "Microsoft.Common.TextBox",
                     "label": "User",
                     "defaultValue": "sqladmin",
-                    "toolTip": "Administrator SQL login name to create with the new sql server or to use to connect to existing sql server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols",
+                    "toolTip": "Administrator SQL login name to create with the new SQL Server or to use to connect to existing SQL Server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols",
                     "constraints": {
                         "required": true,
                         "regex": "",
@@ -539,7 +539,7 @@
                 {
                     "name": "DNSUpdate",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "You can choose to use azure dns or user defined dns",
+                    "label": "You can choose to use Azure DNS or user defined DNS",
                     "defaultValue": "Use Azure DNS - myprofisee.(reqion).cloudapps.azure.com and Let's Encrypt for https certificates.",
                     "toolTip": "",
                     "constraints": {
