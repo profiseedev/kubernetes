@@ -540,7 +540,7 @@
                 {
                     "name": "DNSUpdate",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Use default Azure DNS?",
+                    "label": "Use default Azure DNS",
                     "defaultValue": "Yes, use default Azure DNS and Let’s Encrypt for certificates",
                     "toolTip": "",
                     "constraints": {
@@ -566,7 +566,7 @@
                         {
                             "name": "DNSUpdate2",
                             "type": "Microsoft.Common.OptionsGroup",
-                            "label": "Is your DNS in Azure?",
+                            "label": "Is your DNS in Azure",
                             "defaultValue": "Yes, use new DNS hostname with existing domain name that is in Azure.",
                             "toolTip": "",
                             "constraints": {
