@@ -700,8 +700,8 @@
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
             "ProfiseeACRUserName": "[steps('profisee').ProfiseeACRUserName]",
             "ProfiseeACRPassword": "[steps('profisee').ProfiseeACRPassword]",
-            "ActiveDirectoryCreateApp": "[steps('profisee')ActiveDirectoryCreateApp]",
-            "ActiveDirectoryClientId": "[steps('profisee')ActiveDirectoryClientId]",
+            "ActiveDirectoryCreateApp": "[steps('profisee').ActiveDirectoryCreateApp]",
+            "ActiveDirectoryClientId": "[steps('profisee').UserSuppliedClientyId.ActiveDirectoryClientId]",
                         
             "KubernetesClusterName": "[steps('kubernetes').KubernetesClusterName]",
             "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSizeSection.KubernetesLinuxNodeSize]",
@@ -729,7 +729,7 @@
             "StorageAccountType": "[steps('storage').StorageAccountNameSection.StorageAccountName.type]",
             "StorageAccountFileShareName": "files",
 
-            "DNSUpdate": "[steps('networking').UserDefinedDNS.DNSUpdate2]",
+            "DNSUpdate": "[if(equals(steps('networking').DNSUpdate, 'No'), 'No', steps('networking').UserDefinedDNS.DNSUpdate2)]",
             "DNSHostName": "[steps('networking').UserDefinedDNS.DNSHostName]",
             "DNSDomainName": "[steps('networking').UserDefinedDNS.DNSDomainName]",
             "DNSDomainResourceGroup": "[steps('networking').UserDefinedDNS.DNSDomainResourceGroup]",
