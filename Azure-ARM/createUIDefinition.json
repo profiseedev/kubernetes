@@ -700,8 +700,8 @@
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
             "ProfiseeACRUserName": "[steps('profisee').ProfiseeACRUserName]",
             "ProfiseeACRPassword": "[steps('profisee').ProfiseeACRPassword]",
-            "ActiveDirectoryCreateApp": "[steps('profisee')ActiveDirectoryCreateApp]",
-            "ActiveDirectoryClientId": "[steps('profisee')ActiveDirectoryClientId]",
+            "ActiveDirectoryCreateApp": "[steps('profisee').ActiveDirectoryCreateApp]",
+            "ActiveDirectoryClientId": "[steps('profisee').UserSuppliedClientyId.ActiveDirectoryClientId]",
                         
             "KubernetesClusterName": "[steps('kubernetes').KubernetesClusterName]",
             "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSizeSection.KubernetesLinuxNodeSize]",
