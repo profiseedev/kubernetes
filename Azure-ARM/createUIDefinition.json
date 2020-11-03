@@ -630,7 +630,7 @@
                     "name": "HttpsConfigure",
                     "type": "Microsoft.Common.OptionsGroup",
                     "label": "Use Let’s Encrypt?",
-                    "defaultValue": "o	Yes, use Let’s Encrypt for certificates",
+                    "defaultValue": "Yes, use Let’s Encrypt for certificates",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
