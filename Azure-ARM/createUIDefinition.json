@@ -120,16 +120,16 @@
                     "name": "ActiveDirectoryCreateApp",
                     "type": "Microsoft.Common.OptionsGroup",
                     "label": "Do you want the deployment to create a new Azure Active Directory app registration for you?",
-                    "defaultValue": "Yes, create and configure a new Azure Active Directory app registration.",
+                    "defaultValue": "Yes, create and configure a new Azure Active Directory app registration",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
-                          "label": "Yes, create and configure a new Azure Active Directory app registration.",
+                          "label": "Yes, create and configure a new Azure Active Directory app registration",
                           "value": "Yes"
                         },
                         {
-                          "label": "No, I will specify the client ID for an existing Azure Active Directory app registration .",
+                          "label": "No, I will specify the client ID for an existing Azure Active Directory app registration",
                           "value": "No"
                         }
                       ],
@@ -268,7 +268,7 @@
                 {
                     "name": "KubernetesAdvancedYesNo",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Configure advanced Kubernetes networking settings",
+                    "label": "Configure advanced Kubernetes networking settings?",
                     "defaultValue": "No, use default settings",
                     "toolTip": "",
                     "constraints": {
@@ -381,8 +381,8 @@
                     "name": "SQLServerCreateNew",
                     "type": "Microsoft.Common.OptionsGroup",
                     "label": "Do you want the deployment process to create a SQL Server and configure it for you?",
-                    "defaultValue": "Yes, create a new SQL Server",
-                    "toolTip": "If you select No, you must enter the FQDN of an existing sql server accessable by this azure subscription",
+                    "defaultValue": "Create a new SQL Server?",
+                    "toolTip": "",
                     "constraints": {
                         "required": true,
                         "allowedValues": [
@@ -565,12 +565,12 @@
                     "name": "DNSUpdate",
                     "type": "Microsoft.Common.OptionsGroup",
                     "label": "Use default Azure DNS",
-                    "defaultValue": "Yes, use default Azure DNS and Let’s Encrypt for certificates",
+                    "defaultValue": "Yes, use default Azure DNS and Let’s Encrypt for certificates (ex. https://[profisee name].[region].cloudapps.azure.com/profisee)",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
-                          "label": "Yes, use default Azure DNS and Let’s Encrypt for certificates",
+                          "label": "Yes, use default Azure DNS and Let’s Encrypt for certificates (ex. https://[profisee name].[region].cloudapps.azure.com/profisee)",
                           "value": "No"
                         },
                         {
