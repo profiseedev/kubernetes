@@ -639,7 +639,7 @@
                             "type": "Microsoft.Common.TextBox",
                             "label": "DNS Domain Resource Group",
                             "defaultValue": "mydnszoneresourcegroup",
-                            "toolTip": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS.",
+                            "toolTip": "",
                             "constraints": {
                                 "required": true,
                                 "regex": "",
