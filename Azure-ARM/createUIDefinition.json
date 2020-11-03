@@ -30,49 +30,8 @@
                     "required": true
                 },
                 "visible": true
-            },
-            {
-                "name": "ActiveDirectoryCreateApp",
-                "type": "Microsoft.Common.OptionsGroup",
-                "label": "Do you want the deployment process to create an Azure application registration and configure it for you?",
-                "defaultValue": "Yes, create and configure the Azure application registration.",
-                "toolTip": "",
-                "constraints": {
-                  "allowedValues": [
-                    {
-                      "label": "Yes, create and configure the Azure application registration.",
-                      "value": "Yes"
-                    },
-                    {
-                      "label": "No, I want to supply an existing Azure application registration client id.",
-                      "value": "No"
-                    }
-                  ],
-                  "required": true
-                },
-                "visible": true
-            }, 
-            {
-                "name": "UserSuppliedClientyId",
-                "type": "Microsoft.Common.Section",
-                "label": "",
-                "elements": [
-                    {
-                        "name": "ActiveDirectoryClientId",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Application Registration Client Id",
-                        "defaultValue": "",
-                        "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the Profisee platform for authentication.",
-                        "constraints": {
-                            "required": "[equals(basics('ActiveDirectoryCreateApp'),'No')]",
-                            "regex": "",
-                            "validationMessage": ""
-                        },
-                        "visible": true
-                    }
-                ],
-                "visible": "[equals(basics('ActiveDirectoryCreateApp'),'No')]"
-            }            
+            }
+                       
         ],
         "steps": [ {
             "name": "profisee",
@@ -132,7 +91,49 @@
                       "encoding": "UTF-8"
                     },
                     "visible": true
-                }
+                },
+                {
+                    "name": "ActiveDirectoryCreateApp",
+                    "type": "Microsoft.Common.OptionsGroup",
+                    "label": "Do you want the deployment process to create an Azure application registration and configure it for you?",
+                    "defaultValue": "Yes, create and configure the Azure application registration.",
+                    "toolTip": "",
+                    "constraints": {
+                      "allowedValues": [
+                        {
+                          "label": "Yes, create and configure the Azure application registration.",
+                          "value": "Yes"
+                        },
+                        {
+                          "label": "No, I want to supply an existing Azure application registration client id.",
+                          "value": "No"
+                        }
+                      ],
+                      "required": true
+                    },
+                    "visible": true
+                }, 
+                {
+                    "name": "UserSuppliedClientyId",
+                    "type": "Microsoft.Common.Section",
+                    "label": "",
+                    "elements": [
+                        {
+                            "name": "ActiveDirectoryClientId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Application Registration Client Id",
+                            "defaultValue": "",
+                            "toolTip": "ClientId of existing Azure Active Directory App Registration which will be used by the Profisee platform for authentication.",
+                            "constraints": {
+                                "required": "[equals(steps('profisee').ActiveDirectoryCreateApp,'No')]",
+                                "regex": "",
+                                "validationMessage": ""
+                            },
+                            "visible": true
+                        }
+                    ],
+                    "visible": "[equals(steps('profisee').ActiveDirectoryCreateApp,'No')]"
+                } 
             ]
         },
         
@@ -563,6 +564,27 @@
                     "label": "User Defined DNS",
                     "elements": [
                         {
+                            "name": "DNSUpdate2",
+                            "type": "Microsoft.Common.OptionsGroup",
+                            "label": "Is your DNS in Azure?",
+                            "defaultValue": "Yes, use new DNS hostname with existing domain name that is in Azure.",
+                            "toolTip": "",
+                            "constraints": {
+                              "allowedValues": [
+                                {
+                                  "label": "Yes, use new DNS hostname with existing domain name that is in Azure.",
+                                  "value": "Yes"
+                                },
+                                {
+                                  "label": "No, use existing DNS hostname and domain name that is outside of Azure.",
+                                  "value": "No"
+                                }
+                              ],
+                              "required": true
+                            },
+                            "visible": true
+                        },
+                        {
                             "name": "DNSHostName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "DNS Host Name",
@@ -599,7 +621,7 @@
                                 "regex": "",
                                 "validationMessage": ""
                             },
-                            "visible": true
+                            "visible": "[equals(steps('networking').UserDefinedDNS.DNSUpdate2, 'Yes')]"
                         }
                     ],
                     "visible": "[equals(steps('networking').DNSUpdate,'Yes')]"
@@ -671,15 +693,16 @@
             ]
         }],
         "outputs": {
+            "ManagedIdentityName": "[basics('ManagedIdentityName')]",
+
             "ProfiseeVersion": "[steps('profisee').ProfiseeVersion]",
             "ProfiseeAdminUserAccount": "[steps('profisee').ProfiseeAdminUserAccount]",
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
             "ProfiseeACRUserName": "[steps('profisee').ProfiseeACRUserName]",
             "ProfiseeACRPassword": "[steps('profisee').ProfiseeACRPassword]",
-            "ActiveDirectoryCreateApp": "[basics('ActiveDirectoryCreateApp')]",
-            "ActiveDirectoryClientId": "[basics('ActiveDirectoryClientId')]",
-            "ManagedIdentityName": "[basics('ManagedIdentityName')]",
-            
+            "ActiveDirectoryCreateApp": "[steps('profisee')ActiveDirectoryCreateApp]",
+            "ActiveDirectoryClientId": "[steps('profisee')ActiveDirectoryClientId]",
+                        
             "KubernetesClusterName": "[steps('kubernetes').KubernetesClusterName]",
             "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSizeSection.KubernetesLinuxNodeSize]",
             "KubernetesLinuxNodeCount": "[steps('kubernetes').KubernetesLinuxNodeCount]",
@@ -706,7 +729,7 @@
             "StorageAccountType": "[steps('storage').StorageAccountNameSection.StorageAccountName.type]",
             "StorageAccountFileShareName": "files",
 
-            "DNSUpdate": "[steps('networking').DNSUpdate]",
+            "DNSUpdate": "[steps('networking').UserDefinedDNS.DNSUpdate2]",
             "DNSHostName": "[steps('networking').UserDefinedDNS.DNSHostName]",
             "DNSDomainName": "[steps('networking').UserDefinedDNS.DNSDomainName]",
             "DNSDomainResourceGroup": "[steps('networking').UserDefinedDNS.DNSDomainResourceGroup]",
