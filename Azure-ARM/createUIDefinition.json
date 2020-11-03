@@ -550,7 +550,7 @@
                           "value": "No"
                         },
                         {
-                          "label": "	No, I’ll use my own DNS host name and domain",
+                          "label": "No, I’ll use my own DNS host name and domain",
                           "value": "Yes"
                         }
                       ],
