@@ -380,8 +380,8 @@
                 {
                     "name": "SQLServerCreateNew",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Do you want the deployment process to create a SQL Server and configure it for you?",
-                    "defaultValue": "Create a new SQL Server?",
+                    "label": "Create a new SQL Server? ",
+                    "defaultValue": "Yes, create a new SQL Server",
                     "toolTip": "",
                     "constraints": {
                         "required": true,
