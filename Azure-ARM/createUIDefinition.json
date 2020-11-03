@@ -11,13 +11,26 @@
             "microsoft.resources/resourcegroups"
         ],
         "basics": [ 
+            
+            {
+                "name": "text2",
+                "type": "Microsoft.Common.TextBlock",
+                "visible": true,
+                "options": {
+                  "text": " ",
+                  "link": {
+                    "label": "",
+                    "uri": ""
+                  }
+                }
+              },
             {
                 "name": "ManagedIdentityName",
                 "type": "Microsoft.ManagedIdentity.IdentitySelector",
-                "label": "Managed Identity Configuration",
+                "label": "Managed Identity",
                 "toolTip": {
                     "systemAssignedIdentity": "",
-                    "userAssignedIdentity": "The managed identity must have Contributor role for the resource group, and the DNS zone resource group if using your own DNS. This can be done by assigning the contributor role to each individual resource group, or assigning at the subscription level. If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it."
+                    "userAssignedIdentity": " The identity used to run the Profisee deployment"
                 },
                 "defaultValue": {
                     "systemAssignedIdentity": "OffOnly"
@@ -30,7 +43,17 @@
                     "required": true
                 },
                 "visible": true
-            }
+            },
+            {
+                "name": "text1",
+                "type": "Microsoft.Common.InfoBox",
+                "visible": true,
+                "options": {
+                  "icon": "Info",
+                  "text": "Click here to learn more about managed identities.",
+                  "uri": "https://support.profisee.com/wikis/2020_r2_support/planning_your_managed_identity_configuration"
+                }
+              }
                        
         ],
         "steps": [ {
