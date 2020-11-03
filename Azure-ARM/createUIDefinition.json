@@ -42,7 +42,7 @@
                     "type": "Microsoft.Common.DropDown",
                     "label": "Version",
                     "defaultValue": "2020R2.0",
-                    "toolTip": "Version of the Profisee platform to use.",
+                    "toolTip": "Which release of the Profisee Platform to start with.",
                     "constraints": {
                         "required": true,
                         "allowedValues": [
@@ -67,7 +67,7 @@
                     "type": "Microsoft.Common.TextBox",
                     "label": "Admin User Account",
                     "defaultValue": "first.last@company.com",
-                    "toolTip": "Name of the account of the first super user who will be registered in the Profisee platform, who will be able to logon and add other users.",
+                    "toolTip": "The first Super User, who will be able to login and add other users.",
                     "constraints": {
                         "required": true,
                         "regex": "",
@@ -95,17 +95,17 @@
                 {
                     "name": "ActiveDirectoryCreateApp",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Do you want the deployment process to create an Azure application registration and configure it for you?",
-                    "defaultValue": "Yes, create and configure the Azure application registration.",
+                    "label": "Do you want the deployment to create a new Azure Active Directory app registration for you?",
+                    "defaultValue": "Yes, create and configure a new Azure Active Directory app registration.",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
-                          "label": "Yes, create and configure the Azure application registration.",
+                          "label": "Yes, create and configure a new Azure Active Directory app registration.",
                           "value": "Yes"
                         },
                         {
-                          "label": "No, I want to supply an existing Azure application registration client id.",
+                          "label": "No, I will specify the client ID for an existing Azure Active Directory app registration .",
                           "value": "No"
                         }
                       ],
@@ -146,7 +146,7 @@
                     "type": "Microsoft.Common.TextBox",
                     "label": "Cluster Name",
                     "defaultValue": "ProfiseeAKSCluster",
-                    "toolTip": "Name of the kubernetes cluster to create.  The name can contain only letters, numbers, underscores and hyphens. The name must start and end with letter or number. The name must be unique in the current resource group",
+                    "toolTip": "Can only contain letters, numbers, underscores, and hyphens, must start and end with a letter or number, and must be unique in the current resource group",
                     "constraints": {
                         "required": true,
                         "regex": "",
@@ -189,7 +189,7 @@
                     "subLabel": "",
                     "defaultValue": 1,
                     "showStepMarkers": false,
-                    "toolTip": "Pick the amount of nodes",
+                    "toolTip": "",
                     "constraints": {
                         "required": false
                     },
@@ -235,7 +235,7 @@
                     "subLabel": "",
                     "defaultValue": 1,
                     "showStepMarkers": false,
-                    "toolTip": "Pick the amount of nodes",
+                    "toolTip": "",
                     "constraints": {
                         "required": false
                     },
@@ -244,13 +244,13 @@
                 {
                     "name": "KubernetesAdvancedYesNo",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "Do you need to configure advanced Kubernetes neteworking settings, vnet's, subnets, etc..",
-                    "defaultValue": "No, use default settings.",
+                    "label": "Configure advanced Kubernetes networking settings",
+                    "defaultValue": "No, use default settings",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
-                          "label": "No, use default settings.",
+                          "label": "No, use default settings",
                           "value": "No"
                         },
                         {
@@ -367,7 +367,7 @@
                                 "value": "Yes"
                             },
                             {
-                                "label": "No, I will pick and existing SQL Server in Azure",
+                                "label": "No, use an existing Azure SQL Server",
                                 "value": "No"
                             }
                         ]
@@ -377,7 +377,7 @@
                 {
                     "name": "SQLServerNameExisting",
                     "type": "Microsoft.Solutions.ResourceSelector",
-                    "label": "Select Sql Server",
+                    "label": "Select SQL Server",
                     "resourceType": "Microsoft.Sql/servers",
                     "options": {
                         "filter": {
@@ -400,7 +400,7 @@
                     "name": "SQLServerName",
                     "type": "Microsoft.Common.TextBox",
                     "label": "Server Name",
-                    "toolTip": "Enter a unique SQL Server name.  Can contain only lowercase letters, numbers, and '-', but can't start or end with '-' or have more than 63 characters and be an available sqlserver name in Azure.  SQL Server names are globally unique in Azure",
+                    "toolTip": "Enter a globally unique Azure SQL Server name. Name can contain only lowercase letters, numbers, and hyphens. The name cannot start or end with a hyphen or contain more than 63 characters.",
                     "constraints": {
                         "required": true,
                         "validations":[
@@ -448,7 +448,7 @@
                     "type": "Microsoft.Common.TextBox",
                     "label": "Database Name",
                     "defaultValue": "Profisee",
-                    "toolTip": "Name of database to create and/or use.  Name should not match special pattern and has a length of at most 128.  Should not contain reserved words.  No database with the same name exists in the server",
+                    "toolTip": "Cannot contain special characters or reserved words. Should be less than 128 characters and unique within the SQL Server.",
                     "constraints": {
                         "required": true,
                         "regex": "",
@@ -540,17 +540,17 @@
                 {
                     "name": "DNSUpdate",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "You can choose to use Azure DNS or user defined DNS",
-                    "defaultValue": "Use Azure DNS - myprofisee.(reqion).cloudapps.azure.com and Let's Encrypt for https certificates.",
+                    "label": "Use default Azure DNS?",
+                    "defaultValue": "Yes, use default Azure DNS and Let’s Encrypt for certificates (ex. https://[profisee name].[region].cloudapps.azure.com/profisee)",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
-                          "label": "Use Azure DNS - myprofisee.(reqion).cloudapps.azure.com and Let's Encrypt for https certificates.",
+                          "label": "Yes, use default Azure DNS and Let’s Encrypt for certificates (ex. https://[profisee name].[region].cloudapps.azure.com/profisee)",
                           "value": "No"
                         },
                         {
-                          "label": "Use my own DNS hostname and domain name",
+                          "label": "	No, I’ll use my own DNS host name and domain",
                           "value": "Yes"
                         }
                       ],
@@ -589,7 +589,7 @@
                             "type": "Microsoft.Common.TextBox",
                             "label": "DNS Host Name",
                             "defaultValue": "myprofiseehostname",
-                            "toolTip": "Host name to use/create.  Required if updating DNS.",
+                            "toolTip": "",
                             "constraints": {
                                 "required": true,
                                 "regex": "",
@@ -602,7 +602,7 @@
                             "type": "Microsoft.Common.TextBox",
                             "label": "DNS Domain Name",
                             "defaultValue": "mydomain.com",
-                            "toolTip": "Domain name name to use.  Required if updating DNS.",
+                            "toolTip": "",
                             "constraints": {
                                 "required": true,
                                 "regex": "",
@@ -615,7 +615,7 @@
                             "type": "Microsoft.Common.TextBox",
                             "label": "DNS Domain Resource Group",
                             "defaultValue": "mydnszoneresourcegroup",
-                            "toolTip": "Resource group that the DNS zone (Domain name) is in.  Required if updating DNS.",
+                            "toolTip": "",
                             "constraints": {
                                 "required": true,
                                 "regex": "",
@@ -629,17 +629,17 @@
                 {
                     "name": "HttpsConfigure",
                     "type": "Microsoft.Common.OptionsGroup",
-                    "label": "You can choose to use Let's Encrypt for https or supply your own certificates",
-                    "defaultValue": "Use Let's Encrypt",
+                    "label": "Use Let’s Encrypt?",
+                    "defaultValue": "o	Yes, use Let’s Encrypt for certificates",
                     "toolTip": "",
                     "constraints": {
                       "allowedValues": [
                         {
-                          "label": "Use Let's Encrypt",
+                          "label": "Yes, use Let’s Encrypt for certificates",
                           "value": "No"
                         },
                         {
-                          "label": "Use my own certificates",
+                          "label": "No, I’ll use my own certificates",
                           "value": "Yes"
                         }
                       ],
@@ -700,8 +700,8 @@
             "ProfiseeLicense": "[steps('profisee').ProfiseeLicense]",
             "ProfiseeACRUserName": "[steps('profisee').ProfiseeACRUserName]",
             "ProfiseeACRPassword": "[steps('profisee').ProfiseeACRPassword]",
-            "ActiveDirectoryCreateApp": "[steps('profisee').ActiveDirectoryCreateApp]",
-            "ActiveDirectoryClientId": "[steps('profisee').UserSuppliedClientyId.ActiveDirectoryClientId]",
+            "ActiveDirectoryCreateApp": "[steps('profisee')ActiveDirectoryCreateApp]",
+            "ActiveDirectoryClientId": "[steps('profisee')ActiveDirectoryClientId]",
                         
             "KubernetesClusterName": "[steps('kubernetes').KubernetesClusterName]",
             "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSizeSection.KubernetesLinuxNodeSize]",
@@ -729,7 +729,7 @@
             "StorageAccountType": "[steps('storage').StorageAccountNameSection.StorageAccountName.type]",
             "StorageAccountFileShareName": "files",
 
-            "DNSUpdate": "[if(equals(steps('networking').DNSUpdate, 'No'), 'No', steps('networking').UserDefinedDNS.DNSUpdate2)]",
+            "DNSUpdate": "[steps('networking').UserDefinedDNS.DNSUpdate2]",
             "DNSHostName": "[steps('networking').UserDefinedDNS.DNSHostName]",
             "DNSDomainName": "[steps('networking').UserDefinedDNS.DNSDomainName]",
             "DNSDomainResourceGroup": "[steps('networking').UserDefinedDNS.DNSDomainResourceGroup]",
