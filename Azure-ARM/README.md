@@ -11,7 +11,6 @@
 2.  License
     - Profisee license associated with the dns for the environment
     - Token for access to the profisee container
-3.  Https certificate including the private key
 
 ## Deployment steps
 
