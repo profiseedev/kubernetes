@@ -501,7 +501,7 @@
                                 "label": "Storage account",
                                 "toolTip": "",
                                 "defaultValue": {
-                                    "name": "uniquestorageaccount01",
+                                    "name": "",
                                     "type": "Standard_LRS"
                                 },
                                 "constraints": {
