@@ -80,6 +80,10 @@
                             {
                                 "label": "2020R2.0",
                                 "value": "2020R2.0"
+                            },
+                            {
+                                "label": "2021R1.Preview",
+                                "value": "2021r1.preview"
                             }
                         ]
                     },
