@@ -1,17 +1,16 @@
 # Deploy Profisee platform on to AKS using ARM template
 
-'ALL - NEW sexy UI - in development' deployment of the Profisee platform.
+This ARM template deploys Profisee platform into a Azure Kubernetes Service cluster.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseedev%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinition.json)
 
 ## Prerequisites
 
 1.  Managed Identity
-    - A user assigned managed identity configured ahead of time.  The managed identity must have Contributor role for the resource group, and the DNS zone resource group if updating DNS.  This can be done by assigning the contributor role to each individual resource group, or assigning the subscription level resource group.  If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it.  https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-manage-ua-identity-portal
+    - A user assigned managed identity configured ahead of time.  The managed identity must have Contributor role for the resource group, and the DNS zone resource group if updating Azure DNS.  This can be done by assigning the contributor role to each individual resource group, or assigning the subscription level resource group.  If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it.  Click [here](https://support.profisee.com/wikis/2020_r2_support/planning_your_managed_identity_configuration) for more information
 2.  License
     - Profisee license associated with the dns for the environment
-    - Token for access to the profisee container
-
+    
 ## Deployment steps
 
 Click the "Deploy to Azure" button under the deployment option you want to use
