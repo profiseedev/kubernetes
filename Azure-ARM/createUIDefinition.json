@@ -760,7 +760,14 @@
                               "openMode": "text",
                               "encoding": "UTF-8"
                             },
-                            "visible": true
+                            "visible": "[equals(steps('profisee').UseKeyVault,'No')]"
+                        },
+                        {
+                            "name": "HttpsCertificateFromKeyVault",
+                            "type": "Microsoft.KeyVault.KeyVaultCertificateSelector",                            
+                            "toolTip": "",
+                            "label": "Https Certificate",
+                            "visible": "[equals(steps('profisee').UseKeyVault,'Yes')]"
                         },
                         {
                             "name": "HttpsCertificatePrivateKey",
@@ -777,7 +784,7 @@
                               "openMode": "text",
                               "encoding": "UTF-8"
                             },
-                            "visible": true
+                            "visible": "[equals(steps('profisee').UseKeyVault,'No')]"
                         }
                     ],
                     "visible": "[equals(steps('networking').HttpsConfigure,'Yes')]"
