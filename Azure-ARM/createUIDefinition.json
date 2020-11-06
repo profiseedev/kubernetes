@@ -616,7 +616,8 @@
                             "name": "DNSHostName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "DNS Host Name",
-                            "defaultValue": "myprofiseehostname",
+                            "defaultValue": "",
+                            "placeholder": "myprofiseehostname",
                             "toolTip": "",
                             "constraints": {
                                 "required": true,
@@ -629,7 +630,8 @@
                             "name": "DNSDomainName",
                             "type": "Microsoft.Common.TextBox",
                             "label": "DNS Domain Name",
-                            "defaultValue": "mydomain.com",
+                            "defaultValue": "",
+                            "placeholder":"mydomain.com",
                             "toolTip": "",
                             "constraints": {
                                 "required": true,
@@ -642,7 +644,8 @@
                             "name": "DNSDomainResourceGroup",
                             "type": "Microsoft.Common.TextBox",
                             "label": "DNS Domain Resource Group",
-                            "defaultValue": "mydnszoneresourcegroup",
+                            "defaultValue": "",
+                            "placeholder": "mydnszoneresourcegroup",
                             "toolTip": "",
                             "constraints": {
                                 "required": true,
