@@ -7,13 +7,13 @@ This ARM template deploys Profisee platform into a Azure Kubernetes Service clus
 ## Prerequisites
 
 1.  Managed Identity
-    - A user assigned managed identity configured ahead of time.  The managed identity must have Contributor role for the resource group, and the DNS zone resource group if updating Azure DNS.  This can be done by assigning the contributor role to each individual resource group, or assigning the subscription level resource group.  If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it.  Click [here](https://support.profisee.com/wikis/2020_r2_support/planning_your_managed_identity_configuration) for more information
+    - A user assigned managed identity configured ahead of time.  The managed identity must have Contributor role for the resource group, and the DNS zone resource group if updating Azure DNS.  This can be done by assigning the contributor role to each individual resource group, or assigning the subscription level resource group.  If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it.  Click [here](https://support.profisee.com/wikis/2020_r2_support/planning_your_managed_identity_configuration) for more information.
 2.  License
-    - Profisee license associated with the dns for the environment
+    - Profisee license associated with the dns for the environment.
     
 ## Deployment steps
 
-Click the "Deploy to Azure" button under the deployment option you want to use
+Click the "Deploy to Azure" button at the beginning of this document.
 
 ## Troubleshooting
 
