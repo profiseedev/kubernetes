@@ -61,6 +61,40 @@
             "label": "Profisee",
             "elements": [
                 {
+                    "name": "UseKeyVault",
+                    "type": "Microsoft.Common.OptionsGroup",
+                    "label": "Use Key Vault?",
+                    "defaultValue": "No, I will enter it in.",
+                    "toolTip": "",
+                    "constraints": {
+                      "allowedValues": [
+                        {
+                          "label": "Yes, pull sensitive information from Key Vault.",
+                          "value": "Yes"
+                        },
+                        {
+                          "label": "No, I will enter it in.",
+                          "value": "No"
+                        }
+                      ],
+                      "required": true
+                    },
+                    "visible": true
+                },
+                {
+                    "name": "KeyVault",
+                    "type": "Microsoft.Solutions.ResourceSelector",
+                    "label": "Key Vault",
+                    "resourceType": "Microsoft.KeyVault/vaults",
+                    "options": {
+                        "filter": {
+                            "subscription": "All",
+                            "location": "All"
+                        }
+                    },
+                    "visible": "[equals(steps('profisee').UseKeyVault,'Yes')]"
+                },
+                {
                     "name": "ProfiseeVersion",
                     "type": "Microsoft.Common.DropDown",
                     "label": "Version",
@@ -118,7 +152,21 @@
                       "openMode": "text",
                       "encoding": "UTF-8"
                     },
-                    "visible": true
+                    "visible": "[equals(steps('profisee').UseKeyVault,'No')]"
+                },
+                {
+                    "name": "ProfiseeLicenseSecret",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "License",
+                    "defaultValue": "",
+                    "placeholder": "License secret name",
+                    "toolTip": "",
+                    "constraints": {
+                        "required": true,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": "[equals(steps('profisee').UseKeyVault,'Yes')]"
                 },
                 {
                     "name": "ActiveDirectoryCreateApp",
@@ -140,7 +188,7 @@
                       "required": true
                     },
                     "visible": true
-                }, 
+                },                  
                 {
                     "name": "UserSuppliedClientyId",
                     "type": "Microsoft.Common.Section",
@@ -469,7 +517,21 @@
                     "options": {
                         "hideConfirmation": false
                     },
-                    "visible": true
+                    "visible": "[equals(steps('profisee').UseKeyVault,'No')]"
+                },
+                {
+                    "name": "SQLServerPasswordSecret",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Password",
+                    "defaultValue": "",
+                    "placeholder": "SQL server password secret name",
+                    "toolTip": "",
+                    "constraints": {
+                        "required": true,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": "[equals(steps('profisee').UseKeyVault,'Yes')]"
                 },
                 {
                     "name": "SQLServerDatabaseName",
