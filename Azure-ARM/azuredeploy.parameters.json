@@ -6,10 +6,10 @@
             "value": "2020R2.0"
         },
         "ProfiseeAdminUserAccount": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "ProfiseeLicense": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "ActiveDirectoryCreateApp": {
             "value": "Yes"
@@ -18,8 +18,7 @@
             "value": ""
         },
         "ManagedIdentityName": {
-            "value": {
-                // TODO: Fill in parameter value
+            "value": {              
             }
         },
         "KubernetesClusterName": {
@@ -62,13 +61,13 @@
             "value": "Yes"
         },
         "SQLServerName": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "SQLServerUser": {
             "value": "sqladmin"
         },
         "SQLServerPassword": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "SQLServerDatabaseName": {
             "value": "Profisee"
@@ -77,7 +76,7 @@
             "value": "Yes"
         },
         "StorageAccountName": {
-            "value": "" // TODO: Fill in parameter value
+            "value": ""
         },
         "StorageAccountType": {
             "value": "Standard_LRS"
