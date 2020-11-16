@@ -537,6 +537,14 @@
     "KubernetesClusterFQDN": {
             "type": "string",
             "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).FQDN]"
+        },
+    "KubernetesClusterIdentityClientId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.clientId]"
+        },
+    "KubernetesClusterIdentityResourceId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.resourceId]"
         }
   }
 }
