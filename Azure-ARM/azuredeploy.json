@@ -126,6 +126,9 @@
         },
         "UseKeyVault": {
             "type": "String"
+        },
+        "KeyVault": {
+            "type": "String"
         }
     },
     "variables": 
@@ -184,7 +187,8 @@
         "USELETSENCRYPT":"[parameters('UseLetsEncrypt')]",
         "KubenetesInfrastructureResourceGroupName":"[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]",
 
-        "UseKeyVault":"[parameters('UseKeyVault')]"
+        "UseKeyVault":"[parameters('UseKeyVault')]",
+        "KeyVault":"[parameters('KeyVault')]"
     },
     "resources": [
         {
@@ -497,6 +501,11 @@
                 {
                     "name": "USEKEYVAULT",
                     "value": "[variables('UseKeyVault')]"
+                }
+                ,
+                {
+                    "name": "KEYVAULT",
+                    "value": "[variables('KeyVault')]"
                 }
             ],
             "primaryScriptUri": "[variables('ScriptURL')]"            

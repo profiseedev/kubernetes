@@ -113,6 +113,9 @@
         },
         "UseKeyVault": {
             "value": "No"
+        },
+        "KeyVault": {
+            "value": ""
         }
     }
 }
