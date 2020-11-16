@@ -235,6 +235,11 @@ sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$USEKEYVAULT/'true'/g' Settings.yaml
+
+	sed -i -e 's/$SQLUSERNAMESECRET/'"$SQLUSERNAME"'/g' Settings.yaml
+	sed -i -e 's/$SQLUSERPASSWORDSECRET/'"$SQLUSERPASSWORD"'/g' Settings.yaml
+	sed -i -e 's/$TLSCERTSECRET/'"$TLSCERT"'/g' Settings.yaml
+	sed -i -e 's/$LICENSEDATASECRET/'"$LICENSEDATA"'/g' Settings.yaml
 else
 	sed -i -e 's/$USEKEYVAULT/'false'/g' Settings.yaml
 fi

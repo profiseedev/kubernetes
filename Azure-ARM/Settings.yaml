@@ -59,16 +59,16 @@ tlsKey: |
 cloud:
     azure:
       isProvider: true
-      useKeyVault: false
+      useKeyVault: $USEKEYVAULT
       keyVault:
         identity: #must be created in the aks node resource group and have reader ploicy's on keyvault
           clientId: ""
           resourceId: 
         secrets:
-          sqlUserName: ""
-          sqlPassword: ""
-          tlsCertificate: ""
-          license: ""
+          sqlUserName: $SQLUSERNAMESECRET
+          sqlPassword: $SQLUSERPASSWORDSECRET
+          tlsCertificate: $TLSCERTSECRET
+          license: $LICENSEDATASECRET
         name: ""
         resourceGroup: ""
       subscriptionId: ""
