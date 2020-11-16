@@ -110,6 +110,9 @@
         },
         "UseLetsEncrypt": {
             "value": "Yes"
+        },
+        "UseKeyVault": {
+            "value": "No"
         }
     }
 }

@@ -6,10 +6,12 @@ sqlServer:
 profiseeRunTime:
     adminAccount: "$ADMINACCOUNTNAME"
     fileRepository:
+        accountName: "$FILEREPOACCOUNTNAME"
         userName: "$FILEREPOUSERNAME"
         password: "$FILEREPOPASSWORD"
         logonType: "NewCredentials"
         location: "$FILEREPOURL"
+        fileShareName: "$FILEREPOSHARENAME"
     externalDnsUrl: "$EXTERNALDNSURL"
     externalDnsName: "$EXTERNALDNSNAME"
     oidc:
@@ -54,4 +56,25 @@ tlsCert: |
     $TLSCERT
 tlsKey: |
     $TLSKEY  
-    
+cloud:
+    azure:
+      isProvider: true
+      useKeyVault: false
+      keyVault:
+        identity: #must be created in the aks node resource group and have reader ploicy's on keyvault
+          clientId: ""
+          resourceId: 
+        secrets:
+          sqlUserName: ""
+          sqlPassword: ""
+          tlsCertificate: ""
+          license: ""
+        name: ""
+        resourceGroup: ""
+      subscriptionId: ""
+      tenantId: ""
+      clusterClientId: "" #clientid of the aks cluster; Roles must be assigned ot it; role to main RG: "Managed Identity Operator"; roles to node RG: "Managed Identity Operator", "Virtual Machine Contributor"
+    aws:
+      isProvider: false
+    google:
+      isProvider: false     

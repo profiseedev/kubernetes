@@ -66,19 +66,42 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scr
 chmod 700 get_helm.sh;
 ./get_helm.sh;
 
+#create profisee namespace
+kubectl create namespace profisee
+
+#install keyvault drivers
+if [ "$USEKEYVAULT" = "Yes" ]; then
+	echo $"Installing keyvault csi driver - started"
+	#Install the Secrets Store CSI driver and the Azure Key Vault provider for the driver
+	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
+	helm install --namespace profisee csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure
+	echo $"Installing keyvault csi driver - finished"
+
+	echo $"Installing keyvault aad pod identity - started"
+	#Install the Azure Active Directory (Azure AD) identity into AKS.
+	helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
+	helm install --namespace profisee pod-identity aad-pod-identity/aad-pod-identity
+	echo $"Installing keyvault aad pod identity - finished"
+fi
+
 #install nginx
 echo $"Installing nginx started";
 helm repo add stable https://charts.helm.sh/stable;
+
+#new going forward
+#helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+#helm install --namespace profisee nginx ingress-nginx/ingress-nginx
+
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
 helm uninstall nginx
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Installing nginx for Lets Encrypt and setting the dns name for its IP."
-	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+	helm install --namespace profisee nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 else
 	echo $"Installing nginx not for Lets Encrypt and not setting the dns name for its IP."
-	helm install nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$publicInIP	
+	helm install --namespace profisee nginx stable/nginx-ingress --values nginxSettings.yaml
 fi
 
 echo $"Installing nginx finished, sleeping for 30s to wait for its IP";
@@ -196,10 +219,11 @@ sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
 sed -i -e 's/$SQLDBNAME/'"$SQLDBNAME"'/g' Settings.yaml
 sed -i -e 's/$SQLUSERNAME/'"$SQLUSERNAME"'/g' Settings.yaml
 sed -i -e 's/$SQLUSERPASSWORD/'"$SQLUSERPASSWORD"'/g' Settings.yaml
+sed -i -e 's/$FILEREPOACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' Settings.yaml
 sed -i -e 's/$FILEREPOUSERNAME/'"$FILEREPOUSERNAME"'/g' Settings.yaml
 sed -i -e 's~$FILEREPOPASSWORD~'"$FILEREPOPASSWORD"'~g' Settings.yaml
 sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
-sed -i -e 's/$FILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' Settings.yaml
+sed -i -e 's/$FILEREPOSHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' Settings.yaml
 sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
@@ -209,7 +233,11 @@ sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
 sed -i -e 's~$LICENSEDATA~'"$LICENSEDATA"'~g' Settings.yaml
 sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
-
+if [ "$USEKEYVAULT" = "Yes" ]; then
+	sed -i -e 's/$USEKEYVAULT/'true'/g' Settings.yaml
+else
+	sed -i -e 's/$USEKEYVAULT/'false'/g' Settings.yaml
+fi
 #Add settings.yaml as a secret so its always available after the deployment
 kubectl delete secret profisee-settings
 kubectl create secret generic profisee-settings --from-file=Settings.yaml

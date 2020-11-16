@@ -123,6 +123,9 @@
         },
         "UseLetsEncrypt": {
             "type": "String"
+        },
+        "UseKeyVault": {
+            "type": "String"
         }
     },
     "variables": 
@@ -179,7 +182,9 @@
         "TLSKEY":"[parameters('HttpsCertificatePrivateKey')]",
                 
         "USELETSENCRYPT":"[parameters('UseLetsEncrypt')]",
-        "KubenetesInfrastructureResourceGroupName":"[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]"
+        "KubenetesInfrastructureResourceGroupName":"[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]",
+
+        "UseKeyVault":"[parameters('UseKeyVault')]"
     },
     "resources": [
         {
@@ -248,9 +253,7 @@
                     "dockerBridgeCidr": "[variables('KubernetesDockerBridgeCidr')]"
                 }
             },
-            "identity": {
-                "type": "SystemAssigned"
-            }
+            "identity": "[variables('ManagedIdentityName')]"
         },
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
@@ -490,6 +493,10 @@
                 {
                     "name": "SQLSERVERCREATENEW",
                     "value": "[variables('SQLServerCreateNew')]"
+                },
+                {
+                    "name": "USEKEYVAULT",
+                    "value": "[variables('UseKeyVault')]"
                 }
             ],
             "primaryScriptUri": "[variables('ScriptURL')]"            
