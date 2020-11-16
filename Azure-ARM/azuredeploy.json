@@ -257,7 +257,9 @@
                     "dockerBridgeCidr": "[variables('KubernetesDockerBridgeCidr')]"
                 }
             },
-            "identity": "[variables('ManagedIdentityName')]"
+            "identity": {
+                "type": "SystemAssigned"
+            }
         },
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
