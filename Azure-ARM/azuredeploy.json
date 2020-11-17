@@ -194,30 +194,26 @@
         "KeyVault":"[parameters('KeyVault')]"
     },
     "resources": [
-         {
+        {
       "apiVersion": "2015-01-01",
       "name": "nestedTemplate",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "resources":[],
-          "parameters": 
-          {
-          "SQLServerPasswordSecret": {
-            "reference": {
-              "keyVault": {
-                "id": "[parameters('KeyVault')]"
-              },
-              "secretName": "[parameters('SQLServerPassword')]"
-            }
-          }
-        }
+        "resources": [
+          ],
+        "parameters": {
+              "SQLServerPasswordSecret": {
+                "reference": {
+                  "keyVault": {
+                    "id": "[parameters('KeyVault')]"
+                  },
+                  "secretName": "[parameters('SQLServerPassword')]"
+                }
+              }
         }
       }
-    },
+    }, 
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-07-01",
