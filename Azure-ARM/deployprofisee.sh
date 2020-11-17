@@ -94,7 +94,7 @@ helm repo add stable https://charts.helm.sh/stable;
 
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
-helm uninstall nginx
+helm uninstall --namespace profisee nginx
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Installing nginx for Lets Encrypt and setting the dns name for its IP."
@@ -109,7 +109,7 @@ echo $"Installing nginx finished, sleeping for 30s to wait for its IP";
 #wait for the ip to be available.  usually a few seconds
 sleep 30;
 #get ip for nginx
-nginxip=$(kubectl get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
+nginxip=$(kubectl --namespace profisee get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 
 if [ -z "$nginxip" ]; then
     echo $"nginx is not configure properly because the LB IP is null.  Exiting with error";
@@ -256,34 +256,37 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	# Update your local Helm chart repository cache
 	helm repo update
 	# Install the cert-manager Helm chart
-	helm install cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta\.kubernetes\.io/os"=linux --set webhook.nodeSelector."beta\.kubernetes\.io/os"=linux --set cainjector.nodeSelector."beta\.kubernetes\.io/os"=linux
+	helm install --namespace profisee cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta\.kubernetes\.io/os"=linux --set webhook.nodeSelector."beta\.kubernetes\.io/os"=linux --set cainjector.nodeSelector."beta\.kubernetes\.io/os"=linux
 	#wait for the cert manager to be ready
 	sleep 30;
-	#create the CA cluster issuer
-	curl -fsSL -o clusterissuer.yaml "$REPOURL/Azure-ARM/clusterissuer.yaml";
-	kubectl apply -f clusterissuer.yaml
+	#create the CA cluster issuer - now in profisee helm chart
+	#curl -fsSL -o clusterissuer.yaml "$REPOURL/Azure-ARM/clusterissuer.yaml";
+	#kubectl apply -f clusterissuer.yaml
+	sed -i -e 's/$USELETSENCRYPT/'true'/g' Settings.yaml
 	echo "Lets Encrypt Part 1 finshed";
 	#################################Lets Encrypt Part 1 End #######################################
+else
+	sed -i -e 's/$USELETSENCRYPT/'false'/g' Settings.yaml
 fi
 
 #################################Install Profisee Start #######################################
 echo "Install Profisee started";
 helm repo add profisee https://profiseedev.github.io/kubernetes
 helm repo update
-helm uninstall profiseeplatform
-helm install profiseeplatform profisee/profisee-platform --values Settings.yaml
+helm uninstall --namespace profisee profiseeplatform
+helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
 echo "Install Profisee finsihed";
 #################################Install Profisee End #######################################
 #################################Add Azure File volume Start #######################################
-echo "Add Azure File volume started";
-curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml "$REPOURL/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml";
-STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
-FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
-sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
-sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
-sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
-kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
-echo "Add Azure File volume finished";
+#echo "Add Azure File volume started";
+#curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml "$REPOURL/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml";
+#STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
+#FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
+#sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+#sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
+#sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
+#kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
+#echo "Add Azure File volume finished";
 #################################Add Azure File volume End #######################################
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
