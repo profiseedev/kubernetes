@@ -206,7 +206,12 @@
           "resources": [],
           "parameters": {
               "SQLServerPasswordSecret": {
-                  "type": "securestring",
+              "type": "securestring"
+            }
+            }
+        },
+        "parameters": {
+            "SQLServerPasswordSecret": {
                 "reference": {
                   "keyVault": {
                     "id": "[parameters('KeyVault')]"
@@ -214,7 +219,6 @@
                   "secretName": "[parameters('SQLServerPassword')]"
                 }
               }
-            }
         }        
       }
     }, 
