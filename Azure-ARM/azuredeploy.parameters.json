@@ -116,6 +116,14 @@
         },
         "KeyVault": {
             "value": ""
+        },
+        "SQLServerPasswordSecret": {
+            "reference": {
+                "keyVault": {
+                "id": "[parameters('KeyVault')]"
+                },
+                "secretName": "[parameters('SQLServerPassword')]"
+            }
         }
     }
 }
