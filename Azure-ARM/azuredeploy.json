@@ -200,11 +200,14 @@
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
           "contentVersion": "1.0.0.0",
           "resources": [{
-            "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+            "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
             "name": "[tolower(variables('SQLServerName'))]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
@@ -215,11 +218,11 @@
             },
             "properties": {
                 "administratorLogin": "[variables('SQLUSERNAME')]",
-                "administratorLoginPassword": "[variables('SQLUSERPASSWORD')]"
+                "administratorLoginPassword": "[parameters('SQLServerPasswordFromVault')]"
             },
             "resources": [
                 {
-                    "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+                    "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
                     "name": "AllowAllWindowsAzureIps",
                     "type": "firewallrules",
                     "location": "[resourceGroup().location]",
@@ -244,22 +247,31 @@
                 }
             ]
         }],
-          "parameters": {
-              "SQLServerPasswordSecret": {
+        "parameters": {
+              "SQLServerPasswordFromVault": {
               "type": "securestring"
+            },
+            "SQLServerCreateNew": {
+              "type": "string"
             }
             }
         },
         "parameters": {
-            "SQLServerPasswordSecret": {
+            "SQLServerPasswordFromVault": {
                 "reference": {
                   "keyVault": {
                     "id": "[parameters('KeyVault')]"
                   },
                   "secretName": "[parameters('SQLServerPassword')]"
                 }
+              },
+              "SQLServerCreateNew":{
+                  "defaultValue":"[parameters('SQLServerCreateNew')]"
               }
-        }        
+        },
+         "variables": {
+            "SQLServerCreateNew":"[variables('SQLServerCreateNew')]"
+         }        
       }
     }, 
         {
