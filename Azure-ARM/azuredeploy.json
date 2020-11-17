@@ -196,7 +196,7 @@
     "resources": [
         {
       "apiVersion": "2015-01-01",
-      "name": "Sql Template",
+      "name": "Sql-subtemplate",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
