@@ -129,6 +129,14 @@
         },
         "KeyVault": {
             "type": "String"
+        },
+        "SQLServerPasswordSecret": {
+            "reference": {
+                "keyVault": {
+                "id": "[parameters('KeyVault')]"
+                },
+                "secretName": "[parameters('SQLServerPassword')]"
+            }
         }
     },
     "variables": 
@@ -170,7 +178,7 @@
         "SQLServerName":"[parameters('SQLServerName')]",
         "SQLNAME": "[concat(variables('SQLServerName'),'.database.windows.net')]",
         "SQLServerDatabaseName":"[parameters('SQLServerDatabaseName')]",
-        "SQLUSERPASSWORD":"[parameters('SQLServerPassword')]",
+        "SQLUSERPASSWORD":"[if(equals(parameters('UseKeyVault'),'Yes'),parameters('SQLServerPasswordSecret'),parameters('SQLServerPassword'))]",
         "SQLUSERNAME":"[parameters('SQLServerUser')]",
 
         "StorageAccountCreateNew" : "[parameters('StorageAccountCreateNew')]",
