@@ -515,6 +515,10 @@
                 {
                     "name": "TENANTID",
                     "value": "[subscription().tenantId]"
+                },
+                {
+                    "name": "KUBERNETESCLIENTID",
+                    "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.clientId]"
                 }
             ],
             "primaryScriptUri": "[variables('ScriptURL')]"            
