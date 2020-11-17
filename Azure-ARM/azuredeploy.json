@@ -196,14 +196,54 @@
     "resources": [
         {
       "apiVersion": "2015-01-01",
-      "name": "nestedTemplate",
+      "name": "Sql Template",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
           "contentVersion": "1.0.0.0",
-          "resources": [],
+          "resources": [{
+            "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+            "name": "[tolower(variables('SQLServerName'))]",
+            "type": "Microsoft.Sql/servers",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2019-06-01-preview",
+            "dependsOn": [],
+            "tags": {
+                "displayName": "SQLServer"
+            },
+            "properties": {
+                "administratorLogin": "[variables('SQLUSERNAME')]",
+                "administratorLoginPassword": "[variables('SQLUSERPASSWORD')]"
+            },
+            "resources": [
+                {
+                    "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+                    "name": "AllowAllWindowsAzureIps",
+                    "type": "firewallrules",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2015-05-01-preview",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', tolower(variables('SQLServerName')))]"
+                    ],
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                },
+                {
+                "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+                "type": "databases",
+                "apiVersion": "2020-08-01-preview",
+                "name": "[variables('SQLServerDatabaseName')]",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                    "[resourceId('Microsoft.Sql/servers', concat(variables('SQLServerName')))]"
+                ]
+                }
+            ]
+        }],
           "parameters": {
               "SQLServerPasswordSecret": {
               "type": "securestring"
@@ -331,47 +371,7 @@
                 "osType": "Windows"
             }
         },
-        {
-            "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
-            "name": "[tolower(variables('SQLServerName'))]",
-            "type": "Microsoft.Sql/servers",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2019-06-01-preview",
-            "dependsOn": [],
-            "tags": {
-                "displayName": "SQLServer"
-            },
-            "properties": {
-                "administratorLogin": "[variables('SQLUSERNAME')]",
-                "administratorLoginPassword": "[variables('SQLUSERPASSWORD')]"
-            },
-            "resources": [
-                {
-                    "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
-                    "name": "AllowAllWindowsAzureIps",
-                    "type": "firewallrules",
-                    "location": "[resourceGroup().location]",
-                    "apiVersion": "2015-05-01-preview",
-                    "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', tolower(variables('SQLServerName')))]"
-                    ],
-                    "properties": {
-                        "startIpAddress": "0.0.0.0",
-                        "endIpAddress": "0.0.0.0"
-                    }
-                },
-                {
-                "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
-                "type": "databases",
-                "apiVersion": "2020-08-01-preview",
-                "name": "[variables('SQLServerDatabaseName')]",
-                "location": "[resourceGroup().location]",
-                "dependsOn": [
-                    "[resourceId('Microsoft.Sql/servers', concat(variables('SQLServerName')))]"
-                ]
-                }
-            ]
-        },
+        
         {
             "condition": "[equals(tolower(variables('StorageAccountCreateNew')),tolower('Yes'))]",
             "name": "[tolower(variables('StorageAccountName'))]",
