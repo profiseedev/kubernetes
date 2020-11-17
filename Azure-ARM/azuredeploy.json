@@ -503,11 +503,18 @@
                 {
                     "name": "USEKEYVAULT",
                     "value": "[variables('UseKeyVault')]"
-                }
-                ,
+                },
                 {
                     "name": "KEYVAULT",
                     "value": "[variables('KeyVault')]"
+                },
+                {
+                    "name": "SUBSCRIPTIONID",
+                    "value": "[subscription().subscriptionId]"
+                },
+                {
+                    "name": "TENANTID",
+                    "value": "[subscription().tenantId]"
                 }
             ],
             "primaryScriptUri": "[variables('ScriptURL')]"            
@@ -541,10 +548,6 @@
     "KubernetesClusterIdentityClientId": {
             "type": "string",
             "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.clientId]"
-        },
-    "KubernetesClusterIdentityResourceId": {
-            "type": "string",
-            "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.resourceId]"
         }
   }
 }
