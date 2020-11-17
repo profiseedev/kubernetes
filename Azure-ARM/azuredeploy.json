@@ -131,7 +131,12 @@
             "type": "String"
         },
         "SQLServerPasswordSecret": {
-            "type": "String"
+            "reference": {
+                "keyVault": {
+                        "id": "[parameters('KeyVault')]"
+                        },
+                        "secretName": "[parameters('SQLServerPassword')]"   
+            }
         }
     },
     "variables": 
