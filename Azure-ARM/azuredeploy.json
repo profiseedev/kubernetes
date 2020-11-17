@@ -206,6 +206,7 @@
           "resources": [],
           "parameters": {
               "SQLServerPasswordSecret": {
+                  "type": "securestring",
                 "reference": {
                   "keyVault": {
                     "id": "[parameters('KeyVault')]"
