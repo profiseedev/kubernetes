@@ -131,7 +131,7 @@
             "type": "String"
         },
         "SQLServerPasswordSecret": {
-            "type": "String"
+            "type": "securestring"
         }
     },
     "variables": 
