@@ -116,9 +116,6 @@
         },
         "KeyVault": {
             "value": ""
-        },
-        "SQLServerPasswordSecret": {
-            "value":""
         }
     }
 }
