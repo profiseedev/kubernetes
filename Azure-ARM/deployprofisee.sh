@@ -69,6 +69,9 @@ chmod 700 get_helm.sh;
 #create profisee namespace
 kubectl create namespace profisee
 
+#download the settings.yaml
+curl -fsSL -o Settings.yaml "$REPOURL/Azure-ARM/Settings.yaml";
+
 #install keyvault drivers
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"Installing keyvault csi driver - started"
@@ -99,6 +102,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#KEYVAULT looks like this this /subscriptions/$SUBID/resourceGroups/$kvresourceGroup/providers/Microsoft.KeyVault/vaults/$kvname
 	IFS='/' read -r -a kv <<< "$KEYVAULT" #splits the KEYVAULT on slashes and gets last one
 	kvname=${kv[-1]}
+	kvrgname=${kv[3]}
 	az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
 	az keyvault set-policy -n $kvname --secret-permissions get --spn $clientId
 	az keyvault set-policy -n $kvname --key-permissions get --spn $clientId
@@ -170,7 +174,6 @@ echo $"fix tls variables finished";
 #install profisee platform
 echo $"install profisee platform statrted";
 #set profisee helm chart settings
-curl -fsSL -o Settings.yaml "$REPOURL/Azure-ARM/Settings.yaml";
 auth="$(echo -n "$ACRUSER:$ACRUSERPASSWORD" | base64)"
 sed -i -e 's/$ACRUSER/'"$ACRUSER"'/g' Settings.yaml
 sed -i -e 's/$ACRPASSWORD/'"$ACRUSERPASSWORD"'/g' Settings.yaml
@@ -261,6 +264,15 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$SQL_USERPASSWORDSECRET/'"$SQLUSERPASSWORD"'/g' Settings.yaml
 	sed -i -e 's/$TLS_CERTSECRET/'"$TLSCERT"'/g' Settings.yaml
 	sed -i -e 's/$LICENSE_DATASECRET/'"$LICENSEDATA"'/g' Settings.yaml
+	sed -i -e 's/$KUBERNETESCLIENTID/'"$KUBERNETESCLIENTID"'/g' Settings.yaml
+
+	sed -i -e 's/$KEYVAULTNAME/'"$kvname"'/g' Settings.yaml
+	sed -i -e 's/$KEYVAULTRESOURCEGROUP/'"$kvrgname"'/g' Settings.yaml
+
+	sed -i -e 's/$AZURETENANTID/'"$SUBSCRIPTIONID"'/g' Settings.yaml
+	sed -i -e 's/$KUBERNETESCLIENTID/'"$TENANTID"'/g' Settings.yaml
+
+	$SUBSCRIPTIONID
 else
 	sed -i -e 's/$USEKEYVAULT/'false'/g' Settings.yaml
 fi
