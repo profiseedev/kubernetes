@@ -300,7 +300,6 @@
       }
     }, 
         {
-            "condition": "[equals(1,2)]",
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-07-01",
             "name": "[variables('KubernetesClusterName')]",
