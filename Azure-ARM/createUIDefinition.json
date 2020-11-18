@@ -780,7 +780,7 @@
                             "type": "Microsoft.Common.TextBox",
                             "label": "Https Certificate",
                             "defaultValue": "",
-                            "placeholder": "Https Certificate nae in KeyVault",
+                            "placeholder": "Https Certificate name in KeyVault",
                             "toolTip": "",
                             "constraints": {
                                 "required": true,
