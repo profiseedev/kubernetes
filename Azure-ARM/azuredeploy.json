@@ -299,7 +299,7 @@
       }
     }, 
         {
-            "condition": false,
+            "condition": "[equals(1,2)]",
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-07-01",
             "name": "[variables('KubernetesClusterName')]",
@@ -433,7 +433,7 @@
             ]
         },          
         {
-        "condition": false,
+        "condition": "[equals(1,2)]",
         "type": "Microsoft.Resources/deploymentScripts",
         "apiVersion": "2019-10-01-preview",
         "name": "InstallProfiseePlatform",
