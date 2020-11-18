@@ -82,6 +82,27 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
 	helm install --namespace profisee pod-identity aad-pod-identity/aad-pod-identity
 	echo $"Installing keyvault aad pod identity - finished"
+
+	#Assign roles needed for kv
+	echo $"Managing Identity configuration for KV access - started"
+	az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME
+	az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
+	az role assignment create --role "Virtual Machine Contributor" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
+
+	#Create AD Identity, get clientid and principalid to assign the reader role to (next command)
+	identityName="AKSKeyVaultUser"
+	az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName
+
+	clientId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId')
+	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId')
+
+	#KEYVAULT looksl this this /subscriptions/$SUBID/resourceGroups/$kvresourceGroup/providers/Microsoft.KeyVault/vaults/$kvname
+	IFS='/' read -r -a kv <<< "$KEYVAULT" #splits the KEYVAULT on slashes and gets last one
+	kvname=${kv[-1]}
+	az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
+	az keyvault set-policy -n $kvname --secret-permissions get --spn $clientId
+	az keyvault set-policy -n $kvname --key-permissions get --spn $clientId
+    echo $"Managing Identity configuration for KV access - finished"
 fi
 
 #install nginx
