@@ -220,6 +220,7 @@
                 "administratorLogin": "[parameters('SQLServerUserFromVault')]",
                 "administratorLoginPassword": "[parameters('SQLServerPasswordFromVault')]"
             },
+            "variables":{},
             "resources": [
                 {
                     "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
@@ -406,7 +407,6 @@
                 "osType": "Windows"
             }
         },
-        
         {
             "condition": "[equals(tolower(variables('StorageAccountCreateNew')),tolower('Yes'))]",
             "name": "[tolower(variables('StorageAccountName'))]",
