@@ -391,7 +391,6 @@
             }
         },
         {
-            "condition": "[equals(1,2)]",
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
             "name": "[concat(variables('KubernetesClusterName'), '/npwin1')]",
