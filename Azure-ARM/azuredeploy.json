@@ -442,9 +442,7 @@
         "name": "InstallProfiseePlatform",
         "location": "[resourceGroup().location]",
         "kind": "AzureCLI",
-         "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
-            ],
+         
         "identity": "[variables('ManagedIdentityName')]",
         "properties": {
             "forceUpdateTag": "[guid(resourceGroup().id)]",
