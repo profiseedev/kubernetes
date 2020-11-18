@@ -777,9 +777,16 @@
                         },
                         {
                             "name": "HttpsCertificateSecret",
-                            "type": "Microsoft.KeyVault.KeyVaultCertificateSelector",                            
-                            "toolTip": "",
+                            "type": "Microsoft.Common.TextBox",
                             "label": "Https Certificate",
+                            "defaultValue": "",
+                            "placeholder": "Https Certificate nae in KeyVault",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": ""
+                            },
                             "visible": "[equals(steps('profisee').UseKeyVault,'Yes')]"
                         },
                         {
@@ -848,7 +855,7 @@
             "DNSDomainResourceGroup": "[steps('networking').UserDefinedDNS.DNSDomainResourceGroup]",
             "HttpsConfigure": "[coalesce(steps('networking').HttpsConfigure,'No')]",
             "UseLetsEncrypt": "[if(equals(coalesce(steps('networking').HttpsConfigure,'No'),'No'),'Yes','No')]",
-            "HttpsCertificate": "[if(equals(steps('profisee').UseKeyVault, 'Yes'), steps('networking').UserDefinedHTTPS.HttpsCertificateSecret.certificateName, steps('networking').UserDefinedHTTPS.HttpsCertificate)]",
+            "HttpsCertificate": "[if(equals(steps('profisee').UseKeyVault, 'Yes'), steps('networking').UserDefinedHTTPS.HttpsCertificateSecret, steps('networking').UserDefinedHTTPS.HttpsCertificate)]",
 
             "HttpsCertificatePrivateKey": "[steps('networking').UserDefinedHTTPS.HttpsCertificatePrivateKey]",
             "UseKeyVault":"[steps('profisee').UseKeyVault]",
