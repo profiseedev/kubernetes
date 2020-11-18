@@ -374,6 +374,7 @@
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
             "name": "[concat(variables('KubernetesClusterName'), '/nplinux1')]",
+            "condition": "[equals(1,2)]",
             "dependsOn": [
                 "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
@@ -394,6 +395,7 @@
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
             "name": "[concat(variables('KubernetesClusterName'), '/npwin1')]",
+            "condition": "[equals(1,2)]",
             "dependsOn": [
                 "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
             ],
@@ -437,6 +439,7 @@
         "type": "Microsoft.Resources/deploymentScripts",
         "apiVersion": "2019-10-01-preview",
         "name": "InstallProfiseePlatform",
+        "condition": "[equals(1,2)]",
         "location": "[resourceGroup().location]",
         "kind": "AzureCLI",
          "dependsOn": [
