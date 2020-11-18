@@ -193,8 +193,9 @@
         "UseKeyVault":"[parameters('UseKeyVault')]",
         "KeyVault":"[parameters('KeyVault')]"
     },
-    "resources": [
-        {
+    "resources": 
+    [
+    {
       "apiVersion": "2015-01-01",
       "name": "Sql",
       "type": "Microsoft.Resources/deployments",
@@ -370,6 +371,7 @@
             }
         },
         {
+            "condition": "[equals(1,2)]",
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
             "name": "[concat(variables('KubernetesClusterName'), '/nplinux1')]",
@@ -390,6 +392,7 @@
             }
         },
         {
+            "condition": "[equals(1,2)]",
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2020-07-01",
             "name": "[concat(variables('KubernetesClusterName'), '/npwin1')]",
