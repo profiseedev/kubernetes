@@ -196,7 +196,7 @@
     "resources": [
         {
       "apiVersion": "2015-01-01",
-      "name": "Sql-subtemplate",
+      "name": "Sql",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
@@ -208,7 +208,7 @@
           "contentVersion": "1.0.0.0",
           "resources": [{
             "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
-            "name": "[tolower(variables('SQLServerName'))]",
+            "name": "[tolower(parameters('SQLServerName'))]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
             "apiVersion": "2019-06-01-preview",
@@ -217,7 +217,7 @@
                 "displayName": "SQLServer"
             },
             "properties": {
-                "administratorLogin": "[variables('SQLUSERNAME')]",
+                "administratorLogin": "[parameters('SQLServerUserFromVault')]",
                 "administratorLoginPassword": "[parameters('SQLServerPasswordFromVault')]"
             },
             "resources": [
@@ -228,7 +228,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-05-01-preview",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', tolower(variables('SQLServerName')))]"
+                        "[concat('Microsoft.Sql/servers/', tolower(parameters('SQLServerName')))]"
                     ],
                     "properties": {
                         "startIpAddress": "0.0.0.0",
@@ -236,27 +236,53 @@
                     }
                 },
                 {
-                "condition": "[equals(tolower(variables('SQLServerCreateNew')),tolower('Yes'))]",
+                "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
                 "type": "databases",
                 "apiVersion": "2020-08-01-preview",
-                "name": "[variables('SQLServerDatabaseName')]",
+                "name": "[parameters('SQLServerDatabaseName')]",
                 "location": "[resourceGroup().location]",
                 "dependsOn": [
-                    "[resourceId('Microsoft.Sql/servers', concat(variables('SQLServerName')))]"
+                    "[resourceId('Microsoft.Sql/servers', concat(parameters('SQLServerName')))]"
                 ]
                 }
             ]
         }],
         "parameters": {
-              "SQLServerPasswordFromVault": {
+             "SQLServerUserFromVault": {
+              "type": "securestring"
+            },
+            "SQLServerPasswordFromVault": {
               "type": "securestring"
             },
             "SQLServerCreateNew": {
+              "type": "string"
+            },
+            "SQLServerName": {
+              "type": "string"
+            },
+            "SQLServerDatabaseName": {
               "type": "string"
             }
             }
         },
         "parameters": {
+            "SQLServerCreateNew":{
+                "value":"[variables('SQLServerCreateNew')]"
+            },
+            "SQLServerDatabaseName":{
+                "value":"[variables('SQLServerDatabaseName')]"
+            },
+            "SQLServerName":{
+                "value":"[variables('SQLServerName')]"
+            },
+            "SQLServerUserFromVault": {
+                "reference": {
+                  "keyVault": {
+                    "id": "[parameters('KeyVault')]"
+                  },
+                  "secretName": "[parameters('SQLServerUser')]"
+                }
+              },
             "SQLServerPasswordFromVault": {
                 "reference": {
                   "keyVault": {
@@ -264,9 +290,6 @@
                   },
                   "secretName": "[parameters('SQLServerPassword')]"
                 }
-              },
-              "SQLServerCreateNew":{
-                  "defaultValue":"[parameters('SQLServerCreateNew')]"
               }
         },
          "variables": {
