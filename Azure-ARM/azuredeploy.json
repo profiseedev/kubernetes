@@ -490,7 +490,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
-            "name": "deployprofiseeplatform",
+            "name": "InstallProfiseePlatform",
             "location": "[resourceGroup().location]",
             "kind": "AzureCLI",
             "dependsOn": [
@@ -662,8 +662,8 @@
     ],
     "outputs": 
     {
-    "DeployProfiseePlatformOutputs": {
-      "value": "[reference('deployprofiseeplatform').outputs]",
+    "InstallProfiseePlatformOutputs": {
+      "value": "[reference('InstallProfiseePlatform').outputs]",
       "type": "object"
     },
     "KubernetesClusterFQDN": {
