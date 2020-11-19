@@ -490,7 +490,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
-            "name": "InstallProfiseePlatform",
+            "name": "DeployProfiseePlatform",
             "location": "[resourceGroup().location]",
             "kind": "AzureCLI",
             "dependsOn": [
@@ -500,6 +500,7 @@
             "properties": {
                 "forceUpdateTag": "[guid(resourceGroup().id)]",
                 "azCliVersion": "2.0.80",
+                "containerSettings": { "containerGroupName": "DeployProfiseePlatformCI" },
                 "timeout": "PT1H",
                 "cleanupPreference": "OnExpiration",
                 "retentionInterval": "P1D",
