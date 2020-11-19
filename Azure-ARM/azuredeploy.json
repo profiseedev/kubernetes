@@ -722,12 +722,28 @@
       "value": "[reference('InstallProfiseePlatform').outputs.Result[1].WEBURL]",
       "type": "string"
     },
+    "FileRepoUserName": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[2].FILEREPOUSERNAME]",
+      "type": "string"
+    },
     "FileRepoUrl": {
       "value": "[reference('InstallProfiseePlatform').outputs.Result[3].FILEREPOURL]",
       "type": "string"
     },
-    "AzureAppReplyUrl": {
+    "AzureAppRegistrationClientIdReplyUrl": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[4].AZUREAPPCLIENTID]",
+      "type": "string"
+    },
+    "AzureAppRegistrationReplyUrl": {
       "value": "[reference('InstallProfiseePlatform').outputs.Result[5].AZUREAPPREPLYURL]",
+      "type": "string"
+    },
+    "SqlServer": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[6].SQLNAME]",
+      "type": "string"
+    },
+    "SqlDatabase": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[7].SQLDBNAME]",
       "type": "string"
     },
     "KubernetesClusterFQDN": {

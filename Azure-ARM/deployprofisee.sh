@@ -349,6 +349,8 @@ result="{\"Result\":[\
 {\"FILEREPOURL\":\"$FILEREPOURL\"},\
 {\"AZUREAPPCLIENTID\":\"$CLIENTID\"},\
 {\"AZUREAPPREPLYURL\":\"$azureAppReplyUrl\"},\
+{\"SQLSERVER\":\"$SQLNAME\"},\
+{\"SQLDATABASE\":\"$SQLDBNAME\"},\
 {\"ACRREPONAME\":\"$ACRREPONAME\"},\
 {\"ACRREPOLABEL\":\"$ACRREPOLABEL\"}\
 ]}"
