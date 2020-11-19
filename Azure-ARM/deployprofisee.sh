@@ -96,18 +96,20 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	identityName="AKSKeyVaultUser"
 	az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName
 
-	clientId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId')
-	clientId=$(echo "$clientId" | tr -d '"')
+	akskvidentityClientId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId')
+	akskvidentityClientId=$(echo "$akskvidentityClientId" | tr -d '"')
+	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id')
+	akskvidentityClientResourceId=$(echo "$akskvidentityClientResourceId" | tr -d '"')
 	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId')
 	principalId=$(echo "$principalId" | tr -d '"')
     echo $principalId
 	#KEYVAULT looks like this this /subscriptions/$SUBID/resourceGroups/$kvresourceGroup/providers/Microsoft.KeyVault/vaults/$kvname
 	IFS='/' read -r -a kv <<< "$KEYVAULT" #splits the KEYVAULT on slashes and gets last one
 	kvname=${kv[-1]}
-	kvrgname=${kv[3]}
+	kvrgname=${kv[4]}
 	az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
-	az keyvault set-policy -n $kvname --secret-permissions get --spn $clientId
-	az keyvault set-policy -n $kvname --key-permissions get --spn $clientId
+	az keyvault set-policy -n $kvname --secret-permissions get --spn $akskvidentityClientId
+	az keyvault set-policy -n $kvname --key-permissions get --spn $akskvidentityClientId
     echo $"Managing Identity configuration for KV access - finished"
 fi
 
@@ -262,6 +264,9 @@ sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$USEKEYVAULT/'true'/g' Settings.yaml
 
+	sed -i -e 's/$KEYVAULTIDENTITCLIENTID/'"$akskvidentityClientId"'/g' Settings.yaml
+	sed -i -e 's/$KEYVAULTIDENTITYRESOURCEID/'"$akskvidentityClientResourceId"'/g' Settings.yaml
+
 	sed -i -e 's/$SQL_USERNAMESECRET/'"$SQLUSERNAME"'/g' Settings.yaml
 	sed -i -e 's/$SQL_USERPASSWORDSECRET/'"$SQLUSERPASSWORD"'/g' Settings.yaml
 	sed -i -e 's/$TLS_CERTSECRET/'"$TLSCERT"'/g' Settings.yaml
@@ -271,8 +276,8 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$KEYVAULTNAME/'"$kvname"'/g' Settings.yaml
 	sed -i -e 's/$KEYVAULTRESOURCEGROUP/'"$kvrgname"'/g' Settings.yaml
 
-	sed -i -e 's/$AZURETENANTID/'"$SUBSCRIPTIONID"'/g' Settings.yaml
-	sed -i -e 's/$KUBERNETESCLIENTID/'"$TENANTID"'/g' Settings.yaml
+	sed -i -e 's/$AZURESUBSCRIPTIONID/'"$SUBSCRIPTIONID"'/g' Settings.yaml
+	sed -i -e 's/$AZURETENANTID/'"$TENANTID"'/g' Settings.yaml
 
 	$SUBSCRIPTIONID
 else
