@@ -490,7 +490,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
-            "name": "DeployProfiseePlatform",
+            "name": "deployprofiseeplatform",
             "location": "[resourceGroup().location]",
             "kind": "AzureCLI",
             "dependsOn": [
@@ -500,7 +500,7 @@
             "properties": {
                 "forceUpdateTag": "[guid(resourceGroup().id)]",
                 "azCliVersion": "2.0.80",
-                "containerSettings": { "containerGroupName": "DeployProfiseePlatformCI" },
+                "containerSettings": { "containerGroupName": "deployprofiseeplatformci" },
                 "timeout": "PT1H",
                 "cleanupPreference": "OnExpiration",
                 "retentionInterval": "P1D",
@@ -664,7 +664,7 @@
     "outputs": 
     {
     "DeployProfiseePlatformOutputs": {
-      "value": "[reference('DeployProfiseePlatform').outputs]",
+      "value": "[reference('deployprofiseeplatform').outputs]",
       "type": "object"
     },
     "KubernetesClusterFQDN": {
