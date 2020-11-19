@@ -318,28 +318,6 @@ helm uninstall --namespace profisee profiseeplatform
 helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
 echo "Install Profisee finsihed";
 #################################Install Profisee End #######################################
-#################################Add Azure File volume Start #######################################
-#echo "Add Azure File volume started";
-#curl -fsSL -o StatefullSet_AddAzureFileVolume.yaml "$REPOURL/Azure-ARM/StatefullSet_AddAzureFileVolume.yaml";
-#STORAGEACCOUNTNAME="$(echo -n "$STORAGEACCOUNTNAME" | base64)"
-#FILEREPOPASSWORD="$(echo -n "$FILEREPOPASSWORD" | base64 | tr -d '\n')" #The last tr is needed because base64 inserts line breaks after every 76th character
-#sed -i -e 's/$STORAGEACCOUNTNAME/'"$STORAGEACCOUNTNAME"'/g' StatefullSet_AddAzureFileVolume.yaml
-#sed -i -e 's/$STORAGEACCOUNTKEY/'"$FILEREPOPASSWORD"'/g' StatefullSet_AddAzureFileVolume.yaml
-#sed -i -e 's/$STORAGEACCOUNTFILESHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' StatefullSet_AddAzureFileVolume.yaml
-#kubectl apply -f StatefullSet_AddAzureFileVolume.yaml
-#echo "Add Azure File volume finished";
-#################################Add Azure File volume End #######################################
-
-if [ "$USELETSENCRYPT" = "Yes" ]; then
-	#################################Lets Encrypt Part 2 Start #####################################
-	#Install Ingress for lets encrypt
-	echo "Lets Encrypt Part 2 started";
-	curl -fsSL -o ingressletsencrypt.yaml "$REPOURL/Azure-ARM/ingressletsencrypt.yaml";
-	sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' ingressletsencrypt.yaml
-	kubectl apply -f ingressletsencrypt.yaml
-	echo "Lets Encrypt Part 2 finished";
-	#################################Lets Encrypt Part 2 End #######################################
-fi
 
 echo $"install profisee platform finished";
 result="{\"Result\":[\

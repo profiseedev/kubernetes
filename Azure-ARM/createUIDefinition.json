@@ -159,7 +159,7 @@
                     "type": "Microsoft.Common.TextBox",
                     "label": "License",
                     "defaultValue": "",
-                    "placeholder": "License secret name",
+                    "placeholder": "License secret name in KeyVault",
                     "toolTip": "",
                     "constraints": {
                         "required": true,
@@ -505,7 +505,7 @@
                     "name": "SQLServerUserSecret",
                     "type": "Microsoft.Common.TextBox",
                     "label": "User",
-                    "placeholder": "SQL server username secret name",
+                    "placeholder": "SQL server username secret name in KeyVault",
                     "toolTip": "Administrator SQL login name to create with the new SQL Server or to use to connect to existing SQL Server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols",
                     "constraints": {
                         "required": true,
@@ -537,7 +537,7 @@
                     "type": "Microsoft.Common.TextBox",
                     "label": "Password",
                     "defaultValue": "",
-                    "placeholder": "SQL server password secret name",
+                    "placeholder": "SQL server password secret name in KeyVault",
                     "toolTip": "",
                     "constraints": {
                         "required": true,
