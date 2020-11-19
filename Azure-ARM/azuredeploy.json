@@ -499,7 +499,7 @@
             "identity": "[variables('ManagedIdentityName')]",
             "properties": {
                 "forceUpdateTag": "[guid(resourceGroup().id)]",
-                "azCliVersion": "2.5.0",
+                "azCliVersion": "2.50.00",
                 "timeout": "PT1H",
                 "cleanupPreference": "OnExpiration",
                 "retentionInterval": "P1D",
