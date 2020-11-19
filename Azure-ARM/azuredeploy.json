@@ -500,7 +500,7 @@
             "properties": {
                 "forceUpdateTag": "[guid(resourceGroup().id)]",
                 "azCliVersion": "2.0.80",
-                "containerSettings": { "containerGroupName": "deployprofiseeplatformci" },
+                "containerSettings": { "containerGroupName": "deployprofiseeplatform-ci" },
                 "timeout": "PT1H",
                 "cleanupPreference": "OnExpiration",
                 "retentionInterval": "P1D",
