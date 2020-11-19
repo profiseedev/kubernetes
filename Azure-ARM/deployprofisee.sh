@@ -266,7 +266,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$USEKEYVAULT/'true'/g' Settings.yaml
 
 	sed -i -e 's/$KEYVAULTIDENTITCLIENTID/'"$akskvidentityClientId"'/g' Settings.yaml
-	sed -i -e 's/$KEYVAULTIDENTITYRESOURCEID/'"$akskvidentityClientResourceId"'/g' Settings.yaml
+	sed -i -e 's~$KEYVAULTIDENTITYRESOURCEID~'"$akskvidentityClientResourceId"'~g' Settings.yaml
 
 	sed -i -e 's/$SQL_USERNAMESECRET/'"$SQLUSERNAME"'/g' Settings.yaml
 	sed -i -e 's/$SQL_USERPASSWORDSECRET/'"$SQLUSERPASSWORD"'/g' Settings.yaml
