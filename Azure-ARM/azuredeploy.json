@@ -663,8 +663,8 @@
     ],
     "outputs": 
     {
-    "InstallProfiseePlatformOutputs": {
-      "value": "[reference('InstallProfiseePlatform').outputs]",
+    "DeployProfiseePlatformOutputs": {
+      "value": "[reference('DeployProfiseePlatform').outputs]",
       "type": "object"
     },
     "KubernetesClusterFQDN": {
