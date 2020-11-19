@@ -97,8 +97,10 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName
 
 	clientId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId')
+	clientId=$(echo "$clientId" | tr -d '"')
 	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId')
-
+	principalId=$(echo "$principalId" | tr -d '"')
+    echo $principalId
 	#KEYVAULT looks like this this /subscriptions/$SUBID/resourceGroups/$kvresourceGroup/providers/Microsoft.KeyVault/vaults/$kvname
 	IFS='/' read -r -a kv <<< "$KEYVAULT" #splits the KEYVAULT on slashes and gets last one
 	kvname=${kv[-1]}
