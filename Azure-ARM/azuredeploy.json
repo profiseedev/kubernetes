@@ -194,6 +194,48 @@
     [
         {
             "apiVersion": "2015-01-01",
+            "name": "License",
+            "type": "Microsoft.Resources/deployments",
+            "condition": "[equals(tolower(parameters('UseKeyVault')),tolower('Yes'))]",
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": 
+                {
+                "scope": "inner"
+                },
+                "template": 
+                    {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                    ],
+                    "parameters": {
+                        "LicenseFromVault": {
+                        "type": "securestring"
+                        }
+                        },
+                        "outputs": {
+                            "ValueInVault": {
+                            "value": "[parameters('LicenseFromVault')]",
+                            "type": "string"
+                            }
+                        }
+                    },
+                "parameters": {
+                    "LicenseFromVault": {
+                        "reference": {
+                        "keyVault": {
+                            "id": "[parameters('KeyVault')]"
+                        },
+                        "secretName": "[parameters('ProfiseeLicense')]"
+                        }
+                    }
+                }
+            }
+        },
+
+        {
+            "apiVersion": "2015-01-01",
             "name": "Sql",
             "type": "Microsoft.Resources/deployments",
             "condition": "[equals(tolower(parameters('UseKeyVault')),tolower('Yes'))]",
@@ -572,7 +614,11 @@
                     },
                     {
                         "name": "LICENSEDATA",
-                        "value": "[variables('LICENSEDATA')]"
+                        "value": "[if(equals(parameters('UseKeyVault'),'Yes'), reference('License').outputs.valueInVault.value,variables('LICENSEDATA'))]"
+                    },
+                     {
+                        "name": "LICENSEDATASECRETNAME",
+                        "value": "[if(equals(parameters('UseKeyVault'),'Yes'), variables('LICENSEDATA'),'')]"
                     },
                     {
                         "name": "ACRUSER",
@@ -667,6 +713,22 @@
     "InstallProfiseePlatformOutputs": {
       "value": "[reference('InstallProfiseePlatform').outputs]",
       "type": "object"
+    },
+    "ClusterIP": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[0].IP]",
+      "type": "string"
+    },
+    "ProfiseeWebPortalURL": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[1].WEBURL]",
+      "type": "string"
+    },
+    "FileRepoUrl": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[3].FILEREPOURL]",
+      "type": "string"
+    },
+    "AzureAppReplyUrl": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[5].AZUREAPPREPLYURL]",
+      "type": "string"
     },
     "KubernetesClusterFQDN": {
             "type": "string",
