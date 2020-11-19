@@ -739,11 +739,11 @@
       "type": "string"
     },
     "SqlServer": {
-      "value": "[reference('InstallProfiseePlatform').outputs.Result[6].SQLNAME]",
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[6].SQLSERVER]",
       "type": "string"
     },
     "SqlDatabase": {
-      "value": "[reference('InstallProfiseePlatform').outputs.Result[7].SQLDBNAME]",
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[7].SQLDATABASE]",
       "type": "string"
     },
     "KubernetesClusterFQDN": {
