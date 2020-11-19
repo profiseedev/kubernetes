@@ -105,11 +105,12 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
     echo $principalId
 	#KEYVAULT looks like this this /subscriptions/$SUBID/resourceGroups/$kvresourceGroup/providers/Microsoft.KeyVault/vaults/$kvname
 	IFS='/' read -r -a kv <<< "$KEYVAULT" #splits the KEYVAULT on slashes and gets last one
-	kvname=${kv[-1]}
-	kvrgname=${kv[4]}
+	keyVaultName=${kv[-1]}
+	keyVaultResourceGroup=${kv[4]}
+	keyVaultSubscriptionId=${kv[2]}
 	az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
-	az keyvault set-policy -n $kvname --secret-permissions get --spn $akskvidentityClientId
-	az keyvault set-policy -n $kvname --key-permissions get --spn $akskvidentityClientId
+	az keyvault set-policy -n $keyVaultName --secret-permissions get --spn $akskvidentityClientId
+	az keyvault set-policy -n $keyVaultName --key-permissions get --spn $akskvidentityClientId
     echo $"Managing Identity configuration for KV access - finished"
 fi
 
@@ -273,10 +274,10 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$LICENSE_DATASECRET/'"$LICENSEDATA"'/g' Settings.yaml
 	sed -i -e 's/$KUBERNETESCLIENTID/'"$KUBERNETESCLIENTID"'/g' Settings.yaml
 
-	sed -i -e 's/$KEYVAULTNAME/'"$kvname"'/g' Settings.yaml
-	sed -i -e 's/$KEYVAULTRESOURCEGROUP/'"$kvrgname"'/g' Settings.yaml
+	sed -i -e 's/$KEYVAULTNAME/'"$keyVaultName"'/g' Settings.yaml
+	sed -i -e 's/$KEYVAULTRESOURCEGROUP/'"$keyVaultResourceGroup"'/g' Settings.yaml
 
-	sed -i -e 's/$AZURESUBSCRIPTIONID/'"$SUBSCRIPTIONID"'/g' Settings.yaml
+	sed -i -e 's/$AZURESUBSCRIPTIONID/'"$keyVaultSubscriptionId"'/g' Settings.yaml
 	sed -i -e 's/$AZURETENANTID/'"$TENANTID"'/g' Settings.yaml
 
 	$SUBSCRIPTIONID
