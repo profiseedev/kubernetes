@@ -1,5 +1,7 @@
 #!/bin/bash
-REPOURL="https://raw.githubusercontent.com/profiseedev/kubernetes/master";
+REPONAME="profiseedev"
+REPOURL="https://raw.githubusercontent.com/$REPONAME/kubernetes/master";
+HELMREPOURL="https://$REPONAME.github.io/kubernetes";
 
 az login --identity
 #install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5
@@ -284,9 +286,6 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 else
 	sed -i -e 's/$USEKEYVAULT/'false'/g' Settings.yaml
 fi
-#Add settings.yaml as a secret so its always available after the deployment
-kubectl delete secret profisee-settings --namespace profisee
-kubectl create secret generic profisee-settings --namespace profisee --from-file=Settings.yaml
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	#################################Lets Encrypt Part 1 Start #####################################
@@ -310,9 +309,13 @@ else
 	sed -i -e 's/$USELETSENCRYPT/'false'/g' Settings.yaml
 fi
 
+#Add settings.yaml as a secret so its always available after the deployment
+kubectl delete secret profisee-settings --namespace profisee
+kubectl create secret generic profisee-settings --namespace profisee --from-file=Settings.yaml
+
 #################################Install Profisee Start #######################################
 echo "Install Profisee started";
-helm repo add profisee https://profiseedev.github.io/kubernetes
+helm repo add profisee $HELMREPOURL
 helm repo update
 helm uninstall --namespace profisee profiseeplatform
 helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
