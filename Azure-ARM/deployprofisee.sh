@@ -285,8 +285,8 @@ else
 	sed -i -e 's/$USEKEYVAULT/'false'/g' Settings.yaml
 fi
 #Add settings.yaml as a secret so its always available after the deployment
-kubectl delete secret profisee-settings
-kubectl create secret generic profisee-settings --from-file=Settings.yaml
+kubectl delete secret profisee-settings --namespace profisee
+kubectl create secret generic profisee-settings --namespace profisee --from-file=Settings.yaml
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	#################################Lets Encrypt Part 1 Start #####################################
