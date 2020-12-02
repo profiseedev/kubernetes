@@ -146,8 +146,14 @@ sleep 30;
 nginxip=$(kubectl --namespace profisee get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 
 if [ -z "$nginxip" ]; then
-    echo $"nginx is not configure properly because the LB IP is null.  Exiting with error";
-	exit 1
+	#try again
+	echo $"nginx is not configure properly because the LB IP is null, trying again in 60 seconds";
+    sleep 60;
+	nginxip=$(kubectl --namespace profisee get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
+	if [ -z "$nginxip" ]; then
+    	echo $"nginx is not configure properly because the LB IP is null.  Exiting with error";
+		exit 1
+	fi
 fi
 echo $"nginx LB IP is $nginxip";
 
