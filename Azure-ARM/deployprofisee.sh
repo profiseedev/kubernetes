@@ -2,6 +2,8 @@
 REPONAME="profiseedev"
 REPOURL="https://raw.githubusercontent.com/$REPONAME/kubernetes/master";
 HELMREPOURL="https://$REPONAME.github.io/kubernetes";
+echo $"REPOURL is $REPOURL";
+echo $"HELMREPOURL is $HELMREPOURL";
 
 az login --identity
 #install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5
@@ -298,6 +300,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	# Install the cert-manager Helm chart
 	helm install --namespace profisee cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta\.kubernetes\.io/os"=linux --set webhook.nodeSelector."beta\.kubernetes\.io/os"=linux --set cainjector.nodeSelector."beta\.kubernetes\.io/os"=linux
 	#wait for the cert manager to be ready
+	echo $"Lets Encrypt, waiting for certificate manager to be ready, sleeping for 30s";
 	sleep 30;
 	#create the CA cluster issuer - now in profisee helm chart
 	#curl -fsSL -o clusterissuer.yaml "$REPOURL/Azure-ARM/clusterissuer.yaml";
