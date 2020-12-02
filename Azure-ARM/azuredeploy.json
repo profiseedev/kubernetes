@@ -709,11 +709,7 @@
         }
     ],
     "outputs": 
-    {
-    "InstallProfiseePlatformOutputs": {
-      "value": "[reference('InstallProfiseePlatform').outputs]",
-      "type": "object"
-    },
+    {    
     "ClusterIP": {
       "value": "[reference('InstallProfiseePlatform').outputs.Result[0].IP]",
       "type": "string"
@@ -746,6 +742,14 @@
       "value": "[reference('InstallProfiseePlatform').outputs.Result[7].SQLDATABASE]",
       "type": "string"
     },
+    "ARCRepoName": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[8].ACRREPONAME]",
+      "type": "string"
+    },
+    "ACRRepoLabel": {
+      "value": "[reference('InstallProfiseePlatform').outputs.Result[9].ACRREPOLABEL]",
+      "type": "string"
+    },
     "KubernetesClusterFQDN": {
             "type": "string",
             "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).FQDN]"
@@ -753,6 +757,10 @@
     "KubernetesClusterIdentityClientId": {
             "type": "string",
             "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.clientId]"
-        }
+        },
+    "InstallProfiseePlatformOutputs": {
+      "value": "[reference('InstallProfiseePlatform').outputs]",
+      "type": "object"
+    }
   }
 }
