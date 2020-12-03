@@ -428,45 +428,6 @@
             }
         },
         {
-            "type": "Microsoft.ContainerService/managedClusters/agentPools",
-            "apiVersion": "2020-07-01",
-            "name": "[concat(variables('KubernetesClusterName'), '/nplinux1')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
-            ],
-            "properties": {
-                "count": "[variables('KubernetesLinuxNodeCount')]",
-                "vmSize": "[variables('KubernetesLinuxNodeSize')]",
-                "osDiskSizeGB": 100,
-                "maxPods": 30,
-                "type": "VirtualMachineScaleSets",
-                "orchestratorVersion": "[variables('KubernetesVersion')]",
-                "enableNodePublicIP": false,
-                "nodeLabels": {},
-                "mode": "System",
-                "osType": "Linux"
-            }
-        },
-        {
-            "type": "Microsoft.ContainerService/managedClusters/agentPools",
-            "apiVersion": "2020-07-01",
-            "name": "[concat(variables('KubernetesClusterName'), '/npwin1')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
-            ],
-            "properties": {
-                "count": "[variables('KubernetesWindowsNodeCount')]",
-                "vmSize": "[variables('KubernetesWindowsNodeSize')]",
-                "osDiskSizeGB": 100,
-                "maxPods": 30,
-                "type": "VirtualMachineScaleSets",
-                "orchestratorVersion": "[variables('KubernetesVersion')]",
-                "enableNodePublicIP": false,
-                "mode": "User",
-                "osType": "Windows"
-            }
-        },
-        {
             "condition": "[and(equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes')),equals(tolower(parameters('UseKeyVault')),tolower('No')))]",
             "name": "[tolower(parameters('SQLServerName'))]",
             "type": "Microsoft.Sql/servers",
