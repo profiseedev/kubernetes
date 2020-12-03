@@ -344,7 +344,8 @@ fi;
 
 #wait for pod to be ready (downloaded)
 echo "Waiting for pod to be downloaded and be ready..";
-kubectl wait --for=condition=ready pod/profisee-0 --namespace profisee
+sleep 30;
+kubectl wait --timeout=1200s --for=condition=ready pod/profisee-0 --namespace profisee
 
 echo $"Install Profisee Platform finished";
 
