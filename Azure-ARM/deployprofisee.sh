@@ -33,6 +33,9 @@ rm LicenseReader.tar.003
 rm LicenseReader.tar.004
 echo $"Downloading and extracting license reader finished";
 
+echo $"Cleaning license string to remove and unwanted characters - linebreaks, spaces, etc...";
+LICENSEDATA=$(echo $LICENSEDATA|tr -d '\n')
+
 echo $"Getting values from license started";
 ./LicenseReader "ExternalDnsUrl" $LICENSEDATA
 ./LicenseReader "ACRUserName" $LICENSEDATA
@@ -328,7 +331,15 @@ helm repo add profisee $HELMREPOURL
 helm repo update
 helm uninstall --namespace profisee profiseeplatform
 helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
-echo "Install Profisee finsihed";
+
+#Make sure it installed, if not return error
+profiseeinstalledname=$(echo $(helm list --filter 'profisee+' --namespace profisee -o json)| jq '.[].name')
+if [ -z "$profiseeinstalledname" ]; then
+	echo "Profisee did not get installed.  Exiting with error";
+	exit 1
+else
+	echo "Install Profisee finished";
+fi;
 #################################Install Profisee End #######################################
 
 echo $"install profisee platform finished";
