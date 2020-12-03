@@ -342,7 +342,12 @@ else
 fi;
 #################################Install Profisee End #######################################
 
-echo $"install profisee platform finished";
+#wait for pod to be ready (downloaded)
+echo "Waiting for pod to be downloaded and be ready..";
+kubectl wait --for=condition=ready pod/profisee-0 --namespace profisee
+
+echo $"Install Profisee Platform finished";
+
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
 {\"WEBURL\":\"${EXTERNALDNSURL}/Profisee\"},\
