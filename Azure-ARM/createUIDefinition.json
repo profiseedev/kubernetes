@@ -356,10 +356,10 @@
                             },
                             "defaultValue": {
                                 "name": "vnet01",
-                                "addressPrefixSize": "/16"
+                                "addressPrefixSize": "/24"
                             },
                             "constraints": {
-                                "minAddressPrefixSize": "/16"
+                                "minAddressPrefixSize": "/28"
                             },
                             "options": {
                                 "hideExisting": false
