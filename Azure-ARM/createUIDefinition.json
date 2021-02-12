@@ -98,7 +98,7 @@
                     "name": "ProfiseeVersion",
                     "type": "Microsoft.Common.DropDown",
                     "label": "Version",
-                    "defaultValue": "2020R1.0",
+                    "defaultValue": "2021R1.0",
                     "toolTip": "Which release of the Profisee Platform to start with.",
                     "constraints": {
                         "required": true,
