@@ -56,7 +56,8 @@
               }
                        
         ],
-        "steps": [ {
+        "steps": [ 
+        {
             "name": "profisee",
             "label": "Profisee",
             "elements": [
@@ -122,6 +123,10 @@
                             {
                                 "label": "2021R2.Preview",
                                 "value": "profiseeplatform:2021r2.preview"
+                            },
+                            {
+                                "label": "2021R2.PurviewPreview",
+                                "value": "profiseeplatform:2021r2.purviewpreview"
                             }
                         ]
                     },
@@ -213,10 +218,37 @@
                         }
                     ],
                     "visible": "[equals(steps('profisee').ActiveDirectoryCreateApp,'No')]"
-                } 
+                },
+                {
+                    "name": "PurviewAPIBaseUrl",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Purview API Base Url ",
+                    "defaultValue": "",
+                    "placeholder": "",
+                    "toolTip": "",
+                    "constraints": {
+                        "required": true,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": "[equals(steps('profisee').ProfiseeVersion,'profiseeplatform:2021r2.purviewpreview')]"                    
+                },
+                {
+                    "name": "PurviewInstanceName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Purview Instance Name",
+                    "defaultValue": "",
+                    "placeholder": "",
+                    "toolTip": "",
+                    "constraints": {
+                        "required": true,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": "[equals(steps('profisee').ProfiseeVersion,'profiseeplatform:2021r2.purviewpreview')]"                    
+                }
             ]
-        },
-        
+        },        
         {
             "name": "kubernetes",
             "label": "Kubernetes",
