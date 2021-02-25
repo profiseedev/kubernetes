@@ -134,7 +134,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 4.  Create Profisee Settings.yaml
     - Fetch the Settings.yaml template
       
-            curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/AWS-EKS-CLI/Settings.yaml;
+            curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/Profiseedev/kubernetes/master/AWS-EKS-CLI/Settings.yaml;
     - Update the values
     
 			sqlServer: 
@@ -212,7 +212,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 	- Register redirect url http(s)://FQDNThatPointsToClusterIP/Profisee/auth/signin-microsoft
 6.  Install Profisee
 
-            helm repo add profisee https://profisee.github.io/kubernetes
+            helm repo add profisee https://profiseedev.github.io/kubernetes
             helm uninstall --namespace profisee profiseeplatform
             helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
             
