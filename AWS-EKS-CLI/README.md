@@ -60,6 +60,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
     - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-creating-volume.html
     
 5. AWS kubernetes utilities
+	- todo: use cloudshell and if so nothing else needed in this section https://dev.to/aws-builders/setting-up-a-working-environment-for-amazon-eks-with-aws-cloudshell-1nn7
 	- https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
 	- Install aws cli - https://awscli.amazonaws.com/AWSCLIV2.msi
 	- Install eksctl 
