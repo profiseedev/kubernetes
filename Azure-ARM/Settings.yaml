@@ -83,5 +83,7 @@ cloud:
         baseUrl: "$PURVIEWBASEURL"
     aws:
       isProvider: false
+      ebsVolumeId: ""
     google:
-      isProvider: false     
+      isProvider: false
+      gceVolumeName: ""     
