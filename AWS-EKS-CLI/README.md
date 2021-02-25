@@ -59,7 +59,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
     - aws ec2 create-volume --volume-type gp2 --size 80 --availability-zone us-east-1c --region us-east-1
     - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-creating-volume.html
     
-5. AWS kubernetes utilities
+5. Configure environment with required tools
 	- Use aws cloudshell 
 	  - https://dev.to/aws-builders/setting-up-a-working-environment-for-amazon-eks-with-aws-cloudshell-1nn7
 	- Use local computer - no cloudshell
