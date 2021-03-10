@@ -106,7 +106,9 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 	    kubectl --namespace profisee describe pod profisee-0
 
 2.  View the kubernetes logs and you will see that it fails the first time as it cannot talk to the sql server.
-	kubectl logs profisee-0 --namespace profisee
+
+		kubectl logs profisee-0 --namespace profisee
+		
 3.  Update the sql security group to allow the container ip in
 	- Connect to container 
 	- kubectl exec -it profisee-0 powershell
