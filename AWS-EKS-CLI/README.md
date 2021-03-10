@@ -114,7 +114,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 	
 			kubectl exec -it profisee-0 powershell
 			
-	- Get oubound ip and make noe of it
+	- Get oubound ip and make note of it
 	
 			Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
 			
@@ -124,12 +124,12 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 	- Edit inbound rules
 	- Add MSSQL for outbound IP of cluster
 
-4.  Remote back into the container and reun ./setup.ps1
+4.  Remote back into the container and run ./setup.ps1
     
         kubectl --namespace profisee exec -it profisee-0 powershell
 		./Setup.ps1
 
 5.  Make sure it succeeds
 	
-6.  Goto Profisee Platform web portal
+6.  Voila, goto Profisee Platform web portal
 	- http(s)://FQDNThatPointsToClusterIP/Profisee
