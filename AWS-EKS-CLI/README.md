@@ -54,7 +54,8 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 1.  Make cluster.yaml and upload to cloudshell.
 	- Download the cluster.yaml
             	
-		curl -fsSL -o cluster.yaml https://raw.githubusercontent.com/Profiseedev/kubernetes/master/AWS-EKS-CLI/cluster.yaml;
+			curl -fsSL -o cluster.yaml https://raw.githubusercontent.com/Profiseedev/kubernetes/master/AWS-EKS-CLI/cluster.yaml;
+		
 	- Change the name/region/zone
 	- Change the instance type(s) to fit your needs.  https://aws.amazon.com/ec2/pricing/on-demand/
     
