@@ -7,7 +7,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 1.  License
     - Profisee license associated with the dns for the environment
 
-2.  Https certificate including the private key
+2.  Https certificate and the private key
 	- Certificate
 	
 			-----BEGIN CERTIFICATE-----
@@ -53,27 +53,11 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 5. Configure environment with required tools
 	- Use aws cloudshell 
 	  - https://dev.to/aws-builders/setting-up-a-working-environment-for-amazon-eks-with-aws-cloudshell-1nn7
-	- Use local computer - no cloudshell
-	  - https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
+	- Use local computer - no cloudshell - https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
 	  - Install aws cli - https://awscli.amazonaws.com/AWSCLIV2.msi
-	  - Install eksctl 
-		- Install chocolately if you need it - https://chocolatey.org/install
-		- Install eksctl - chocolatey install -y eksctl 
-	  - Install kubectl
-		- curl -o kubectl.exe https://amazon-eks.s3.us-west-2.amazonaws.com/1.17.9/2020-08-04/bin/windows/amd64/kubectl.exe
-		- Set path
-			- Create a new directory for your command line binaries, such as C:\bin.
-			- Copy the kubectl.exe binary to your new directory.
-			- Edit your user or system PATH environment variable to add the new directory to your PATH.
-			- Close your PowerShell terminal and open a new one to pick up the new PATH variable.
-           - Setup IAM - https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds
-    
-		    aws configure
-		    AWS Access Key ID [None]: XXXX
-		    AWS Secret Access Key [None]: XXXX
-		    Default region name [None]: us-east-1
-		    Default output format [None]: json
-		    
+	  - Install eksctl - https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html
+	  - Install kubectl - https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
+          - Setup IAM - https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds
 
 6.  Configure DNS	
     - Choose a DNS host name that you want to use eg:  profiseemdm.mycompany.com
