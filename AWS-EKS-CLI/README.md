@@ -104,83 +104,14 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
       
             curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/Profiseedev/kubernetes/master/AWS-EKS-CLI/Settings.yaml;
     - Update the values
-    
-			sqlServer: 
-			    name: "Sql server fully qualified domain name"
-			    databaseName: "Database name"
-			    userName: "Sql username"
-			    password: "Sql password"
-			profiseeRunTime:
-			    useLetsEncrypt: false
-			    adminAccount: "Email/account of the first super user who will be registered with Profisee, who will be able to logon and add other users."
-			    fileRepository:
-				accountName: ""
-				userName: "user manager\\containeradministrator"
-				password: ""
-				logonType: "NewCredentials"
-				location: "c:\\fileshare"
-				fileShareName: ""
-			    externalDnsUrl: "url to profisee endpoint eg: https://eks.mycompany.com"
-			    externalDnsName: "web url to profisee endpoint eg: eks.mycompany.com"
-			    oidc:
-				name: "Authority name eg: Okta"
-				authority: "Authority url  eg: https://mycompany.okta.com/oauth2/default"
-				clientId: "Authority client id eg" acbdefghijklmnop"
-				clientSecret: "Authority client secret"
-				usernameClaim: "Authority username claim name.  eg: preferred_username"
-				userIdClaim: "Authority userid claim name.  eg: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-				firstNameClaim: "Authority first name claim name.  eg: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
-				lastNameClaim: "Authority last name claim name.  eg: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
-				emailClaim: "Authority email claim name.  eg: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-			clusterNode:
-			    limits:
-			      cpu: 1000
-			      memory: 10T
-			    requests:
-			      cpu: 1
-			      memory: 1000M        
-			image:
-			    registry: "profisee.azurecr.io"
-			    repository: "profiseeplatform"
-			    tag: "2021r1.0"
-			    auth: |
-				{
-				   "auths":{
-				      "profisee.azurecr.io":{
-					 "username":"Username supplied by Profisee support",
-					 "password":"Password supplied by Profisee support",
-					 "email":"support@profisee.com",
-					 "auth":"Token supplied by Profisee support"
-				      }
-				   }
-				}
-			licenseFileData: License string provided by Profisee support
-
-			oidcFileData: |
-			    {      
-			    }
-			tlsCert: |
-			    -----BEGIN CERTIFICATE-----
-			    Add certificate string with opening and closing tags like this
-			    -----END CERTIFICATE-----
-			tlsKey: |
-			    -----BEGIN PRIVATE KEY-----
-			    Add certificate key string with opening and closing tags like this
-			    -----END PRIVATE KEY-----
-			cloud:
-			    azure:
-			      isProvider: false      
-			    aws:
-			      isProvider: true
-			      ebsVolumeId: "volume id of existing ebs volume"
-			    google:
-			      isProvider: false
+    - Upload to cloudshell    
 
 6.  Install Profisee
 
             helm repo add profisee https://profiseedev.github.io/kubernetes
             helm uninstall --namespace profisee profiseeplatform
             helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
+
 # Verify and finalize:
 
 1.  The initial deploy will have to download the container which takes about 10 minutes.  Verify its finished downloading the container:
