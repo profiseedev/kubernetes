@@ -221,20 +221,20 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 2.  View the kubernetes logs and you will see that it fails the first time as it cannot talk to the sql server.
 	kubectl logs profisee-0 --namespace profisee
 3.  Update the sql security group to allow the container ip in
-	Connect to container 
-	kubectl exec -it profisee-0 powershell
-	Get oubound ip and make noe of it
-	Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
-	Click on sql instance
-	Click on VPC security group
-	Inbound rules
-	Edit inbound rules
-	Add MSSQL for outbound IP of cluster
+	- Connect to container 
+	- kubectl exec -it profisee-0 powershell
+	- Get oubound ip and make noe of it
+	- Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
+	- Click on sql instance
+	- Click on VPC security group
+	- Inbound rules
+	- Edit inbound rules
+	- Add MSSQL for outbound IP of cluster
 
 4.  Remote back into the container and reun ./setup.ps1
     
         kubectl --namespace profisee exec -it profisee-0 powershell
-	./Setup.ps1
+		./Setup.ps1
 
 5.  Make sure it succeeds
 	
