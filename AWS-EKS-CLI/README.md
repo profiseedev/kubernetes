@@ -6,28 +6,13 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 
 1.  License
     - Profisee license associated with the dns for the environment
+    - ACR username, password and token
 
 2.  Https certificate and the private key
-	- Certificate
-	
-			-----BEGIN CERTIFICATE-----
-			XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-			-----END CERTIFICATE-----
 			
-	- Key
-	
-			-----BEGIN PRIVATE KEY-----
-			XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-			-----END PRIVATE KEY-----
+3.  Choose your AWS region you want to use eg us-east-1
 
-			or
-
-			-----BEGIN RSA PRIVATE KEY-----
-			XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-			-----END RSA PRIVATE KEY-----
-			
-4.  Choose your AWS region you want to use eg us-east-1
-3.  SQL Server
+4.  SQL Server
     - AWS RDS instance - https://aws.amazon.com/getting-started/hands-on/create-microsoft-sql-db/
     	
 		- Goto https://console.aws.amazon.com/rds
@@ -46,11 +31,11 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 		- Defaults for rest
 		- Wait for database to be available
     	
-4.  Create EBS volume - must be created in the same region/zone as the eks cluster
+5.  Create EBS volume - must be created in the same region/zone as the eks cluster
     - aws ec2 create-volume --volume-type gp2 --size 1 --availability-zone us-east-1a --region us-east-1
     - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-creating-volume.html
     
-5. Configure environment with required tools
+6. Configure environment with required tools
 	- Use aws cloudshell 
 	  - https://dev.to/aws-builders/setting-up-a-working-environment-for-amazon-eks-with-aws-cloudshell-1nn7
 	- Use local computer - no cloudshell - https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
@@ -59,7 +44,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 	  - Install kubectl - https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
           - Setup IAM - https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds
 
-6.  Configure DNS	
+7.  Configure DNS	
     - Choose a DNS host name that you want to use eg:  profiseemdm.mycompany.com
     - Register that hostname in your DNS provider with a CNAME that points to xxxxxx.elb.<region>.amazonaws.com (this will be updated later.
       
@@ -99,6 +84,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 	- Create/configure an auth provider in your auth providr of choice.  eg Azure Active Directory, OKTA
 	- Register redirect url http(s)://profiseemdm.mycompany.com/Profisee/auth/signin-microsoft
 	- Note the clientid and authority url.  The authority url for AAD is https://login.microsoftonline.com/{tenantid}
+
 5.  Create Profisee Settings.yaml
     - Fetch the Settings.yaml template, download the yaml file so you can edit it locally
       
