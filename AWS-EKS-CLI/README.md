@@ -111,9 +111,11 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 		
 3.  Update the sql security group to allow the container ip in
 	- Connect to container 
-	- kubectl exec -it profisee-0 powershell
+	
+		kubectl exec -it profisee-0 powershell
 	- Get oubound ip and make noe of it
-	- Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
+	
+		Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
 	- Click on sql instance
 	- Click on VPC security group
 	- Inbound rules
