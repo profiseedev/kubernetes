@@ -75,6 +75,11 @@ cloud:
         subscriptionId: "$AZURESUBSCRIPTIONID"
         tenantId: "$AZURETENANTID"
         clusterClientId: "$KUBERNETESCLIENTID" #clientid of the aks cluster; Roles must be assigned ot it; role to main RG: "Managed Identity Operator"; roles to node RG: "Managed Identity Operator", "Virtual Machine Contributor"
+      purview:
+        clientId: "$PURVIEWCLIENTID"
+        clientSecret: "$PURVIEWCLIENTSECRET"
+        tenantId: "$PURVIEWTENANTID"
+        url: "$PURVIEWURL"  
     aws:
       isProvider: false
     google:

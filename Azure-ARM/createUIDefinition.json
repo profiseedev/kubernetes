@@ -234,7 +234,7 @@
                     "visible": "[equals(steps('profisee').ProfiseeVersion,'profiseeplatform:2021r2.purviewpreview')]"                    
                 },
                 {
-                    "name": "PurviewPrincipalID",
+                    "name": "PurviewClientID",
                     "type": "Microsoft.Common.TextBox",
                     "label": "Purview Service Principal ID",
                     "defaultValue": "",
@@ -248,7 +248,7 @@
                     "visible": "[equals(steps('profisee').ProfiseeVersion,'profiseeplatform:2021r2.purviewpreview')]"                    
                 },
                 {
-                    "name": "PurviewPrincipalSecret",
+                    "name": "PurviewClientSecret",
                     "type": "Microsoft.Common.TextBox",
                     "label": "Purview Service Principal Secret",
                     "defaultValue": "",
@@ -909,10 +909,10 @@
 
             "HttpsCertificatePrivateKey": "[steps('networking').UserDefinedHTTPS.HttpsCertificatePrivateKey]",
             "UseKeyVault":"[steps('profisee').UseKeyVault]",
-            "KeyVault":"[steps('profisee').KeyVault.id]"
-
-
-            
+            "KeyVault":"[steps('profisee').KeyVault.id]",
+            "PurviewUrl":"[steps('profisee').PurviewAPIBaseUrl]",
+            "PurviewClientId":"[steps('profisee').PurviewClientID]",
+            "PurviewClientSecret":"[steps('profisee').PurviewClientSecret]"
         }
     }
 }

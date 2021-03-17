@@ -18,6 +18,18 @@
             "defaultValue": "",
             "type": "String"
         },
+        "PurviewUrl": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "PurviewClientId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "PurviewClientSecret": {
+            "defaultValue": "",
+            "type": "String"
+        },
          "ManagedIdentityName": {
             "type": "object"
         },
@@ -189,7 +201,11 @@
         "KubenetesInfrastructureResourceGroupName":"[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]",
 
         "UseKeyVault":"[parameters('UseKeyVault')]",
-        "KeyVault":"[parameters('KeyVault')]"
+        "KeyVault":"[parameters('KeyVault')]",
+
+        "PurviewUrl":"[parameters('PurviewUrl')]",
+        "PurviewClientId":"[parameters('PurviewClientId')]",
+        "PurviewClientSecret":"[parameters('PurviewClientSecret')]"
     },
     "resources": 
     [
@@ -651,6 +667,18 @@
                     {
                         "name": "KUBERNETESCLIENTID",
                         "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.clientId]"
+                    },
+                    {
+                        "name": "PURVIEWURL",
+                        "value": "[variables('PurviewUrl')]"
+                    },
+                    {
+                        "name": "PURVIEWCLIENTID",
+                        "value": "[variables('PurviewClientId')]"
+                    },
+                    {
+                        "name": "PURVIEWCLIENTSECRET",
+                        "value": "[variables('PurviewClientSecret')]"
                     }
                 ],
                 "primaryScriptUri": "[variables('ScriptURL')]"            
