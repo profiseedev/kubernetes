@@ -222,7 +222,7 @@
                 {
                     "name": "PurviewAPIBaseUrl",
                     "type": "Microsoft.Common.TextBox",
-                    "label": "Purview API Base Url ",
+                    "label": "Purview API Url ",
                     "defaultValue": "",
                     "placeholder": "",
                     "toolTip": "",
@@ -234,9 +234,23 @@
                     "visible": "[equals(steps('profisee').ProfiseeVersion,'profiseeplatform:2021r2.purviewpreview')]"                    
                 },
                 {
-                    "name": "PurviewInstanceName",
+                    "name": "PurviewPrincipalID",
                     "type": "Microsoft.Common.TextBox",
-                    "label": "Purview Instance Name",
+                    "label": "Purview Service Principal ID",
+                    "defaultValue": "",
+                    "placeholder": "",
+                    "toolTip": "",
+                    "constraints": {
+                        "required": true,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": "[equals(steps('profisee').ProfiseeVersion,'profiseeplatform:2021r2.purviewpreview')]"                    
+                },
+                {
+                    "name": "PurviewPrincipalSecret",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Purview Service Principal Secret",
                     "defaultValue": "",
                     "placeholder": "",
                     "toolTip": "",
