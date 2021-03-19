@@ -128,7 +128,6 @@ echo $"Installing nginx started";
 
 #new going forward
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm install --namespace profisee nginx ingress-nginx/ingress-nginx
 
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
