@@ -134,12 +134,12 @@ curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
 helm uninstall --namespace profisee nginx
 
 staticIpInName="kubernetes-nginx"
-az network public-ip create --resource-group $AKSINFRARESOURCEGROUPNAME --name $staticIpInName --sku Standard --allocation-method static
+az network public-ip create --resource-group $AKSINFRARESOURCEGROUPNAME --name $staticIpInName --sku Standard --allocation-method static --dns-name $DNSHOSTNAME;
 nginxip=$(az network public-ip show -g $AKSINFRARESOURCEGROUPNAME -n $staticIpInName --query ipAddress --output tsv)
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Installing nginx for Lets Encrypt and setting the dns name for its IP."
-	helm install --namespace profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+	helm install --namespace profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip #--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 else
 	echo $"Installing nginx not for Lets Encrypt and not setting the dns name for its IP."
 	helm install --namespace profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip
