@@ -123,31 +123,36 @@ fi
 
 #install nginx
 echo $"Installing nginx started";
-helm repo add stable https://charts.helm.sh/stable;
+#old
+#helm repo add stable https://charts.helm.sh/stable;
 
 #new going forward
-#helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-#helm install --namespace profisee nginx ingress-nginx/ingress-nginx
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install --namespace profisee nginx ingress-nginx/ingress-nginx
 
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
 helm uninstall --namespace profisee nginx
 
+staticIpInName="kubernetes-nginx"
+az network public-ip create --resource-group $AKSINFRARESOURCEGROUPNAME --name $staticIpInName --sku Standard --allocation-method static
+nginxip=$(az network public-ip show -g $AKSINFRARESOURCEGROUPNAME -n $staticIpInName --query ipAddress --output tsv)
+
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Installing nginx for Lets Encrypt and setting the dns name for its IP."
-	helm install --namespace profisee nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+	helm install --namespace profisee ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 else
 	echo $"Installing nginx not for Lets Encrypt and not setting the dns name for its IP."
-	helm install --namespace profisee nginx stable/nginx-ingress --values nginxSettings.yaml
+	helm install --namespace profisee ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip
 fi
 
-echo $"Installing nginx finished, sleeping for 30s to wait for its IP";
-
-#wait for the ip to be available.  usually a few seconds
-sleep 30;
-#get ip for nginx
-nginxip=$(kubectl --namespace profisee get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-
+#echo $"Installing nginx finished, sleeping for 30s to wait for its IP";
+#
+##wait for the ip to be available.  usually a few seconds
+#sleep 30;
+##get ip for nginx
+#nginxip=$(kubectl --namespace profisee get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
+#
 if [ -z "$nginxip" ]; then
 	#try again
 	echo $"nginx is not configure properly because the LB IP is null, trying again in 60 seconds";
