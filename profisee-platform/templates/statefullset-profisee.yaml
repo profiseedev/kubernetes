@@ -109,6 +109,26 @@ spec:
             secretKeyRef:
                 name: profisee-oidc-secret
                 key: ProfiseeOidcClientSecret
+        - name: ProfiseePurviewUrl
+          valueFrom:
+            secretKeyRef:
+                name: profisee-purview
+                key: ProfiseePurviewUrl
+        - name: ProfiseePurviewTenantId
+          valueFrom:
+            secretKeyRef:
+                name: profisee-purview
+                key: ProfiseePurviewTenantId
+        - name: ProfiseePurviewClientId
+          valueFrom:
+            secretKeyRef:
+                name: profisee-purview
+                key: ProfiseePurviewClientId
+        - name: ProfiseePurviewClientSecret
+          valueFrom:
+            secretKeyRef:
+                name: profisee-purview
+                key: ProfiseePurviewClientSecret
         resources:
           limits:
             cpu: {{.Values.clusterNode.limits.cpu}}
