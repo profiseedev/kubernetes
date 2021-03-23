@@ -523,7 +523,7 @@
                 "forceUpdateTag": "[guid(resourceGroup().id)]",
                 "azCliVersion": "2.0.80",
                 "timeout": "PT1H",
-                "cleanupPreference": "OnSuccess",
+                "cleanupPreference": "OnExpiration",
                 "retentionInterval": "P1D",
                 "environmentVariables": [
                     {
