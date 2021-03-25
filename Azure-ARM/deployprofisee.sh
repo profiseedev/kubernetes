@@ -351,7 +351,7 @@ kubectl delete secret profisee-settings --namespace profisee
 kubectl create secret generic profisee-settings --namespace profisee --from-file=Settings.yaml
 
 #################################Install Profisee Start #######################################
-echo "Install Profisee started";
+echo "Install Profisee started $(date +"%Y-%m-%d %T")";
 helm repo add profisee $HELMREPOURL
 helm repo update
 helm uninstall --namespace profisee profiseeplatform
@@ -363,12 +363,12 @@ if [ -z "$profiseeinstalledname" ]; then
 	echo "Profisee did not get installed.  Exiting with error";
 	exit 1
 else
-	echo "Install Profisee finished";
+	echo "Install Profisee finished $(date +"%Y-%m-%d %T")";
 fi;
 #################################Install Profisee End #######################################
 
 #wait for pod to be ready (downloaded)
-echo "Waiting for pod to be downloaded and be ready..";
+echo "Waiting for pod to be downloaded and be ready..$(date +"%Y-%m-%d %T")";
 sleep 30;
 kubectl wait --timeout=1800s --for=condition=ready pod/profisee-0 --namespace profisee
 
