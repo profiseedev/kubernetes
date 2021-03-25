@@ -386,4 +386,7 @@ result="{\"Result\":[\
 {\"ACRREPONAME\":\"$ACRREPONAME\"},\
 {\"ACRREPOLABEL\":\"$ACRREPOLABEL\"}\
 ]}"
+
+echo $result
+
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
