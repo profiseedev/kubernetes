@@ -124,10 +124,9 @@ fi
 #install nginx
 echo $"Installing nginx started";
 #old
-#helm repo add stable https://charts.helm.sh/stable;
-
+helm repo add stable https://charts.helm.sh/stable;
 #new going forward
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+#helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
 #get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
@@ -139,10 +138,12 @@ nginxip=$(az network public-ip show -g $AKSINFRARESOURCEGROUPNAME -n $staticIpIn
 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Installing nginx for Lets Encrypt and setting the dns name for its IP."
-	helm install --namespace profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip #--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+	helm install --namespace profisee nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip #--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+	#helm install --namespace profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip #--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 else
 	echo $"Installing nginx not for Lets Encrypt and not setting the dns name for its IP."
-	helm install --namespace profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip
+	helm install --namespace profisee nginx stable/nginx-ingress --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip
+	#helm install --namespace profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip
 fi
 
 #echo $"Installing nginx finished, sleeping for 30s to wait for its IP";
