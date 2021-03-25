@@ -3,6 +3,8 @@ exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>log.out 2>&1
 
+echo $"Profisee deploymented started $(date +"%Y-%m-%d %T")";
+
 REPONAME="profiseedev"
 REPOURL="https://raw.githubusercontent.com/$REPONAME/kubernetes/master";
 HELMREPOURL="https://$REPONAME.github.io/kubernetes";
@@ -363,7 +365,7 @@ echo "Waiting for pod to be downloaded and be ready..";
 sleep 30;
 kubectl wait --timeout=1200s --for=condition=ready pod/profisee-0 --namespace profisee
 
-echo $"Install Profisee Platform finished";
+echo $"Profisee deploymented finished $(date +"%Y-%m-%d %T")";
 
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
