@@ -370,7 +370,7 @@ fi;
 #wait for pod to be ready (downloaded)
 echo "Waiting for pod to be downloaded and be ready..";
 sleep 30;
-kubectl wait --timeout=1200s --for=condition=ready pod/profisee-0 --namespace profisee
+kubectl wait --timeout=1800s --for=condition=ready pod/profisee-0 --namespace profisee
 
 echo $"Profisee deploymented finished $(date +"%Y-%m-%d %T")";
 
