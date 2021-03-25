@@ -5,6 +5,13 @@ exec 1>log_$(date +%Y-%m-%d_%H-%M-%S).out 2>&1
 
 echo $"Profisee deploymented started $(date +"%Y-%m-%d %T")";
 
+
+FILE=./get_helm.sh
+if [ -f "$FILE" ]; then
+    echo $"Profisee deploymented exiting, already has been ran";
+	exit 1;
+fi
+
 REPONAME="profiseedev"
 REPOURL="https://raw.githubusercontent.com/$REPONAME/kubernetes/master";
 HELMREPOURL="https://$REPONAME.github.io/kubernetes";
