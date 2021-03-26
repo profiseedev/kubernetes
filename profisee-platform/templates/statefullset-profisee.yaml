@@ -23,6 +23,9 @@ spec:
       - name: data-volume
         secret:
           secretName: profisee-license 
+      - name: initscripts
+        secret:
+          secretName: profisee-initscripts 
       {{- if .Values.cloud.azure.isProvider }}
       - name: fileshare
         azureFile:
@@ -63,6 +66,8 @@ spec:
         - name: data-volume
           mountPath: C:\data
           readOnly: true
+        - name: initscripts
+          mountPath: C:\scripts
         {{- if .Values.cloud.azure.isProvider }}
         - name: fileshare
           mountPath: c:\Fileshare
