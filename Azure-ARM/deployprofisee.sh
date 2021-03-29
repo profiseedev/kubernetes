@@ -1,7 +1,8 @@
 #!/bin/bash
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
-exec 1>log_$(date +%Y-%m-%d_%H-%M-%S).out 2>&1
+logfile=log_$(date +%Y-%m-%d_%H-%M-%S).out
+exec 1>$logfile 2>&1
 
 echo $"Profisee deploymented started $(date +"%Y-%m-%d %T")";
 
@@ -388,5 +389,8 @@ result="{\"Result\":[\
 ]}"
 
 echo $result
+
+kubectl delete secret profisee-deploymentlog --namespace profisee
+kubectl create secret generic profisee-deploymentlog --namespace profisee --from-file=$logfile
 
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
