@@ -348,7 +348,7 @@ else
 fi
 
 #Add settings.yaml as a secret so its always available after the deployment
-kubectl delete secret profisee-settings --namespace profisee
+kubectl delete secret profisee-settings --namespace profisee --ignore-not-found
 kubectl create secret generic profisee-settings --namespace profisee --from-file=Settings.yaml
 
 #################################Install Profisee Start #######################################
@@ -390,7 +390,7 @@ result="{\"Result\":[\
 
 echo $result
 
-kubectl delete secret profisee-deploymentlog --namespace profisee
+kubectl delete secret profisee-deploymentlog --namespace profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog --namespace profisee --from-file=$logfile
 
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
