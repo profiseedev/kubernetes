@@ -37,6 +37,16 @@ This explains the process to deploy the Profisee platform onto a new GCP Kuberne
     
         gcloud container node-pools create windows-pool --cluster=profiseedemo --image-type=WINDOWS_LTSC --no-enable-autoupgrade --machine-type=e2-standard-4 --region us-east1-b --num-nodes=1
 
+3.  Allow kubernetes access to sql server
+    - Get the outbound IP's of the cluster.
+            
+            kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type == "ExternalIP")].address}'
+
+    - Edit SQL server instance
+    - Goto connections (left)
+    - Click add network
+    - Add IP's from above with /32
+
 3.  Install nginx
 
             ##helm repo add stable https://charts.helm.sh/stable;
