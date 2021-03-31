@@ -63,7 +63,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 1.  Make cluster.yaml and upload to cloudshell.
 	- Download the cluster.yaml
             	
-			curl -fsSL -o cluster.yaml https://raw.githubusercontent.com/Profiseedev/kubernetes/master/AWS-EKS-CLI/cluster.yaml;
+			curl -fsSL -o cluster.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/AWS-EKS-CLI/cluster.yaml;
 		
 	- Change the name, region and availabilityzones
 	- Change the instance type(s) to fit your needs.  https://aws.amazon.com/ec2/pricing/on-demand/
@@ -92,7 +92,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 
             helm repo add stable https://charts.helm.sh/stable;
             curl -o nginxSettingsAWS.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/AWS-EKS-CLI/nginxSettingsAWS.yaml;
-            kubectl creaate namespace profisee
+            kubectl create namespace profisee
 	    	helm install nginx stable/nginx-ingress --values nginxSettingsAWS.yaml --namespace profisee
 	    
 	- Wait for the load balancer to be provisioned.  goto aws ec2/load balancing console and wait for the state to go from provisioning to active (3ish minutes)
@@ -116,7 +116,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 9.  Create Profisee Settings.yaml
     - Fetch the Settings.yaml template, download the yaml file so you can edit it locally
       
-            curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/Profiseedev/kubernetes/master/AWS-EKS-CLI/Settings.yaml;
+            curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/AWS-EKS-CLI/Settings.yaml;
     - Update the values
     - Upload to cloudshell    
 
