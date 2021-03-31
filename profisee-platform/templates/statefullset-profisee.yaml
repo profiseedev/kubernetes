@@ -114,6 +114,7 @@ spec:
             secretKeyRef:
                 name: profisee-oidc-secret
                 key: ProfiseeOidcClientSecret
+        {{- if .Values.cloud.azure.isProvider }}
         - name: ProfiseePurviewUrl
           valueFrom:
             secretKeyRef:
@@ -134,6 +135,7 @@ spec:
             secretKeyRef:
                 name: profisee-purview
                 key: ProfiseePurviewClientSecret
+        {{- end }}
         resources:
           limits:
             cpu: {{.Values.clusterNode.limits.cpu}}
