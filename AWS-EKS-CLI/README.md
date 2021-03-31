@@ -135,7 +135,7 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
 
 2.  View the kubernetes logs and wait for it to finish successfully starting up.  takes longer on the first time as it has to create all the objects in teh database
 
-		kubectl logs profisee-0 --namespace profisee
+		kubectl logs profisee-0 --namespace profisee --follow
 		
 3.  Voila, goto Profisee Platform web portal
 	- http(s)://FQDNThatPointsToClusterIP/Profisee

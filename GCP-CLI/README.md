@@ -80,19 +80,19 @@ This explains the process to deploy the Profisee platform onto a new GCP Kuberne
             helm uninstall profiseeplatform --namespace profisee
             helm install profiseeplatform profisee/profisee-platform --values Settings.yaml --namespace profisee
             
-# Verify:
+# Verify and finalize:
 
 1.  The initial deploy will have to download the container which takes about 10 minutes.  Verify its finished downloading the container:
 
-		kubectl describe pod profisee-0 #check status and wait for "Pulling" to finish
+	    #check status and wait for "Pulling" to finish
+	    kubectl --namespace profisee describe pod profisee-0
 
-1.  Container can be accessed with the following command:
-    
-        kubectl exec -it profisee-0 powershell
+2.  View the kubernetes logs and wait for it to finish successfully starting up.  takes longer on the first time as it has to create all the objects in teh database
 
-2.  System logs can be accessed within the container with the following command:
-    
-        Get-Content C:\Profisee\Configuration\LogFiles\SystemLog.log
+		kubectl logs profisee-0 --namespace profisee --follow
+		
+3.  Voila, goto Profisee Platform web portal
+	- http(s)://FQDNThatPointsToClusterIP/Profisee
 	
 
 
