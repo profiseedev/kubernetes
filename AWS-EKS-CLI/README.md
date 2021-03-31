@@ -102,19 +102,25 @@ This explains the process to deploy the Profisee platform onto a new AWS EKS clu
         kubectl get services nginx-nginx-ingress-controller --namespace profisee
         #Note the external-ip and update the DNS hostname you created earlier and have it point to it (xxxxxx.elb.<region>.amazonaws.com)
 
-7.  Configue Authentication provider
+7.  (Optional) - Install cert-manager for Let's Encrypt
+
+	helm install --namespace profisee cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta\.kubernetes\.io/os"=linux --set webhook.nodeSelector."beta\.kubernetes\.io/os"=linux --set cainjector.nodeSelector."beta\.kubernetes\.io/os"=linux
+
+	update Settings.yaml useLetsEncrypt flag to true
+
+8.  Configue Authentication provider
 	- Create/configure an auth provider in your auth providr of choice.  eg Azure Active Directory, OKTA
 	- Register redirect url http(s)://profiseemdm.mycompany.com/Profisee/auth/signin-microsoft
 	- Note the clientid, secret and authority url.  The authority url for AAD is https://login.microsoftonline.com/{tenantid}
 
-8.  Create Profisee Settings.yaml
+9.  Create Profisee Settings.yaml
     - Fetch the Settings.yaml template, download the yaml file so you can edit it locally
       
             curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/Profiseedev/kubernetes/master/AWS-EKS-CLI/Settings.yaml;
     - Update the values
     - Upload to cloudshell    
 
-9.  Install Profisee
+10.  Install Profisee
 
             helm repo add profisee https://profiseedev.github.io/kubernetes
             helm uninstall --namespace profisee profiseeplatform
