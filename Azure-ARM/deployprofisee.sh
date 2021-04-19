@@ -27,6 +27,8 @@ if [ -z "$SUBSCRIPTIONID" ]; then
 	SUBSCRIPTIONID=$SubscriptionId
 fi
 
+printenv;
+
 #az login --identity
 #install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5
 az aks install-cli;
