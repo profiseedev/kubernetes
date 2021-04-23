@@ -127,6 +127,10 @@
                             {
                                 "label": "2021R2.PurviewPreview",
                                 "value": "profiseeplatform:2021r2.purviewpreview"
+                            },
+                            {
+                                "label": "2021R2.MachineLearningPreview",
+                                "value": "profiseeplatform:2021r2.mlpreview"
                             }
                         ]
                     },
