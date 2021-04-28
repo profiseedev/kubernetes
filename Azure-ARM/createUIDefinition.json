@@ -291,7 +291,7 @@
                     "defaultValue": "",
                     "toolTip": "Leave blank for latest version, or enter the specific version you want to use.",
                     "constraints": {
-                        "required": true,
+                        "required": false,
                         "regex": "",
                         "validationMessage": ""
                     },
