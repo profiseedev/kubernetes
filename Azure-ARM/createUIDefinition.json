@@ -283,6 +283,19 @@
                         "validationMessage": ""
                     },
                     "visible": true
+                },
+                {
+                    "name": "KubernetesVersion",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Version",
+                    "defaultValue": "",
+                    "toolTip": "Leave blank for latest version, or enter the specific version you want to use.",
+                    "constraints": {
+                        "required": true,
+                        "regex": "",
+                        "validationMessage": ""
+                    },
+                    "visible": true
                 },               
                 {
                     "name": "KubernetesLinuxNodeSizeSection",
@@ -876,6 +889,7 @@
             "ActiveDirectoryClientId": "[steps('profisee').UserSuppliedClientyId.ActiveDirectoryClientId]",
                         
             "KubernetesClusterName": "[steps('kubernetes').KubernetesClusterName]",
+            "KubernetesVersion": "[steps('kubernetes').KubernetesVersion]",
             "KubernetesLinuxNodeSize": "[steps('kubernetes').KubernetesLinuxNodeSizeSection.KubernetesLinuxNodeSize]",
             "KubernetesLinuxNodeCount": "[steps('kubernetes').KubernetesLinuxNodeCount]",
             "KubernetesWindowsNodeSize": "[steps('kubernetes').KubernetesWindowsNodeSizeSection.KubernetesWindowsNodeSize]",
