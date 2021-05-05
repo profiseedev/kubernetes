@@ -28,7 +28,7 @@ steps:
     overrideParameters: >-
       -ProfiseeAdminUserAccount "$(ProfiseeAdminUserAccount)"
       -ProfiseeLicense "$(LicenseData)"
-      -ManagedIdentityName "$(ManagedIdentityName)"
+      -ManagedIdentityName $(ManagedIdentityName)
       -SQLServerName "$(SQLServerName)"
       -SQLServerUser "$(SqlServerUser)"
       -SQLServerPassword "$(SQLServerPassword)"
