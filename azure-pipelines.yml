@@ -24,6 +24,9 @@ parameters:
   type: string
   default: chucktest
 
+variables:
+  dtm: $[format('{0:MMddyyyyhhmmss}', pipeline.startTime)]
+
 trigger: none
 
 pool:
@@ -47,10 +50,10 @@ steps:
       -ProfiseeAdminUserAccount "${{ parameters.ProfiseeAdminUserAccount }}"
       -ProfiseeLicense "$(ProfiseeLicense)"
       -ManagedIdentityName $(ManagedIdentityName)
-      -SQLServerName "$(SQLServerName)$(Build.BuildId)"
+      -SQLServerName "$(SQLServerName)$(dtm)"
       -SQLServerUser "$(SqlServerUser)"
       -SQLServerPassword "$(SQLServerPassword)"
-      -StorageAccountName "$(StorageAccountName)$(Build.BuildId)"
+      -StorageAccountName "$(StorageAccountName)$(dtm)"
       -UseLetsEncrypt "$(UseLetsEncrypt)"
       -UseKeyVault "$(UseKeyVault)"
       -KeyVault "$(KeyVault)"
