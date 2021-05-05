@@ -29,4 +29,5 @@ steps:
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.json'
     deploymentMode: 'Complete'
+    overrideParameters: '-ProfiseeVersion profiseeplatform:2021R2.0'
 
