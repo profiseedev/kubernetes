@@ -25,7 +25,7 @@ parameters:
   default: chucktest
 
 variables:
-  dtm: $[format('{0:MMddyyyyhhmmss}', pipeline.startTime)]
+  dtm: $[format('{0:MMddyyyyHHmmss}', pipeline.startTime)]
 
 trigger: none
 
