@@ -13,11 +13,6 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
@@ -28,6 +23,29 @@ steps:
     location: 'East US 2'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.json'
+    csmParametersFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.parameters.json'
     deploymentMode: 'Complete'
-    overrideParameters: '-ProfiseeVersion profiseeplatform:2021R2.0'
+    overrideParameters: >-
+      -ProfiseeAdminUserAccount "$(ProfiseeAdminUserAccount)"
+      -ProfiseeLicense="$(LicenseData)"
+      -ManagedIdentityName="$(ManagedIdentityName)"
+      -SQLServerName="$(SQLServerName)"
+      -SQLServerUser="$(SqlServerUser)"
+      -SQLServerPassword="$(SQLServerPassword)"
+      -StorageAccountName="$(StorageAccountName)"
+      -UseLetsEncrypt="$(UseLetsEncrypt)"
+      -UseKeyVault="$(UseKeyVault)"
+      -KeyVault="$(KeyVault)"
+      -DNSUpdate="$(DNSUpdate)"
+      -DNSHostName="$(DNSHostName)"
+      -DNSDomainName="$(DNSDomainName)"
+      -DNSDomainResourceGroup="$(DNSDomainResourceGroup)"
+      -HttpsConfigure="$(HttpsConfigure)"
+      -HttpsCertificate="$(HttpsCertificate)"
+      -HttpsCertificatePrivateKey="$(HttpsCertificatePrivateKey)"
+      -KubernetesLinuxNodeSize="$(KubernetesLinuxNodeSize)"
+      -KubernetesWindowsNodeSize="$(KubernetesWindowsNodeSize)"
+      -ProfiseeVersion="$(ProfiseeVersion)"
+      -KubernetesVersion="$(KubernetesVersion)"
+
 
