@@ -2,6 +2,19 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
+parameters:
+- name: ProfiseeAdminUserAccount
+  displayName: ProfiseeAdminUserAccount
+  type: string
+  default: chuck.thompson@profisee.com
+- name: ProfiseeVersion
+  displayName: ProfiseeVersion
+  type: string
+  default: profiseeplatform:2021r2.0
+  values:
+  - profiseeplatform:2021r2.0
+  - profiseeplatform:2021r3.preview
+  - profiseeplatform:2021r3.mlpreview
 
 trigger:
 - master
@@ -26,7 +39,7 @@ steps:
     csmParametersFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.parameters.json'
     deploymentMode: 'Complete'
     overrideParameters: >-
-      -ProfiseeAdminUserAccount "$(ProfiseeAdminUserAccount)"
+      -ProfiseeAdminUserAccount "${{ parameters.ProfiseeAdminUserAccount }}"
       -ProfiseeLicense "$(ProfiseeLicense)"
       -ManagedIdentityName $(ManagedIdentityName)
       -SQLServerName "$(SQLServerName)"
@@ -45,7 +58,7 @@ steps:
       -HttpsCertificatePrivateKey "$(HttpsCertificatePrivateKey)"
       -KubernetesLinuxNodeSize "$(KubernetesLinuxNodeSize)"
       -KubernetesWindowsNodeSize "$(KubernetesWindowsNodeSize)"
-      -ProfiseeVersion "$(ProfiseeVersion)"
+      -ProfiseeVersion "${{ parameters.ProfiseeVersion }}"
       -KubernetesVersion "$(KubernetesVersion)"
 
 
