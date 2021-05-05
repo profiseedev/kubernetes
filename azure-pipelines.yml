@@ -3,6 +3,10 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 parameters:
+- name: ResourceGroupName
+  displayName: ResourceGroupName
+  type: string
+  default: ChuckTh_PipelineTest
 - name: ProfiseeAdminUserAccount
   displayName: ProfiseeAdminUserAccount
   type: string
@@ -36,7 +40,7 @@ steps:
     azureResourceManagerConnection: 'ProfiseeAzure'
     subscriptionId: '73814551-37dd-4143-a149-df9c2a2c97b6'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: 'ChuckTh_PipelineTest'
+    resourceGroupName: '${{ parameters.ResourceGroupName }}'
     location: 'East US 2'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.json'
@@ -46,10 +50,10 @@ steps:
       -ProfiseeAdminUserAccount "${{ parameters.ProfiseeAdminUserAccount }}"
       -ProfiseeLicense "$(ProfiseeLicense)"
       -ManagedIdentityName $(ManagedIdentityName)
-      -SQLServerName "$(SQLServerName)"
+      -SQLServerName "$(SQLServerName)$(Build.BuildId)"
       -SQLServerUser "$(SqlServerUser)"
       -SQLServerPassword "$(SQLServerPassword)"
-      -StorageAccountName "$(StorageAccountName)"
+      -StorageAccountName "$(StorageAccountName)$(Build.BuildId)"
       -UseLetsEncrypt "$(UseLetsEncrypt)"
       -UseKeyVault "$(UseKeyVault)"
       -KeyVault "$(KeyVault)"
