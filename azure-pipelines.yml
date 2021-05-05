@@ -27,7 +27,7 @@ steps:
     deploymentMode: 'Complete'
     overrideParameters: >-
       -ProfiseeAdminUserAccount "$(ProfiseeAdminUserAccount)"
-      -ProfiseeLicense "$(LicenseData)"
+      -ProfiseeLicense "$(ProfiseeVersion)"
       -ManagedIdentityName $(ManagedIdentityName)
       -SQLServerName "$(SQLServerName)"
       -SQLServerUser "$(SqlServerUser)"
