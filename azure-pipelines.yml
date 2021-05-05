@@ -26,7 +26,7 @@ parameters:
 
 variables:
   dtm: $[format('{0:MMddyyyyHHmmss}', pipeline.startTime)]
-  email: ${{ Build.RequestedForEmail }}
+  email: $(Build.RequestedForEmail)
   emailclean: $[replace(${email},'@','')]
   emailclean2: $[replace(${emailclean},'.','')]
 
