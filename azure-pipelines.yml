@@ -22,7 +22,7 @@ parameters:
 - name: DNSHostName
   displayName: DNS Host Name
   type: string
-  default: chucktest
+  default: $[variables['emailcleansed']]$[variables['dtm']]
 
 variables:
   dtm: $[format('{0:MMddyyyyHHmmss}', pipeline.startTime)]
