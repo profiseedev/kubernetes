@@ -4,9 +4,9 @@
 # https://aka.ms/yaml
 parameters:
 - name: ResourceGroupName
-  displayName: Resource Group Base Name
+  displayName: Resource Group Name (dtm added to edn)
   type: string
-  default: ChuckTh_PipelineTest
+  default: $[variables['emailcleansed']]
 - name: ProfiseeAdminUserAccount
   displayName: Profisee Admin UserAccount
   type: string
@@ -28,7 +28,7 @@ variables:
   dtm: $[format('{0:MMddyyyyHHmmss}', pipeline.startTime)]
   email: $[variables['Build.RequestedForEmail']]
   emailclean: $[replace(variables['email'],'@','')]
-  emailclean2: $[replace(variables['emailclean'],'.','')]
+  emailcleansed: $[replace(variables['emailclean'],'.','')]
 
 trigger: none
 
@@ -51,7 +51,7 @@ steps:
     deploymentMode: 'Complete'
     #"${{ parameters.ProfiseeAdminUserAccount }}"
     overrideParameters: >-
-      -ProfiseeAdminUserAccount "$(emailclean2)" 
+      -ProfiseeAdminUserAccount "${{ parameters.ProfiseeAdminUserAccount }}"
       -ProfiseeLicense "$(ProfiseeLicense)"
       -ManagedIdentityName $(ManagedIdentityName)
       -SQLServerName "$(SQLServerName)$(dtm)"
