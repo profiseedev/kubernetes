@@ -28,7 +28,7 @@ variables:
   dtm: $[format('{0:MMddyyyyHHmmss}', pipeline.startTime)]
   email: $(Build.RequestedForEmail)
   emailclean: $[replace(variables['email'],'@','')]
-  emailclean2: $[replace(variables['emailclean'],'.','')]
+  emailclean2: 'dude' #$[replace(variables['emailclean'],'.','')]
 
 trigger: none
 
