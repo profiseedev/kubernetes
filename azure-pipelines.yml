@@ -34,7 +34,7 @@ variables:
   emailclean: $[replace(variables['email'],'@','')]
   emailcleansed: $[replace(variables['emailclean'],'.','')]
   ${{ if eq( parameters.ResourceGroupName, '' ) }}: 
-    resourceGroupName: $[variables['emailcleansed']]
+    resourceGroupName: 'chuckth_wtf'
   ${{ if ne( parameters['ResourceGroupName'], '' ) }}: 
     resourceGroupName: ${{ parameters.ResourceGroupName }}
 
