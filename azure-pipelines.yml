@@ -6,7 +6,7 @@ parameters:
 - name: ResourceGroupName
   displayName: Resource Group Name (dtm appended)
   type: string
-  default: $[variables['emailcleansed']]
+  default: 'chuckth_pl'
 - name: ProfiseeAdminUserAccount
   displayName: Profisee Admin UserAccount
   type: string
@@ -47,7 +47,7 @@ steps:
     azureResourceManagerConnection: 'ProfiseeAzure'
     subscriptionId: '73814551-37dd-4143-a149-df9c2a2c97b6'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: $[variables['emailcleansed']]
+    resourceGroupName: '${{ parameters.ResourceGroupName }}_$(dtm)'
     location: 'East US 2'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.json'
