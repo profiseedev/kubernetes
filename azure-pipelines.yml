@@ -47,7 +47,7 @@ steps:
     azureResourceManagerConnection: 'ProfiseeAzure'
     subscriptionId: '73814551-37dd-4143-a149-df9c2a2c97b6'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: ${{ parameters.ResourceGroupName }}_$(dtm)
+    resourceGroupName: $[variables['emailcleansed']]
     location: 'East US 2'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.json'
