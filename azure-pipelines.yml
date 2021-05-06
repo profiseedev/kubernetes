@@ -20,14 +20,14 @@ parameters:
   - profiseeplatform:2021r3.preview
   - profiseeplatform:2021r3.mlpreview
 - name: UseLetsEncrypt
-  displayName: Use Lets Encrypt
+  displayName: Use Lets Encrypt - No, dev.profisee.com, yes eastus2.cloudapp.azure.com
   type: string
   default: No
   values:
   - No
   - Yes
 - name: DNSHostName
-  displayName: DNS Host Name (.dev.profisee.com or if using Let's Encrypt .eastus2.cloudapp.azure.com)(leave blank for default firstlastdomaindtm)
+  displayName: DNS Host Name (leave blank for default firstlastdomaindtm)
   type: string
   default: ' '
 - name: KubernetesVersion
