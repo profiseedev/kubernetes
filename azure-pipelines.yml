@@ -27,6 +27,14 @@ parameters:
   displayName: Kubernetes Version
   type: string
   default: 1.18.14
+- name: KubernetesLinuxNodeSize
+  displayName: Kubernetes Linux VM size
+  type: string
+  default: Standard_B2s
+- name: KubernetesWindowsNodeSize
+  displayName: Kubernetes Windows VM size
+  type: string
+  default: Standard_B2ms
 
 variables:
   dtm: $[format('{0:MMddyyyyHHmmss}', pipeline.startTime)]
@@ -51,9 +59,10 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo adminUserAccount=$(adminUserAccount)
-- script: echo resourceGroupName=$(resourceGroupName)
-- script: echo dnsHostName=$(dnsHostName)
+#- script: echo adminUserAccount=$(adminUserAccount)
+#- script: echo resourceGroupName=$(resourceGroupName)
+#- script: echo dnsHostName=$(dnsHostName)
+
 
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
@@ -67,7 +76,6 @@ steps:
     csmFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.json'
     csmParametersFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.parameters.json'
     deploymentMode: 'Complete'
-    #"${{ parameters.ProfiseeAdminUserAccount }}"
     overrideParameters: >-
       -ProfiseeAdminUserAccount "$(adminUserAccount)"
       -ProfiseeLicense "$(ProfiseeLicense)"
@@ -86,10 +94,10 @@ steps:
       -HttpsConfigure "$(HttpsConfigure)"
       -HttpsCertificate "$(HttpsCertificate)"
       -HttpsCertificatePrivateKey "$(HttpsCertificatePrivateKey)"
-      -KubernetesLinuxNodeSize "$(KubernetesLinuxNodeSize)"
-      -KubernetesWindowsNodeSize "$(KubernetesWindowsNodeSize)"
+      -KubernetesLinuxNodeSize "${{ parameters.KubernetesLinuxNodeSize }}"
+      -KubernetesWindowsNodeSize "${{ parameters.KubernetesWindowsNodeSize }}"
       -ProfiseeVersion "${{ parameters.ProfiseeVersion }}"
       -KubernetesVersion "${{ parameters.KubernetesVersion }}"
-  enabled: false
+  enabled: true
 
 
