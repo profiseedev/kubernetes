@@ -35,7 +35,7 @@ variables:
   emailcleansed: $[replace(variables['emailclean'],'.','')]
   ${{ if eq( parameters.ResourceGroupName, ' ' ) }}: 
     resourceGroupName:  'chuckth_wtf'#$[variables['emailcleansed']_variables['dtm']]
-  ${{ if ne( parameters['ResourceGroupName'], '' ) }}: 
+  ${{ if ne( parameters['ResourceGroupName'], ' ' ) }}: 
     resourceGroupName: ${{ parameters.ResourceGroupName }}
 
 trigger: none
