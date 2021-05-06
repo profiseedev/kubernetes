@@ -8,9 +8,9 @@ parameters:
   type: string
   default: ' '
 - name: ProfiseeAdminUserAccount
-  displayName: Profisee Admin UserAccount
+  displayName: Admin UserAccount (leave blank for default current user email)
   type: string
-  default: $[variables['Build.RequestedForEmail']]
+  default: ' '
 - name: ProfiseeVersion
   displayName: Profisee Version
   type: string
@@ -34,9 +34,13 @@ variables:
   emailclean: $[replace(variables['email'],'@','')]
   emailcleansed: $[replace(variables['emailclean'],'.','')]
   ${{ if eq( parameters.ResourceGroupName, ' ' ) }}: 
-    resourceGroupName:  $[variables['emailcleansed']]
+    resourceGroupName: $[variables['emailcleansed']]
   ${{ if ne( parameters['ResourceGroupName'], ' ' ) }}: 
     resourceGroupName: ${{ parameters.ResourceGroupName }}
+  ${{ if eq( parameters.ProfiseeAdminUserAccount, ' ' ) }}: 
+    adminUserAccount:  $[variables['email']]
+  ${{ if ne( parameters['ProfiseeAdminUserAccount'], ' ' ) }}: 
+    adminUserAccount: ${{ parameters.ProfiseeAdminUserAccount }}
 
 trigger: none
 
@@ -44,6 +48,7 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- script: echo admin=$(adminUserAccount)
 
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
@@ -59,7 +64,7 @@ steps:
     deploymentMode: 'Complete'
     #"${{ parameters.ProfiseeAdminUserAccount }}"
     overrideParameters: >-
-      -ProfiseeAdminUserAccount "$(Build.RequestedForEmail)"
+      -ProfiseeAdminUserAccount "$(adminUserAccount)"
       -ProfiseeLicense "$(ProfiseeLicense)"
       -ManagedIdentityName $(ManagedIdentityName)
       -SQLServerName "$(SQLServerName)$(dtm)"
@@ -80,5 +85,6 @@ steps:
       -KubernetesWindowsNodeSize "$(KubernetesWindowsNodeSize)"
       -ProfiseeVersion "${{ parameters.ProfiseeVersion }}"
       -KubernetesVersion "${{ parameters.KubernetesVersion }}"
+  enabled: false
 
 
