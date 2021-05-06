@@ -33,6 +33,10 @@ variables:
   email: $[variables['Build.RequestedForEmail']]
   emailclean: $[replace(variables['email'],'@','')]
   emailcleansed: $[replace(variables['emailclean'],'.','')]
+  ${{ if eq( parameters.ResourceGroupName, '' ) }}: 
+    resourceGroupName: '$(emailcleansed)_$(dtm)'
+  ${{ if ne( parameters['ResourceGroupName'], '' ) }}: 
+    resourceGroupName: ${{ parameters.ResourceGroupName }}
 
 trigger: none
 
@@ -47,10 +51,7 @@ steps:
     azureResourceManagerConnection: 'ProfiseeAzure'
     subscriptionId: '73814551-37dd-4143-a149-df9c2a2c97b6'
     action: 'Create Or Update Resource Group'
-    ${{ if eq( parameters.ResourceGroupName, '' ) }}: 
-      resourceGroupName: '$(emailcleansed)_$(dtm)'
-    ${{ if ne( parameters['ResourceGroupName'], '' ) }}: 
-      resourceGroupName: ${{ parameters.ResourceGroupName }}
+    resourceGroupName: '$(resourceGroupName)'
     location: 'East US 2'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.json'
