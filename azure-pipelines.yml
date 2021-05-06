@@ -4,9 +4,8 @@
 # https://aka.ms/yaml
 parameters:
 - name: ResourceGroupName
-  displayName: Resource Group Name (dtm appended)
+  displayName: Resource Group Name (leave blank for default firstlastdomain_dtm)
   type: string
-  default: 'chuckth_pl'
 - name: ProfiseeAdminUserAccount
   displayName: Profisee Admin UserAccount
   type: string
