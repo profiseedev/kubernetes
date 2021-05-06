@@ -20,7 +20,7 @@ parameters:
   - profiseeplatform:2021r3.preview
   - profiseeplatform:2021r3.mlpreview
 - name: DNSHostName
-  displayName: DNS Host Name (.dev.profisee.com)(leave blank for default firstlastdomaindtml)
+  displayName: DNS Host Name (.dev.profisee.com)(leave blank for default firstlastdomaindtm)
   type: string
   default: ' '
 - name: KubernetesVersion
