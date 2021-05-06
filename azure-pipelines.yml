@@ -20,9 +20,13 @@ parameters:
   - profiseeplatform:2021r3.preview
   - profiseeplatform:2021r3.mlpreview
 - name: DNSHostName
-  displayName: DNS Host Name
+  displayName: DNS Host Name (.dev.profisee.com)
   type: string
   default: $[variables['emailcleansed']variables['dtm']]
+- name: KubernetesVersion
+  displayName: Kubernetes Version
+  type: string
+  default: 1.18.14
 
 variables:
   dtm: $[format('{0:MMddyyyyHHmmss}', pipeline.startTime)]
@@ -71,6 +75,6 @@ steps:
       -KubernetesLinuxNodeSize "$(KubernetesLinuxNodeSize)"
       -KubernetesWindowsNodeSize "$(KubernetesWindowsNodeSize)"
       -ProfiseeVersion "${{ parameters.ProfiseeVersion }}"
-      -KubernetesVersion "$(KubernetesVersion)"
+      -KubernetesVersion "${{ parameters.KubernetesVersion }}"
 
 
