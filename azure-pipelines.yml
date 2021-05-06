@@ -44,14 +44,15 @@ steps:
     azureResourceManagerConnection: 'ProfiseeAzure'
     subscriptionId: '73814551-37dd-4143-a149-df9c2a2c97b6'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: '${{ parameters.ResourceGroupName }}_$(emailclean2)'
+    resourceGroupName: '${{ parameters.ResourceGroupName }}'
     location: 'East US 2'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.json'
     csmParametersFileLink: 'https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/azuredeploy.parameters.json'
     deploymentMode: 'Complete'
+    #"${{ parameters.ProfiseeAdminUserAccount }}"
     overrideParameters: >-
-      -ProfiseeAdminUserAccount "${{ parameters.ProfiseeAdminUserAccount }}"
+      -ProfiseeAdminUserAccount "$(emailclean2)" 
       -ProfiseeLicense "$(ProfiseeLicense)"
       -ManagedIdentityName $(ManagedIdentityName)
       -SQLServerName "$(SQLServerName)$(dtm)"
