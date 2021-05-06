@@ -34,7 +34,7 @@ variables:
   emailclean: $[replace(variables['email'],'@','')]
   emailcleansed: $[replace(variables['emailclean'],'.','')]
   ${{ if eq( parameters.ResourceGroupName, ' ' ) }}: 
-    resourceGroupName: $[variables['emailcleansed']]
+    resourceGroupName: $[variables['emailcleansed']]_test
   ${{ if ne( parameters['ResourceGroupName'], ' ' ) }}: 
     resourceGroupName: ${{ parameters.ResourceGroupName }}
   ${{ if eq( parameters.ProfiseeAdminUserAccount, ' ' ) }}: 
@@ -48,7 +48,8 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo admin=$(adminUserAccount)
+- script: echo adminUserAccount=$(adminUserAccount)
+- script: echo resourceGroupName=$(resourceGroupName)
 
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
