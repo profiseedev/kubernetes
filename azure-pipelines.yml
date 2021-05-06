@@ -19,8 +19,15 @@ parameters:
   - profiseeplatform:2021r2.0
   - profiseeplatform:2021r3.preview
   - profiseeplatform:2021r3.mlpreview
+- name: UseLetsEncrypt
+  displayName: Use Lets Encrypt
+  type: string
+  default: No
+  values:
+  - No
+  - Yes
 - name: DNSHostName
-  displayName: DNS Host Name (.dev.profisee.com)(leave blank for default firstlastdomaindtm)
+  displayName: DNS Host Name (.dev.profisee.com or if using Let's Encrypt .eastus2.cloudapp.azure.com)(leave blank for default firstlastdomaindtm)
   type: string
   default: ' '
 - name: KubernetesVersion
@@ -53,6 +60,12 @@ variables:
     dnsHostName: '$(emailcleansed)$(dtm)'
   ${{ if ne( parameters['DNSHostName'], ' ' ) }}: 
     dnsHostName: ${{ replace(parameters.DNSHostName,' ','') }}
+  ${{ if eq( parameters.UseLetsEncrypt, 'No' ) }}: 
+    dnsDomainName: 'dev.profisee.com'
+    dnsUpdate: 'Yes'
+  ${{ if ne( parameters['UseLetsEncrypt'], 'No' ) }}: 
+    dnsDomainName: 'eastus2.cloudapp.azure.com'
+    dnsUpdate: 'No'
 trigger: none
 
 pool:
@@ -84,12 +97,12 @@ steps:
       -SQLServerUser "$(SqlServerUser)"
       -SQLServerPassword "$(SQLServerPassword)"
       -StorageAccountName "$(StorageAccountName)$(dtm)"
-      -UseLetsEncrypt "$(UseLetsEncrypt)"
+      -UseLetsEncrypt "${{ parameters.UseLetsEncrypt }}"
       -UseKeyVault "$(UseKeyVault)"
       -KeyVault "$(KeyVault)"
-      -DNSUpdate "$(DNSUpdate)"
+      -DNSUpdate "$(dnsUpdate)"
       -DNSHostName "$(dnsHostName)"
-      -DNSDomainName "$(DNSDomainName)"
+      -DNSDomainName "$(dnsDomainName)"
       -DNSDomainResourceGroup "$(DNSDomainResourceGroup)"
       -HttpsConfigure "$(HttpsConfigure)"
       -HttpsCertificate "$(HttpsCertificate)"
