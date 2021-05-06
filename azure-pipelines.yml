@@ -34,7 +34,8 @@ variables:
   emailclean: $[replace(variables['email'],'@','')]
   emailcleansed: $[replace(variables['emailclean'],'.','')]
   ${{ if eq( parameters.ResourceGroupName, ' ' ) }}: 
-    resourceGroupName: $[variables['emailcleansed']] + 'test'
+    #resourceGroupName: $[variables['emailcleansed']]
+    resourceGroupName: '$(emailcleansed)_$(dtm)'
   ${{ if ne( parameters['ResourceGroupName'], ' ' ) }}: 
     resourceGroupName: ${{ parameters.ResourceGroupName }}
   ${{ if eq( parameters.ProfiseeAdminUserAccount, ' ' ) }}: 
