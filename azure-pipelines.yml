@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 parameters:
 - name: ResourceGroupName
-  displayName: Resource Group Name (dtm added to edn)
+  displayName: Resource Group Name (dtm appended)
   type: string
   default: $[variables['emailcleansed']]
 - name: ProfiseeAdminUserAccount
