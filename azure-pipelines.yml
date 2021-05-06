@@ -20,9 +20,9 @@ parameters:
   - profiseeplatform:2021r3.preview
   - profiseeplatform:2021r3.mlpreview
 - name: DNSHostName
-  displayName: DNS Host Name (.dev.profisee.com)
+  displayName: DNS Host Name (.dev.profisee.com)(leave blank for default firstlastdomaindtml)
   type: string
-  default: $[variables['emailcleansed']variables['dtm']]
+  default: ' '
 - name: KubernetesVersion
   displayName: Kubernetes Version
   type: string
@@ -34,15 +34,17 @@ variables:
   emailclean: $[replace(variables['email'],'@','')]
   emailcleansed: $[replace(variables['emailclean'],'.','')]
   ${{ if eq( parameters.ResourceGroupName, ' ' ) }}: 
-    #resourceGroupName: $[variables['emailcleansed']]
     resourceGroupName: '$(emailcleansed)_$(dtm)'
   ${{ if ne( parameters['ResourceGroupName'], ' ' ) }}: 
     resourceGroupName: ${{ replace(parameters.ResourceGroupName,' ','') }}
   ${{ if eq( parameters.ProfiseeAdminUserAccount, ' ' ) }}: 
     adminUserAccount:  $[variables['email']]
   ${{ if ne( parameters['ProfiseeAdminUserAccount'], ' ' ) }}: 
-    adminUserAccount: ${{ parameters.ProfiseeAdminUserAccount }}
-
+    adminUserAccount: ${{  replace(parameters.ProfiseeAdminUserAccount,' ','') }}
+  ${{ if eq( parameters.DNSHostName, ' ' ) }}: 
+    dnsHostName: '$(emailcleansed)$(dtm)'
+  ${{ if ne( parameters['DNSHostName'], ' ' ) }}: 
+    dnsHostName: ${{ replace(parameters.DNSHostName,' ','') }}
 trigger: none
 
 pool:
@@ -51,6 +53,7 @@ pool:
 steps:
 - script: echo adminUserAccount=$(adminUserAccount)
 - script: echo resourceGroupName=$(resourceGroupName)
+- script: echo dnsHostName=$(dnsHostName)
 
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
@@ -77,7 +80,7 @@ steps:
       -UseKeyVault "$(UseKeyVault)"
       -KeyVault "$(KeyVault)"
       -DNSUpdate "$(DNSUpdate)"
-      -DNSHostName "$(emailcleansed)$(dtm)"
+      -DNSHostName ""$(dnsHostName)"
       -DNSDomainName "$(DNSDomainName)"
       -DNSDomainResourceGroup "$(DNSDomainResourceGroup)"
       -HttpsConfigure "$(HttpsConfigure)"
