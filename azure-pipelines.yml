@@ -66,7 +66,7 @@ steps:
       -UseKeyVault "$(UseKeyVault)"
       -KeyVault "$(KeyVault)"
       -DNSUpdate "$(DNSUpdate)"
-      -DNSHostName "${{ parameters.DNSHostName }}"
+      -DNSHostName "$(emailcleansed)$(dtm)"
       -DNSDomainName "$(DNSDomainName)"
       -DNSDomainResourceGroup "$(DNSDomainResourceGroup)"
       -HttpsConfigure "$(HttpsConfigure)"
