@@ -1,149 +1,157 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "ProfiseeVersion": {
-            "type": "String"
-        },
-        "ProfiseeAdminUserAccount": {
-            "type": "String"
-        },
-        "ProfiseeLicense": {
-            "type": "String"
-        },              
-        "ActiveDirectoryCreateApp": {
-            "type": "String"
-        },
-        "ActiveDirectoryClientId": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "PurviewUrl": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "PurviewClientId": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "PurviewClientSecret": {
-            "defaultValue": "",
-            "type": "String"
-        },
-         "ManagedIdentityName": {
-            "type": "object"
-        },
-        "KubernetesClusterName": {
-            "type": "String"
-        },
-        "KubernetesLinuxNodeSize": {
-            "type": "String"
-        },
-        "KubernetesLinuxNodeCount": {
-            "type": "int"
-        },
-        "KubernetesWindowsNodeSize": {
-            "type": "String"
-        },
-        "KubernetesWindowsNodeCount": {
-            "type": "int"
-        },
-        "KubernetesVersion": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "KubernetesVnetName": {
-            "defaultValue": "",
-            "type": "string"
-        },
-        "KubernetesVnetResourceGroup": {
-            "defaultValue": "",
-            "type": "string"
-        },
-        "KubernetesSubnetName": {
-            "defaultValue": "",
-            "type": "string"
-        },
-        "KubernetesServiceCidr": {
-            "defaultValue": "",
-            "type": "string"
-        },
-        "KubernetesDNSServiceIP": {
-            "defaultValue": "",
-            "type": "string"
-        },
-        "KubernetesDockerBridgeCidr": {
-            "defaultValue": "",
-            "type": "string"
-        },
-        "SQLServerCreateNew": {
-            "type": "String"
-        }, 
-        "SQLServerName": {
-            "type": "String"
-        },        
-        "SQLServerUser": {
-            "type": "string"
-        },
-        "SQLServerPassword": {
-            "type": "securestring"
-        },
-        "SQLServerDatabaseName": {
-            "type": "String"
-        },
-        "StorageAccountCreateNew": {
-            "type": "String"
-        },
-        "StorageAccountName": {
-            "type": "String"
-        }, 
-        "StorageAccountType": {
-            "type": "String"
-        },
-        "StorageAccountAccessKey": {
-            "defaultValue": "",
-            "type": "securestring"
-        },
-        "StorageAccountFileShareName": {
-            "type": "String"
-        },
-        "DNSUpdate": {
-            "type": "String"
-        },
-        "DNSHostName": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "DNSDomainName": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "DNSDomainResourceGroup": {
-            "defaultValue": "",
-            "type": "String"
-        },   
-        "HttpsConfigure": {
-            "type": "String"
-        }, 
-        "HttpsCertificate": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "HttpsCertificatePrivateKey": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "UseLetsEncrypt": {
-            "type": "String"
-        },
-        "UseKeyVault": {
-            "type": "String"
-        },
-        "KeyVault": {
-            "defaultValue": "",
-            "type": "String"
-        }
+  "parameters": {
+    "ProfiseeVersion": {
+      "type": "String"
     },
+    "ProfiseeAdminUserAccount": {
+      "type": "String"
+    },
+    "ProfiseeLicense": {
+      "type": "String"
+    },
+    "ActiveDirectoryCreateApp": {
+      "type": "String"
+    },
+    "ActiveDirectoryClientId": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "UsePurview": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "PurviewUrl": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "PurviewClientId": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "PurviewClientSecret": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "PurviewAccountResourceGroup": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "ManagedIdentityName": {
+      "type": "object"
+    },
+    "KubernetesClusterName": {
+      "type": "String"
+    },
+    "KubernetesLinuxNodeSize": {
+      "type": "String"
+    },
+    "KubernetesLinuxNodeCount": {
+      "type": "int"
+    },
+    "KubernetesWindowsNodeSize": {
+      "type": "String"
+    },
+    "KubernetesWindowsNodeCount": {
+      "type": "int"
+    },
+    "KubernetesVersion": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "KubernetesVnetName": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "KubernetesVnetResourceGroup": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "KubernetesSubnetName": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "KubernetesServiceCidr": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "KubernetesDNSServiceIP": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "KubernetesDockerBridgeCidr": {
+      "defaultValue": "",
+      "type": "string"
+    },
+    "SQLServerCreateNew": {
+      "type": "String"
+    },
+    "SQLServerName": {
+      "type": "String"
+    },
+    "SQLServerUser": {
+      "type": "string"
+    },
+    "SQLServerPassword": {
+      "type": "securestring"
+    },
+    "SQLServerDatabaseName": {
+      "type": "String"
+    },
+    "StorageAccountCreateNew": {
+      "type": "String"
+    },
+    "StorageAccountName": {
+      "type": "String"
+    },
+    "StorageAccountType": {
+      "type": "String"
+    },
+    "StorageAccountAccessKey": {
+      "defaultValue": "",
+      "type": "securestring"
+    },
+    "StorageAccountFileShareName": {
+      "type": "String"
+    },
+    "DNSUpdate": {
+      "type": "String"
+    },
+    "DNSHostName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "DNSDomainName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "DNSDomainResourceGroup": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "HttpsConfigure": {
+      "type": "String"
+    },
+    "HttpsCertificate": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "HttpsCertificatePrivateKey": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "UseLetsEncrypt": {
+      "type": "String"
+    },
+    "UseKeyVault": {
+      "type": "String"
+    },
+    "KeyVault": {
+      "defaultValue": "",
+      "type": "String"
+    }
+  },
     "variables": 
     {
         "ScriptURL":"https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/deployprofisee.sh",
@@ -665,8 +673,12 @@
                         "value": "[subscription().tenantId]"
                     },
                     {
-                        "name": "KUBERNETESCLIENTID",
-                        "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.clientId]"
+                      "name": "KUBERNETESCLIENTID",
+                      "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))).identityProfile.kubeletidentity.clientId]"
+                    },
+                    {
+                      "name": "USEPURVIEW",
+                      "value": "[variables('UsePurview')]"
                     },
                     {
                         "name": "PURVIEWURL",
@@ -677,8 +689,12 @@
                         "value": "[variables('PurviewClientId')]"
                     },
                     {
-                        "name": "PURVIEWCLIENTSECRET",
-                        "value": "[variables('PurviewClientSecret')]"
+                      "name": "PURVIEWCLIENTSECRET",
+                      "value": "[variables('PurviewClientSecret')]"
+                    },
+                    {
+                      "name": "PURVIEWACCOUNTRESOURCEGROUP",
+                      "value": "[variables('PurviewAccountResourceGroup')]"
                     }
                 ],
                 "primaryScriptUri": "[variables('ScriptURL')]"            
