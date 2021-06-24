@@ -262,7 +262,7 @@
             "type":"Microsoft.Solutions.ArmApiControl",
             "request":{
               "method": "GET",
-              "path": "[concat(subscription().id,'/resourceGroups/',skip(take(split(steps('profisee').PurviewAccountName.id, '/'), 5), 4),'/providers/Microsoft.Purview/accounts/',steps('profisee').PurviewAccountName.name,'?api-version=2020-12-01-preview')]",
+              "path": "[concat(subscription().id,'/resourceGroups/',last(take(split(steps('profisee').PurviewAccountName.id, '/'), 5)),'/providers/Microsoft.Purview/accounts/',steps('profisee').PurviewAccountName.name,'?api-version=2020-12-01-preview')]",
               "body": ""
             }
           },
@@ -547,6 +547,20 @@
             "visible": true
           },
           {
+            "name": "Bob",
+            "type": "Microsoft.Common.TextBox",
+            "label": "bob",
+            "defaultValue": "[last(take(split(steps('profisee').PurviewAccountName.id, '/'), 5))]",
+            "placeholder": "",
+            "toolTip": "",
+            "constraints": {
+              "required": false,
+              "regex": "",
+              "validationMessage": ""
+            },
+            "visible": true
+          },
+          {
             "name": "SQLServerNameExisting",
             "type": "Microsoft.Solutions.ResourceSelector",
             "label": "Select SQL Server",
@@ -560,9 +574,9 @@
             "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
           },
           {
-            "name":"CheckSqlNameRestApiResponse",
-            "type":"Microsoft.Solutions.ArmApiControl",
-            "request":{
+            "name": "CheckSqlNameRestApiResponse",
+            "type": "Microsoft.Solutions.ArmApiControl",
+            "request": {
               "method": "POST",
               "path": "[concat(subscription().id,'/providers/Microsoft.Sql/checkNameAvailability?api-version=2014-04-01')]",
               "body": "[parse(concat('{\"name\":\"',steps('sql').SQLServerName,'\",\"type\":\"Microsoft.Sql/servers\"}'))]"
@@ -575,10 +589,10 @@
             "toolTip": "Enter a globally unique Azure SQL Server name. Name can contain only lowercase letters, numbers, and hyphens. The name cannot start or end with a hyphen or contain more than 63 characters.",
             "constraints": {
               "required": true,
-              "validations":[
+              "validations": [
                 {
-                  "isValid":"[equals(steps('sql').CheckSqlNameRestApiResponse.available,true)]",
-                  "message":"[steps('sql').CheckSqlNameRestApiResponse.message]"
+                  "isValid": "[equals(steps('sql').CheckSqlNameRestApiResponse.available,true)]",
+                  "message": "[steps('sql').CheckSqlNameRestApiResponse.message]"
                 }
               ]
             },
@@ -961,7 +975,7 @@
       "PurviewUrl":"[steps('profisee').GetPurviewUrlRestApiResponse.properties.endpoints.catalog]",
       "PurviewClientId":"[steps('profisee').PurviewClientID]",
       "PurviewClientSecret":"[steps('profisee').PurviewClientSecret]",
-      "PurviewAccountResourceGroup":"[skip(take(split(steps('profisee').PurviewAccountName.id, '/'), 5), 4)]"
+      "PurviewAccountResourceGroup":"[last(take(split(steps('profisee').PurviewAccountName.id, '/'), 5))]"
     }
   }
 }
