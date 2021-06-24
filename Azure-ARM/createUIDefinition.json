@@ -547,20 +547,6 @@
             "visible": true
           },
           {
-            "name": "Bob",
-            "type": "Microsoft.Common.TextBox",
-            "label": "bob",
-            "defaultValue": "[last(take(split(steps('profisee').PurviewAccountName.id, '/'), 5))]",
-            "placeholder": "",
-            "toolTip": "",
-            "constraints": {
-              "required": false,
-              "regex": "",
-              "validationMessage": ""
-            },
-            "visible": true
-          },
-          {
             "name": "SQLServerNameExisting",
             "type": "Microsoft.Solutions.ResourceSelector",
             "label": "Select SQL Server",
