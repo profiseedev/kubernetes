@@ -19,6 +19,7 @@
       "type": "String"
     },
     "UsePurview": {
+      "defaultValue": "",
       "type": "String"
     },
     "PurviewUrl": {
@@ -34,6 +35,7 @@
       "type": "String"
     },
     "PurviewAccountResourceGroup": {
+      "defaultValue": "",
       "type": "String"
     },
     "ManagedIdentityName": {
