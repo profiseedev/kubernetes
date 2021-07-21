@@ -13,6 +13,9 @@ printenv;
 az version;
 success='false'
 
+currentIdentityId=$(az ad signed-in-user show --query objectId -o tsv)
+az role assignment list --all --assignee $currentIdentityId --output json
+
 
 printf '%s\n' "Error boom" >&2;
 success='true'
