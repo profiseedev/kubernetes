@@ -14,8 +14,8 @@ az version;
 success='false'
 
 az account show;
-currentIdentityId=$(az ad signed-in-user show --query objectId -o tsv)
-az role assignment list --all --assignee $currentIdentityId --output json
+#currentIdentityId=$(az ad signed-in-user show --query objectId -o tsv)
+#az role assignment list --all --assignee $currentIdentityId --output json
 
 #if something
 #printf '%s\n' "Error boom" >&2;
