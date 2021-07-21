@@ -155,6 +155,7 @@
   "variables": 
   {
     "ScriptURL":"https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/deployprofisee.sh",
+    "PreReqCheckScriptURL":"https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/prereqcheck.sh",
     "KubernetesVnetResourceGroup":"[parameters('KubernetesVnetResourceGroup')]",
     "vnetId":"[resourceId(parameters('KubernetesVnetResourceGroup'),'Microsoft.Network/virtualNetworks/subnets',parameters('KubernetesVnetName'),parameters('KubernetesSubnetName'))]",
     "PROFISEEVERSION":"[parameters('ProfiseeVersion')]",
@@ -220,10 +221,28 @@
     "resources": 
     [
         {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "PreReqChecks",
+            "location": "[resourceGroup().location]",
+            "kind": "AzureCLI",
+            "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
+            "identity": "[variables('ManagedIdentityName')]",
+            "properties": {
+                "forceUpdateTag": "1",
+                "azCliVersion": "2.0.80",
+                "timeout": "PT1H",
+                "cleanupPreference": "OnExpiration",
+                "retentionInterval": "P1D",
+                "primaryScriptUri": "[variables('PreReqCheckScriptURL')]"            
+            }
+        },
+        {
             "apiVersion": "2015-01-01",
             "name": "License",
             "type": "Microsoft.Resources/deployments",
             "condition": "[equals(tolower(parameters('UseKeyVault')),tolower('Yes'))]",
+            "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "properties": {
                 "mode": "Incremental",
                 "expressionEvaluationOptions": 
@@ -266,6 +285,7 @@
             "name": "Sql",
             "type": "Microsoft.Resources/deployments",
             "condition": "[equals(tolower(parameters('UseKeyVault')),tolower('Yes'))]",
+            "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "properties": {
                 "mode": "Incremental",
                 "expressionEvaluationOptions": 
@@ -389,6 +409,7 @@
             "apiVersion": "2020-07-01",
             "name": "[variables('KubernetesClusterName')]",
             "location": "[resourceGroup().location]",
+            "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "sku": {
                 "name": "Basic",
                 "tier": "Free"
@@ -460,7 +481,7 @@
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
             "apiVersion": "2019-06-01-preview",
-            "dependsOn": [],
+            "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "tags": {
                 "displayName": "SQLServer"
             },
@@ -501,7 +522,7 @@
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourceGroup().location]",
             "apiVersion": "2019-06-01",
-            "dependsOn": [],
+            "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "tags": {
                 "displayName": "[variables('StorageAccountName')]"
             },
@@ -516,6 +537,7 @@
             "apiVersion": "2019-06-01",
             "name": "[concat(tolower(variables('StorageAccountName')), '/default/', tolower(variables('StorageAccountFileShareName')))]",
             "dependsOn": [
+                "[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]",
                 "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('StorageAccountName')))]"
             ]
         },          
@@ -526,6 +548,7 @@
             "location": "[resourceGroup().location]",
             "kind": "AzureCLI",
             "dependsOn": [
+                    "[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]",
                     "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
                 ],
             "identity": "[variables('ManagedIdentityName')]",
