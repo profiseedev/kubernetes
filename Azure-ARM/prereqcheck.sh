@@ -15,7 +15,8 @@ success='false'
 
 
 printf '%s\n' "Error boom" >&2;
-exit 1;
+success='true'
+#exit 1;
 
 echo $"Profisee pre-req check finished $(date +"%Y-%m-%d %T")";
 
