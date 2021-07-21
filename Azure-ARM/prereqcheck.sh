@@ -10,7 +10,7 @@ printenv;
 
 #az login --identity
 
-av version;
+az version;
 success='false'
 
 
