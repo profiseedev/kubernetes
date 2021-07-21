@@ -166,6 +166,11 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
     echo $"Managing Identity configuration for KV access - finished"
 fi
 
+if [ "$USEPURVIEW" = "Yes" ]; then
+	echo $"Assigning Purview Data Curator role to Purview service client."
+	az role assignment create --role "Purview Data Curator" --assignee $PURVIEWCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$PURVIEWACCOUNTRESOURCEGROUP
+fi
+
 #install nginx
 echo $"Installing nginx started";
 #old
