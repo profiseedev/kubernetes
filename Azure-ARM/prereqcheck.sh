@@ -19,7 +19,7 @@ az role assignment list --all --assignee $currentIdentityId --output json
 
 #if something
 #printf '%s\n' "Error boom" >&2;
-exit 1;
+#exit 1;
 
 success='true'
 
