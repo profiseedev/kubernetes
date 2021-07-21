@@ -226,7 +226,6 @@
             "name": "PreReqChecks",
             "location": "[resourceGroup().location]",
             "kind": "AzureCLI",
-            "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "identity": "[variables('ManagedIdentityName')]",
             "properties": {
                 "forceUpdateTag": "1",
