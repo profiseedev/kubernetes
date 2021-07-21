@@ -732,6 +732,7 @@
             "apiVersion": "2018-02-01",
             "name": "pid-498552cf-87f5-55b7-a69b-5364df5c1994",
             "type": "Microsoft.Resources/deployments",
+            "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "properties": {
                 "mode": "Incremental",
                 "template": {
