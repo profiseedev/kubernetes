@@ -16,10 +16,12 @@ success='false'
 currentIdentityId=$(az ad signed-in-user show --query objectId -o tsv)
 az role assignment list --all --assignee $currentIdentityId --output json
 
+#if something
+#printf '%s\n' "Error boom" >&2;
+exit 1;
 
-printf '%s\n' "Error boom" >&2;
 success='true'
-#exit 1;
+
 
 echo $"Profisee pre-req check finished $(date +"%Y-%m-%d %T")";
 
