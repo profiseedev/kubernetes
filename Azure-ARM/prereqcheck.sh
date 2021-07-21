@@ -9,9 +9,8 @@ echo $"Profisee pre-req check started $(date +"%Y-%m-%d %T")";
 printenv;
 
 #az login --identity
-#install the aks cli since this script runs in az 2.0.80 and the az aks was not added until 2.5
-az aks install-cli;
 
+av version;
 success='false'
 
 
