@@ -150,6 +150,10 @@
     "KeyVault": {
       "defaultValue": "",
       "type": "String"
+    },
+    "NewGuid": {
+      "defaultValue": "[newGuid()]",
+      "type": "String"
     }
   },
   "variables": 
@@ -228,7 +232,7 @@
             "kind": "AzureCLI",
             "identity": "[variables('ManagedIdentityName')]",
             "properties": {
-                "forceUpdateTag": "[newGuid()]",
+                "forceUpdateTag": "[parameters('NewGuid')]",
                 "azCliVersion": "2.5.0",
                 "timeout": "PT1H",
                 "cleanupPreference": "OnExpiration",
