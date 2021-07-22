@@ -143,27 +143,18 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"Managing Identity configuration for KV access - step 2 started"
 	identityName="AKSKeyVaultUser"
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
+	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
+	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId' -o tsv)
 	echo $"Managing Identity configuration for KV access - step 2 finished"
 
-	#echo $"Managing Identity configuration for KV access - step 3 started"
-	#akskvidentityClientId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId')
-	#akskvidentityClientId=$(echo "$akskvidentityClientId" | tr -d '"')
-	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
-	#akskvidentityClientResourceId=$(echo "$akskvidentityClientResourceId" | tr -d '"')
-	#principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId')
-	#principalId=$(echo "$principalId" | tr -d '"')  
-
-
-
-	echo $"Managing Identity configuration for KV access - step 3 finished"
+	echo $"Managing Identity configuration for KV access - step 3 started"
+	sleep 10;
 	#KEYVAULT looks like this this /subscriptions/$SUBID/resourceGroups/$kvresourceGroup/providers/Microsoft.KeyVault/vaults/$kvname
-
-	echo $"Managing Identity configuration for KV access - step 4 started"
 	IFS='/' read -r -a kv <<< "$KEYVAULT" #splits the KEYVAULT on slashes and gets last one
 	keyVaultName=${kv[-1]}
 	keyVaultResourceGroup=${kv[4]}
 	keyVaultSubscriptionId=${kv[2]}
-	#echo $"principalId is $principalId"
+	echo $"principalId is $principalId"
 	echo $"KEYVAULT is $KEYVAULT"
 	echo $"keyVaultName is $keyVaultName"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
@@ -171,16 +162,16 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#echo $"Managing Identity configuration for KV access - step 4a started"
 	#az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
 
-	echo $"Managing Identity configuration for KV access - step 4b started"
+	echo $"Managing Identity configuration for KV access - step 3a started"
 	az keyvault set-policy -n $keyVaultName --secret-permissions get --spn $akskvidentityClientId
 
-	echo $"Managing Identity configuration for KV access - step 4c started"
+	echo $"Managing Identity configuration for KV access - step 3b started"
 	az keyvault set-policy -n $keyVaultName --key-permissions get --spn $akskvidentityClientId
 
-	echo $"Managing Identity configuration for KV access - step 4d started"
+	echo $"Managing Identity configuration for KV access - step 3c started"
 	az keyvault set-policy -n $keyVaultName --certificate-permissions get --spn $akskvidentityClientId
 
-	echo $"Managing Identity configuration for KV access - step 4 finished"
+	echo $"Managing Identity configuration for KV access - step 3 finished"
     echo $"Managing Identity configuration for KV access - finished"
 fi
 
