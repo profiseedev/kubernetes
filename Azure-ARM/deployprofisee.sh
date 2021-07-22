@@ -148,7 +148,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#echo $"Managing Identity configuration for KV access - step 3 started"
 	#akskvidentityClientId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId')
 	#akskvidentityClientId=$(echo "$akskvidentityClientId" | tr -d '"')
-	#akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id')
+	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
 	#akskvidentityClientResourceId=$(echo "$akskvidentityClientResourceId" | tr -d '"')
 	#principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId')
 	#principalId=$(echo "$principalId" | tr -d '"')  
