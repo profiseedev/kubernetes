@@ -246,10 +246,6 @@
                     {
                         "name": "SUBSCRIPTIONID",
                         "value": "[subscription().subscriptionId]"
-                    },
-                    {
-                        "name": "MANAGEDIDENTITYNAME",
-                        "value": "[variables('ManagedIdentityName')]"
                     }
                 ]           
             }
@@ -759,6 +755,10 @@
     ],
     "outputs": 
     {    
+    "PreReqChecks": {
+      "value": "[reference('PreReqChecks').outputs]",
+      "type": "string"
+    },
     "ClusterIP": {
       "value": "[reference('InstallProfiseePlatform').outputs.Result[0].IP]",
       "type": "string"
