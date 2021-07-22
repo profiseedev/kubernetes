@@ -416,6 +416,9 @@ helm repo update
 helm uninstall --namespace profisee profiseeplatform
 helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
 
+kubectl delete secret profisee-deploymentlog --namespace profisee --ignore-not-found
+kubectl create secret generic profisee-deploymentlog --namespace profisee --from-file=$logfile
+
 #Make sure it installed, if not return error
 profiseeinstalledname=$(echo $(helm list --filter 'profisee+' --namespace profisee -o json)| jq '.[].name')
 if [ -z "$profiseeinstalledname" ]; then
