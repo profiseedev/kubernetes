@@ -92,12 +92,21 @@ echo $"ACRUSERPASSWORD is $ACRUSERPASSWORD";
 echo $"Getting values from license finished";
 
 #install helm
+echo $"Installing helm started";
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3;
 chmod 700 get_helm.sh;
 ./get_helm.sh;
+echo $"Installing helm finished";
+
+echo $"Installing kubectl started";
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+echo $"Installing kubectl finished";
 
 #create profisee namespace
+echo $"Creating profisee namespace in kubernetes started";
 kubectl create namespace profisee
+echo $"Creating profisee namespace in kubernetes finished";
 
 #download the settings.yaml
 curl -fsSL -o Settings.yaml "$REPOURL/Azure-ARM/Settings.yaml";
