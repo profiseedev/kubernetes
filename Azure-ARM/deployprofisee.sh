@@ -292,7 +292,6 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 
 	echo "Updating app registration permissions step 2 started"
 	az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
-	az ad app permission grant --id "43503840-d179-476c-8453-653d2d17d120" --api 00000003-0000-0000-c000-000000000000
 
 	echo "Updating app registration permissions step 2 finished"
 	echo "Update AAD finished";
