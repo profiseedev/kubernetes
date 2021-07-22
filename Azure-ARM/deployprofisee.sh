@@ -164,12 +164,16 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"KEYVAULT is $KEYVAULT"
 	echo $"keyVaultName is $keyVaultName"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
+
 	echo $"Managing Identity configuration for KV access - step 4a started"
 	az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
+
 	echo $"Managing Identity configuration for KV access - step 4b started"
 	az keyvault set-policy -n $keyVaultName --secret-permissions get --spn $akskvidentityClientId
+
 	echo $"Managing Identity configuration for KV access - step 4c started"
 	az keyvault set-policy -n $keyVaultName --key-permissions get --spn $akskvidentityClientId
+	
 	echo $"Managing Identity configuration for KV access - step 4 finished"
     echo $"Managing Identity configuration for KV access - finished"
 fi
@@ -273,13 +277,25 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
 	echo $"azureClientName is $azureClientName";
 	echo $"azureAppReplyUrl is $azureAppReplyUrl";
+
+	echo "Creating app registration started"
 	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
 	#clean client id - remove quotes
 	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
 	echo $"CLIENTID is $CLIENTID";
+	echo "Creating app registration finished"
+
+	##wait for the app reg to be available.  usually a few seconds
+	sleep 30;
+
+	echo "Updating app registration permissions step 1 started"
 	#add a Graph API permission of "Sign in and read user profile"
 	az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
+	echo "Updating app registration permissions step 1 finished"
+
+	echo "Updating app registration permissions step 2 started"
 	az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
+	echo "Updating app registration permissions step 2 finished"
 	echo "Update AAD finished";
 fi
 
