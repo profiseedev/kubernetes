@@ -237,7 +237,21 @@
                 "timeout": "PT1H",
                 "cleanupPreference": "OnExpiration",
                 "retentionInterval": "P1D",
-                "primaryScriptUri": "[variables('PreReqCheckScriptURL')]"            
+                "primaryScriptUri": "[variables('PreReqCheckScriptURL')]",
+                "environmentVariables": [
+                    {
+                        "name": "RESOURCEGROUPNAME",
+                        "value": "[resourceGroup().name]"
+                    },
+                    {
+                        "name": "SUBSCRIPTIONID",
+                        "value": "[subscription().subscriptionId]"
+                    },
+                    {
+                        "name": "MANAGEDIDENTITYNAME",
+                        "value": "[variables('ManagedIdentityName')]"
+                    }
+                ]           
             }
         },
         {
