@@ -8,6 +8,14 @@ echo $"Profisee pre-req check started $(date +"%Y-%m-%d %T")";
 
 printenv;
 
+if [ -z "$RESOURCEGROUPNAME" ]; then
+	RESOURCEGROUPNAME=$ResourceGroupName
+fi
+
+if [ -z "$SUBSCRIPTIONID" ]; then
+	SUBSCRIPTIONID=$SubscriptionId
+fi
+
 #az login --identity
 
 az version;
@@ -18,8 +26,12 @@ az account show;
 #az role assignment list --all --assignee $currentIdentityId --output json
 
 #if something
-printf '%s\n' "Error boom" >&2;
-exit 1;
+if [ "$RESOURCEGROUPNAME" = "ChuckTh_PreReqCheck" ]; then
+	printf '%s\n' "Error boom" >&2;
+	exit 1;
+fi
+
+
 
 success='true'
 
