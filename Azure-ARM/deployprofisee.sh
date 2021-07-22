@@ -142,17 +142,19 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#Create AD Identity, get clientid and principalid to assign the reader role to (next command)
 	echo $"Managing Identity configuration for KV access - step 2 started"
 	identityName="AKSKeyVaultUser"
-	az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName
+	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
 	echo $"Managing Identity configuration for KV access - step 2 finished"
 
-	echo $"Managing Identity configuration for KV access - step 3 started"
-	akskvidentityClientId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId')
-	akskvidentityClientId=$(echo "$akskvidentityClientId" | tr -d '"')
-	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id')
-	akskvidentityClientResourceId=$(echo "$akskvidentityClientResourceId" | tr -d '"')
-	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId')
-	principalId=$(echo "$principalId" | tr -d '"')
-    echo $"principalid is $principalId"
+	#echo $"Managing Identity configuration for KV access - step 3 started"
+	#akskvidentityClientId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId')
+	#akskvidentityClientId=$(echo "$akskvidentityClientId" | tr -d '"')
+	#akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id')
+	#akskvidentityClientResourceId=$(echo "$akskvidentityClientResourceId" | tr -d '"')
+	#principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId')
+	#principalId=$(echo "$principalId" | tr -d '"')  
+
+
+
 	echo $"Managing Identity configuration for KV access - step 3 finished"
 	#KEYVAULT looks like this this /subscriptions/$SUBID/resourceGroups/$kvresourceGroup/providers/Microsoft.KeyVault/vaults/$kvname
 
@@ -161,19 +163,23 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	keyVaultName=${kv[-1]}
 	keyVaultResourceGroup=${kv[4]}
 	keyVaultSubscriptionId=${kv[2]}
+	#echo $"principalId is $principalId"
 	echo $"KEYVAULT is $KEYVAULT"
 	echo $"keyVaultName is $keyVaultName"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
 
-	echo $"Managing Identity configuration for KV access - step 4a started"
-	az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
+	#echo $"Managing Identity configuration for KV access - step 4a started"
+	#az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
 
 	echo $"Managing Identity configuration for KV access - step 4b started"
 	az keyvault set-policy -n $keyVaultName --secret-permissions get --spn $akskvidentityClientId
 
 	echo $"Managing Identity configuration for KV access - step 4c started"
 	az keyvault set-policy -n $keyVaultName --key-permissions get --spn $akskvidentityClientId
-	
+
+	echo $"Managing Identity configuration for KV access - step 4d started"
+	az keyvault set-policy -n $keyVaultName --certificate-permissions get --spn $akskvidentityClientId
+
 	echo $"Managing Identity configuration for KV access - step 4 finished"
     echo $"Managing Identity configuration for KV access - finished"
 fi
@@ -295,6 +301,8 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 
 	echo "Updating app registration permissions step 2 started"
 	az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
+	az ad app permission grant --id "43503840-d179-476c-8453-653d2d17d120" --api 00000003-0000-0000-c000-000000000000
+
 	echo "Updating app registration permissions step 2 finished"
 	echo "Update AAD finished";
 fi
