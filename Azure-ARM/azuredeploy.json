@@ -183,7 +183,7 @@
     "KubernetesWindowsNodeCount": "[int(parameters('KubernetesWindowsNodeCount'))]",
     "KubernetesWindowsNodeSize": "[parameters('KubernetesWindowsNodeSize')]",
 
-    "ManagedIdentityName": "[parameters('ManagedIdentityName')]",
+    "ManagedIdentity": "[parameters('ManagedIdentityName')]",
 
     "DNSHostName": "[parameters('DNSHostName')]",
     "DNSDomainName": "[parameters('DNSDomainName')]",
@@ -230,7 +230,7 @@
             "name": "PreReqChecks",
             "location": "[resourceGroup().location]",
             "kind": "AzureCLI",
-            "identity": "[variables('ManagedIdentityName')]",
+            "identity": "[variables('ManagedIdentity')]",
             "properties": {
                 "forceUpdateTag": "[parameters('NewGuid')]",
                 "azCliVersion": "2.26.0",
@@ -246,6 +246,30 @@
                     {
                         "name": "SUBSCRIPTIONID",
                         "value": "[subscription().subscriptionId]"
+                    },
+                    {
+                        "name": "MANAGEDIDENTITYNAME",
+                        "value": "[string(variables('ManagedIdentity'))]"
+                    },
+                    {
+                        "name": "DOMAINNAMERESOURCEGROUP",
+                        "value": "[variables('DOMAINNAMERESOURCEGROUP')]"
+                    },
+                    {
+                        "name": "UPDATEDNS",
+                        "value": "[variables('DNSUpdate')]"
+                    },
+                    {
+                        "name": "UPDATEAAD",
+                        "value": "[variables('UPDATEAAD')]"
+                    },
+                    {
+                        "name": "USEKEYVAULT",
+                        "value": "[variables('UseKeyVault')]"
+                    },
+                    {
+                        "name": "KEYVAULT",
+                        "value": "[variables('KeyVault')]"
                     }
                 ]           
             }
@@ -564,7 +588,7 @@
                     "[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]",
                     "[resourceId('Microsoft.ContainerService/managedClusters', variables('KubernetesClusterName'))]"
                 ],
-            "identity": "[variables('ManagedIdentityName')]",
+            "identity": "[variables('ManagedIdentity')]",
             "properties": {
                 "forceUpdateTag": "1",
                 "azCliVersion": "2.26.0",
