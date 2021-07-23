@@ -21,6 +21,10 @@ fi
 az version;
 success='false'
 
+echo $"RESOURCEGROUPNAME is $RESOURCEGROUPNAME"
+echo $"SUBSCRIPTIONID is $SUBSCRIPTIONID"
+echo $"MANAGEDIDENTITYNAME is $MANAGEDIDENTITYNAME"
+
 az account show;
 #currentIdentityId=$(az ad signed-in-user show --query objectId -o tsv)
 #az role assignment list --all --assignee $currentIdentityId --output json
