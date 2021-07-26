@@ -134,7 +134,7 @@ success='true'
 echo $"Profisee pre-req check finished $(date +"%Y-%m-%d %T")";
 
 result="{\"Result\":[\
-{\"SUCCESS\":\"$success\"},
+{\"SUCCESS\":\"$success\"}
 ]}"
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
 
