@@ -65,7 +65,14 @@ if [ -z "$subscriptionContributor" ]; then
 		echo "Checking contributor for DNS resource group"
 		dnsrgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$DOMAINNAMERESOURCEGROUP'].roleDefinitionName" --output tsv)
 		if [ -z "$dnsrgContributor" ]; then
-			echo "Managed identity is not contributor to DNS resource group.  Exiting with error"
+			err="Managed identity is not contributor to DNS resource group.  Exiting with error"
+			echo $err
+			$success="false"
+			result="{\"Result\":[\
+			{\"SUCCESS\":\"$success\"},
+			{\"ERROR\":\"$err\"}\
+			]}"
+			echo $result > $AZ_SCRIPTS_OUTPUT_PATH
 			exit 1
 		else
 			echo "Managed identity is contributor to DNS resource group."
@@ -120,9 +127,9 @@ success='true'
 echo $"Profisee pre-req check finished $(date +"%Y-%m-%d %T")";
 
 result="{\"Result\":[\
-{\"success\":\"$success\"}
+{\"SUCCESS\":\"$success\"},
 ]}"
-
+echo $result > $AZ_SCRIPTS_OUTPUT_PATH
 echo $result
 
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
