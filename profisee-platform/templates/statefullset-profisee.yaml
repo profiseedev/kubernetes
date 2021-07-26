@@ -18,7 +18,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 60 #How long kubernetes will wait for a pod to shut down before force deleting it
       nodeSelector:
-        "beta.kubernetes.io/os": windows 
+        "kubernetes.io/os": windows 
       volumes:
       - name: data-volume
         secret:
