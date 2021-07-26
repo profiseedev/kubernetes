@@ -55,7 +55,7 @@ if [ -z "$subscriptionContributor" ]; then
 	rgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$RESOURCEGROUPNAME'].roleDefinitionName" --output tsv)
 	if [ -z "$rgContributor" ]; then
 		echo "Managed identity is not contributor to resource group.  Exiting with error"
-		exit 1
+		exit;# 1
 	else
 		echo "Managed identity is contributor to resource group."
 	fi
@@ -72,7 +72,7 @@ if [ -z "$subscriptionContributor" ]; then
 			{\"ERROR\":\"$err\"}\
 			]}"
 			echo $result > $AZ_SCRIPTS_OUTPUT_PATH
-			exit 1
+			exit;# 1
 		else
 			echo "Managed identity is contributor to DNS resource group."
 		fi
