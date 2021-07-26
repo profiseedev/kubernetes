@@ -23,17 +23,17 @@ success='false'
 
 echo $"RESOURCEGROUPNAME is $RESOURCEGROUPNAME"
 echo $"SUBSCRIPTIONID is $SUBSCRIPTIONID"
-echo $"MANAGEDIDENTITYNAME is $MANAGEDIDENTITYNAME"
+#echo $"MANAGEDIDENTITYNAME is $MANAGEDIDENTITYNAME"
 
 #MI looks like this
 ##{"type":"UserAssigned","userAssignedIdentities":{"/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedIdentity/userAssignedIdentities/managedIdentityName":{}}}
-echo $MANAGEDIDENTITYNAME >> mi.json
-mi=$(echo $(jq '.userAssignedIdentities' mi.json)| tr -d '{' | tr -d '"' | tr -d '}' | tr -d ':')
+#echo $MANAGEDIDENTITYNAME >> mi.json
+#mi=$(echo $(jq '.userAssignedIdentities' mi.json)| tr -d '{' | tr -d '"' | tr -d '}' | tr -d ':')
 
-#MI looks like this after the cleanup
+#MI (AZ_SCRIPTS_USER_ASSIGNED_IDENTITY) looks like this
 #/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedIdentity/userAssignedIdentities/managedIdentityName
 
-IFS='/' read -r -a miparts <<< "$mi" #splits the mi on slashes
+IFS='/' read -r -a miparts <<< "$AZ_SCRIPTS_USER_ASSIGNED_IDENTITY" #splits the mi on slashes
 mirg=${miparts[4]}
 miname=${miparts[8]}
 

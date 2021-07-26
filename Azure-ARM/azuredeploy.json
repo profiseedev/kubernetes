@@ -248,10 +248,6 @@
                         "value": "[subscription().subscriptionId]"
                     },
                     {
-                        "name": "MANAGEDIDENTITYNAME",
-                        "value": "[string(variables('ManagedIdentity'))]"
-                    },
-                    {
                         "name": "DOMAINNAMERESOURCEGROUP",
                         "value": "[variables('DOMAINNAMERESOURCEGROUP')]"
                     },
