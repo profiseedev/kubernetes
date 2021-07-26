@@ -247,8 +247,12 @@ rm -f a.key
 #set dns
 if [ "$UPDATEDNS" = "Yes" ]; then
 	echo "Update DNS started";
+	echo "Delete existing A record - started";
 	az network dns record-set a delete -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME --yes;
+	echo "Delete existing A record - finished"
+	echo "Create new A record - started";
 	az network dns record-set a add-record -g $DOMAINNAMERESOURCEGROUP -z $DNSDOMAINNAME -n $DNSHOSTNAME -a $nginxip --ttl 5;
+	echo "Create new A record - finished";
 	echo "Update DNS finished";
 fi
 echo $"fix tls variables finished";
@@ -276,9 +280,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	echo $"azureAppReplyUrl is $azureAppReplyUrl";
 
 	echo "Creating app registration started"
-	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId');
-	#clean client id - remove quotes
-	CLIENTID=$(echo "$CLIENTID" | tr -d '"')
+	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId' -o tsv);
 	echo $"CLIENTID is $CLIENTID";
 	echo "Creating app registration finished"
 
@@ -313,10 +315,13 @@ if [ "$SQLSERVERCREATENEW" = "Yes" ]; then
 	echo "Adding firewall rule to sql started";
 	#strip off .database.windows.net
 	IFS='.' read -r -a sqlString <<< "$SQLNAME"
+	echo "SQLNAME is $SQLNAME"
 	sqlServerName=${sqlString[0],,}; #lowercase is the ,,
-	OutIP=$(az network public-ip list -g $AKSINFRARESOURCEGROUPNAME --query "[0].ipAddress");
-	#clean OutIP - remove quotes
-	OutIP=$(echo "$OutIP" | tr -d '"')
+	echo "sqlServerName is $sqlServerName"
+
+	echo "Getting ip address from  $AKSINFRARESOURCEGROUPNAME"
+	OutIP=$(az network public-ip list -g $AKSINFRARESOURCEGROUPNAME --query "[0].ipAddress" -o tsv);
+	echo "OutIP is $OutIP"
 	az sql server firewall-rule create --resource-group $RESOURCEGROUPNAME --server $sqlServerName --name "aks lb ip" --start-ip-address $OutIP --end-ip-address $OutIP
 	echo "Adding firewall rule to sql finished";
 fi
