@@ -67,7 +67,6 @@ if [ -z "$subscriptionContributor" ]; then
 		if [ -z "$dnsrgContributor" ]; then
 			err="Managed identity is not contributor to DNS resource group.  Exiting with error"
 			echo $err
-			success="false"
 			result="{\"Result\":[\
 			{\"SUCCESS\":\"$success\"},
 			{\"ERROR\":\"$err\"}\
