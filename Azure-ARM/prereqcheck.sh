@@ -59,15 +59,15 @@ currentIdentityId=$(az identity show -g $mirg -n $miname --query principalId -o 
 echo "Checking contributor level for subscription"
 subscriptionContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 if [ -z "$subscriptionContributor" ]; then
-	echo "Managed identity is NOT contributor at subscription level, checking resource group"
+	echo "Managed Identity is NOT contributor at subscription level, checking resource group"
 	#not subscription level, check resource group level
 	rgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$RESOURCEGROUPNAME'].roleDefinitionName" --output tsv)
 	if [ -z "$rgContributor" ]; then
-		err="Managed identity is not contributor to resource group.  Exiting with error."
+		err="Managed Identity is not Contributor to resource group.  Exiting with error."
 		echo $err
 		set_resultAndReturn;
 	else
-		echo "Managed identity is contributor to resource group."
+		echo "Managed Identity is Contributor to resource group."
 	fi
 
 	#If updating dns, check to make sure you have effective contributor access to the dns resource group
@@ -75,11 +75,11 @@ if [ -z "$subscriptionContributor" ]; then
 		echo "Checking contributor for DNS resource group"
 		dnsrgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$DOMAINNAMERESOURCEGROUP'].roleDefinitionName" --output tsv)
 		if [ -z "$dnsrgContributor" ]; then
-			err="Managed identity is not contributor to DNS resource group.  Exiting with error."
+			err="Managed Identity is not Contributor to DNS resource group.  Exiting with error."
 			echo $err
 			set_resultAndReturn;
 		else
-			echo "Managed identity is contributor to DNS resource group."
+			echo "Managed Identity is Contributor to DNS resource group."
 		fi
 	fi
 
@@ -89,16 +89,16 @@ if [ -z "$subscriptionContributor" ]; then
 		KEYVAULT=$(echo $KEYVAULT | xargs)
 		kvContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='$KEYVAULT'].roleDefinitionName" --output tsv)
 		if [ -z "$kvContributor" ]; then
-			err="Managed identity is not contributor to KeyVault.  Exiting with error."
+			err="Managed Identity is not Contributor to KeyVault.  Exiting with error."
 			echo $err
 			set_resultAndReturn;
 		else
-			echo "Managed identity is contributor to KeyVault."
+			echo "Managed Identity is Contributor to KeyVault."
 		fi
 	fi
 
 else
-	echo "Managed identity is contributor at subscription level."
+	echo "Managed Identity is Contributor at subscription level."
 fi
 
 #If using keyvault, check to make sure you have Managed Identity Contributor role
@@ -106,11 +106,11 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo "Checking Managed Identity Contributor"
 	subscriptionMIContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Managed Identity Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 	if [ -z "$subscriptionMIContributor" ]; then
-		err="Managed identity is not Managed Identity Contributor.  Exiting with error."
+		err="Managed Identity is not Managed Identity Contributor.  Exiting with error."
 		echo $err
 		set_resultAndReturn;
 	else
-		echo "Managed identity is Managed Identity Contributor."
+		echo "Managed Identity is Managed Identity Contributor."
 	fi
 fi
 
@@ -120,11 +120,11 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	appDevRoleId=$(az rest --method get --url https://graph.microsoft.com/v1.0/directoryRoles/ | jq -r '.value[] | select(.displayName | contains("Application Developer")).id')
 	minameinrole=$(az rest --method GET --uri "https://graph.microsoft.com/beta/directoryRoles/$appDevRoleId/members" | jq -r '.value[] | select(.displayName | contains("'"$miname"'")).displayName')
 	if [ -z "$minameinrole" ]; then
-		err="Managed identity is not in application developer role.  exiting with error."
+		err="Managed Identity is not in Application Developer role.  Exiting with error."
 		echo $err
 		set_resultAndReturn;
 	else
-		echo "Managed identity is in application developer role."
+		echo "Managed Identity is in Application Developer role."
 	fi
 fi
 
