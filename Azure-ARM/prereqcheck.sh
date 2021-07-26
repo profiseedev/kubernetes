@@ -21,6 +21,15 @@ fi
 az version;
 success='false'
 
+function set_resultAndReturn () {
+	result="{\"Result\":[\
+	{\"SUCCESS\":\"$success\"},
+	{\"ERROR\":\"$err\"}\
+	]}"
+	echo $result > $AZ_SCRIPTS_OUTPUT_PATH
+	exit 1
+}
+
 echo $"RESOURCEGROUPNAME is $RESOURCEGROUPNAME"
 echo $"SUBSCRIPTIONID is $SUBSCRIPTIONID"
 #echo $"MANAGEDIDENTITYNAME is $MANAGEDIDENTITYNAME"
@@ -129,11 +138,4 @@ result="{\"Result\":[\
 ]}"
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
 
-set_resultAndReturn () {
-	result="{\"Result\":[\
-	{\"SUCCESS\":\"$success\"},
-	{\"ERROR\":\"$err\"}\
-	]}"
-	echo $result > $AZ_SCRIPTS_OUTPUT_PATH
-	exit 1
-}
+
