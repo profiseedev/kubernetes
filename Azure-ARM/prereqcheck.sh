@@ -55,7 +55,7 @@ if [ -z "$subscriptionContributor" ]; then
 	rgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$RESOURCEGROUPNAME'].roleDefinitionName" --output tsv)
 	if [ -z "$rgContributor" ]; then
 		echo "Managed identity is not contributor to resource group.  Exiting with error"
-		#exit 1
+		exit 1
 	else
 		echo "Managed identity is contributor to resource group."
 	fi
@@ -66,7 +66,7 @@ if [ -z "$subscriptionContributor" ]; then
 		dnsrgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$DOMAINNAMERESOURCEGROUP'].roleDefinitionName" --output tsv)
 		if [ -z "$dnsrgContributor" ]; then
 			echo "Managed identity is not contributor to DNS resource group.  Exiting with error"
-			#exit 1
+			exit 1
 		else
 			echo "Managed identity is contributor to DNS resource group."
 		fi
@@ -79,7 +79,7 @@ if [ -z "$subscriptionContributor" ]; then
 		kvContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='$KEYVAULT'].roleDefinitionName" --output tsv)
 		if [ -z "$kvContributor" ]; then
 			echo "Managed identity is not contributor to KeyVault.  Exiting with error"
-			#exit 1
+			exit 1
 		else
 			echo "Managed identity is contributor to KeyVault."
 		fi
@@ -95,7 +95,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	subscriptionMIContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Managed Identity Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 	if [ -z "$subscriptionMIContributor" ]; then
 		echo "Managed identity is not Managed Identity Contributor.  Exiting with error"
-		#exit 1
+		exit 1
 	else
 		echo "Managed identity is Managed Identity Contributor."
 	fi
