@@ -777,7 +777,7 @@
     {    
     "PreReqChecks": {
       "value": "[reference('PreReqChecks').outputs]",
-      "type": "string"
+      "type": "object"
     },
     "ClusterIP": {
       "value": "[reference('InstallProfiseePlatform').outputs.Result[0].IP]",
