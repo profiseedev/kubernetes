@@ -318,7 +318,7 @@
             "type": "Microsoft.Common.TextBox",
             "label": "Infrastructure Resource Group Name",
             "defaultValue": "",
-            "toolTip": "Set blank for default of MC_resourcegroupname_clustername_location, or enter the resouce group name you want to use.",
+            "toolTip": "Set blank for default of MC_resourcegroupname_clustername_location, or enter the resouce group name you want to use.  It must be new, cannot already exist.",
             "constraints": {
               "required": false,
               "regex": "",
