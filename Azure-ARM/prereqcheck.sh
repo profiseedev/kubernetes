@@ -18,7 +18,6 @@ fi
 
 #az login --identity
 
-az version;
 success='false'
 
 function set_resultAndReturn () {
@@ -83,19 +82,19 @@ if [ -z "$subscriptionContributor" ]; then
 		fi
 	fi
 
-	#If using keyvault, check to make sure you have effective contributor access to the keyvault
-	if [ "$USEKEYVAULT" = "Yes" ]; then
-		echo "Checking contributor for keyvault"
-		KEYVAULT=$(echo $KEYVAULT | xargs)
-		kvContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='$KEYVAULT'].roleDefinitionName" --output tsv)
-		if [ -z "$kvContributor" ]; then
-			err="Managed Identity is not Contributor to KeyVault.  Exiting with error."
-			echo $err
-			set_resultAndReturn;
-		else
-			echo "Managed Identity is Contributor to KeyVault."
-		fi
-	fi
+	# #If using keyvault, check to make sure you have effective contributor access to the keyvault
+	# if [ "$USEKEYVAULT" = "Yes" ]; then
+	# 	echo "Checking contributor for keyvault"
+	# 	KEYVAULT=$(echo $KEYVAULT | xargs)
+	# 	kvContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='$KEYVAULT'].roleDefinitionName" --output tsv)
+	# 	if [ -z "$kvContributor" ]; then
+	# 		err="Managed Identity is not Contributor to KeyVault.  Exiting with error."
+	# 		echo $err
+	# 		set_resultAndReturn;
+	# 	else
+	# 		echo "Managed Identity is Contributor to KeyVault."
+	# 	fi
+	# fi
 
 else
 	echo "Managed Identity is Contributor at subscription level."
@@ -103,6 +102,7 @@ fi
 
 #If using keyvault, check to make sure you have Managed Identity Contributor role
 if [ "$USEKEYVAULT" = "Yes" ]; then
+	echo "In KeyVault checks"
 	echo "Checking Managed Identity Contributor"
 	subscriptionMIContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Managed Identity Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 	if [ -z "$subscriptionMIContributor" ]; then
@@ -111,6 +111,16 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 		set_resultAndReturn;
 	else
 		echo "Managed Identity is Managed Identity Contributor."
+	fi
+
+	echo "Checking User Access Administrator"
+	subscriptionUAAContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='User Access Administrator' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
+	if [ -z "$subscriptionUAAContributor" ]; then
+		err="Managed Identity is not User Access Administrator.  Exiting with error."
+		echo $err
+		set_resultAndReturn;
+	else
+		echo "Managed Identity is User Access Administrator."
 	fi
 fi
 
