@@ -163,13 +163,13 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
 
 	echo $"Managing Identity configuration for KV access - step 3a started"
-	az keyvault set-policy -n $keyVaultName --secret-permissions get --spn $akskvidentityClientId
+	az keyvault set-policy -n $keyVaultName --secret-permissions get --spn $akskvidentityClientId --query id
 
 	echo $"Managing Identity configuration for KV access - step 3b started"
-	az keyvault set-policy -n $keyVaultName --key-permissions get --spn $akskvidentityClientId
+	az keyvault set-policy -n $keyVaultName --key-permissions get --spn $akskvidentityClientId --query id
 
 	echo $"Managing Identity configuration for KV access - step 3c started"
-	az keyvault set-policy -n $keyVaultName --certificate-permissions get --spn $akskvidentityClientId
+	az keyvault set-policy -n $keyVaultName --certificate-permissions get --spn $akskvidentityClientId --query id
 
 	echo $"Managing Identity configuration for KV access - step 3 finished"
     echo $"Managing Identity configuration for KV access - finished"
@@ -287,11 +287,10 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	echo $"CLIENTID is $CLIENTID";
 	if [ -z "$CLIENTID" ]; then
 		echo $"CLIENTID is null fetching";
+		CLIENTID=$(az ad app list --display-name $azureClientName --query [0].appId -o tsv)
+		echo $"CLIENTID is $CLIENTID";
 	fi
 	echo "Creating app registration finished"
-
-	##wait for the app reg to be available.  usually a few seconds
-	sleep 30;
 
 	echo "Updating app registration permissions step 1 started"
 	#add a Graph API permission of "Sign in and read user profile"
