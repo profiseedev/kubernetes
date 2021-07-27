@@ -100,7 +100,7 @@ else
 	echo "Managed Identity is Contributor at subscription level."
 fi
 
-#If using keyvault, check to make sure you have Managed Identity Contributor role
+#If using keyvault, check to make sure you have Managed Identity Contributor role AND User Access Administrator
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo "In KeyVault checks"
 	echo "Checking Managed Identity Contributor"
@@ -108,7 +108,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	if [ -z "$subscriptionMIContributor" ]; then
 		err="Managed Identity is not Managed Identity Contributor.  Exiting with error."
 		echo $err
-		set_resultAndReturn;
+		#set_resultAndReturn;
 	else
 		echo "Managed Identity is Managed Identity Contributor."
 	fi
@@ -118,23 +118,23 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	if [ -z "$subscriptionUAAContributor" ]; then
 		err="Managed Identity is not User Access Administrator.  Exiting with error."
 		echo $err
-		set_resultAndReturn;
+		#set_resultAndReturn;
 	else
 		echo "Managed Identity is User Access Administrator."
 	fi
 fi
 
-#If updating AAD, make sure you have Application Developer role
+#If updating AAD, make sure you have Application Administrator role
 if [ "$UPDATEAAD" = "Yes" ]; then
-	echo "Checking Application Developer Role"
-	appDevRoleId=$(az rest --method get --url https://graph.microsoft.com/v1.0/directoryRoles/ | jq -r '.value[] | select(.displayName | contains("Application Developer")).id')
+	echo "Checking Application Administrator Role"
+	appDevRoleId=$(az rest --method get --url https://graph.microsoft.com/v1.0/directoryRoles/ | jq -r '.value[] | select(.displayName | contains("Application Administrator")).id')
 	minameinrole=$(az rest --method GET --uri "https://graph.microsoft.com/beta/directoryRoles/$appDevRoleId/members" | jq -r '.value[] | select(.displayName | contains("'"$miname"'")).displayName')
 	if [ -z "$minameinrole" ]; then
-		err="Managed Identity is not in Application Developer role.  Exiting with error."
+		err="Managed Identity is not in Application Administrator role.  Exiting with error."
 		echo $err
 		set_resultAndReturn;
 	else
-		echo "Managed Identity is in Application Developer role."
+		echo "Managed Identity is in Application Administrator role."
 	fi
 fi
 
