@@ -41,6 +41,9 @@
     "ManagedIdentityName": {
       "type": "object"
     },
+    "KubenetesInfrastructureResourceGroupName": {
+      "type": "String"
+    },
     "KubernetesClusterName": {
       "type": "String"
     },
@@ -211,7 +214,7 @@
     "TLSKEY":"[parameters('HttpsCertificatePrivateKey')]",
 
     "USELETSENCRYPT":"[parameters('UseLetsEncrypt')]",
-    "KubenetesInfrastructureResourceGroupName":"[concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location)]",
+    "KubenetesInfrastructureResourceGroupName":"[if(equals(parameters('KubenetesInfrastructureResourceGroupName'),''), concat('MC_',resourceGroup().name,'_', variables('KubernetesClusterName'), '_',resourceGroup().location),parameters('KubenetesInfrastructureResourceGroupName'))]",
 
     "UseKeyVault":"[parameters('UseKeyVault')]",
     "KeyVault":"[parameters('KeyVault')]",
