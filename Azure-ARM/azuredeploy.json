@@ -759,11 +759,7 @@
                       "value": "[variables('PurviewAccountResourceGroup')]"
                     }
                 ],
-                "primaryScriptUri": "[variables('ScriptURL')]",
-                "storageAccountSettings": {
-                    "storageAccountName": "[tolower(variables('StorageAccountName'))]",
-                    "storageAccountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', tolower(variables('StorageAccountName'))), '2019-06-01').keys[0].value]"
-                }            
+                "primaryScriptUri": "[variables('ScriptURL')]"         
             }
         },
         {
