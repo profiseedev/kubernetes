@@ -397,7 +397,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	# Update your local Helm chart repository cache
 	helm repo update
 	# Install the cert-manager Helm chart
-	helm install --namespace profisee cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."kubernetes\.io/os"=linux --set webhook.nodeSelector."kubernetes\.io/os"=linux --set cainjector.nodeSelector."kubernetes\.io/os"=linux
+	helm install --namespace profisee cert-manager jetstack/cert-manager --namespace default --set installCRDs=true --set nodeSelector."kubernetes\.io/os"=linux --set webhook.nodeSelector."kubernetes\.io/os"=linux --set cainjector.nodeSelector."kubernetes\.io/os"=linux
 	#wait for the cert manager to be ready
 	echo $"Lets Encrypt, waiting for certificate manager to be ready, sleeping for 30s";
 	sleep 30;
