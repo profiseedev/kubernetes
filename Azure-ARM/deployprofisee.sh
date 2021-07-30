@@ -209,13 +209,13 @@ echo $"Installing nginx finished, sleeping for 30s to wait for its IP";
 ##wait for the ip to be available.  usually a few seconds
 sleep 30;
 ##get ip for nginx
-nginxip=$(kubectl --namespace profisee get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
+nginxip=$(kubectl --namespace profisee get services nginx-ingress-nginx-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 #
 if [ -z "$nginxip" ]; then
 	#try again
 	echo $"nginx is not configure properly because the LB IP is null, trying again in 60 seconds";
     sleep 60;
-	nginxip=$(kubectl --namespace profisee get services nginx-nginx-ingress-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
+	nginxip=$(kubectl --namespace profisee get services nginx-ingress-nginx-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 	if [ -z "$nginxip" ]; then
     	echo $"nginx is not configure properly because the LB IP is null.  Exiting with error";
 		exit 1
