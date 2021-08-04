@@ -31,7 +31,11 @@ function set_resultAndReturn () {
 
 echo $"RESOURCEGROUPNAME is $RESOURCEGROUPNAME"
 echo $"SUBSCRIPTIONID is $SUBSCRIPTIONID"
-#echo $"MANAGEDIDENTITYNAME is $MANAGEDIDENTITYNAME"
+echo $"DOMAINNAMERESOURCEGROUP is $DOMAINNAMERESOURCEGROUP"
+echo $"UPDATEDNS is $UPDATEDNS"
+echo $"UPDATEAAD is $UPDATEAAD"
+echo $"USEKEYVAULT is $USEKEYVAULT"
+echo $"KEYVAULT is $KEYVAULT"
 
 #MI looks like this
 ##{"type":"UserAssigned","userAssignedIdentities":{"/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedIdentity/userAssignedIdentities/managedIdentityName":{}}}
@@ -108,7 +112,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	if [ -z "$subscriptionMIContributor" ]; then
 		err="Managed Identity is not Managed Identity Contributor.  Exiting with error."
 		echo $err
-		#set_resultAndReturn;
+		set_resultAndReturn;
 	else
 		echo "Managed Identity is Managed Identity Contributor."
 	fi
@@ -118,7 +122,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	if [ -z "$subscriptionUAAContributor" ]; then
 		err="Managed Identity is not User Access Administrator.  Exiting with error."
 		echo $err
-		#set_resultAndReturn;
+		set_resultAndReturn;
 	else
 		echo "Managed Identity is User Access Administrator."
 	fi
