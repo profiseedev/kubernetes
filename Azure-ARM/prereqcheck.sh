@@ -107,24 +107,24 @@ fi
 #If using keyvault, check to make sure you have Managed Identity Contributor role AND User Access Administrator
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo "In KeyVault checks"
-	echo "Checking Managed Identity Contributor"
+	echo "Checking Managed Identity Contributor at subscription level."
 	subscriptionMIContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Managed Identity Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 	if [ -z "$subscriptionMIContributor" ]; then
-		err="Managed Identity is not Managed Identity Contributor.  Exiting with error."
+		err="Managed Identity is not Managed Identity Contributor at subscription level.  Exiting with error."
 		echo $err
 		set_resultAndReturn;
 	else
-		echo "Managed Identity is Managed Identity Contributor."
+		echo "Managed Identity is Managed Identity Contributor at subscription level."
 	fi
 
-	echo "Checking User Access Administrator"
+	echo "Checking User Access Administrator at subscription level."
 	subscriptionUAAContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='User Access Administrator' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 	if [ -z "$subscriptionUAAContributor" ]; then
-		err="Managed Identity is not User Access Administrator.  Exiting with error."
+		err="Managed Identity is not User Access Administrator at subscription level.  Exiting with error."
 		echo $err
 		set_resultAndReturn;
 	else
-		echo "Managed Identity is User Access Administrator."
+		echo "Managed Identity is User Access Administrator at subscription level."
 	fi
 fi
 
