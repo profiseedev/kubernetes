@@ -37,14 +37,6 @@ echo $"UPDATEAAD is $UPDATEAAD"
 echo $"USEKEYVAULT is $USEKEYVAULT"
 echo $"KEYVAULT is $KEYVAULT"
 
-#MI looks like this
-##{"type":"UserAssigned","userAssignedIdentities":{"/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedIdentity/userAssignedIdentities/managedIdentityName":{}}}
-#echo $MANAGEDIDENTITYNAME >> mi.json
-#mi=$(echo $(jq '.userAssignedIdentities' mi.json)| tr -d '{' | tr -d '"' | tr -d '}' | tr -d ':')
-
-#MI (AZ_SCRIPTS_USER_ASSIGNED_IDENTITY) looks like this
-#/subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.ManagedIdentity/userAssignedIdentities/managedIdentityName
-
 IFS='/' read -r -a miparts <<< "$AZ_SCRIPTS_USER_ASSIGNED_IDENTITY" #splits the mi on slashes
 mirg=${miparts[4]}
 miname=${miparts[8]}
@@ -53,11 +45,17 @@ miname=${miparts[8]}
 miname=$(echo $miname | xargs)
 
 #get the id of the current user (MI)
+echo "Running az identity show -g $mirg -n $miname --query principalId -o tsv"
 currentIdentityId=$(az identity show -g $mirg -n $miname --query principalId -o tsv)
+
+if [ -z "$currentIdentityId" ]; then
+	err="Unable to query Managed Identity to get principal id.  Exiting with error."
+	echo $err
+	set_resultAndReturn;
+fi
 
 #Check to make sure you have effective contributor access to the resource group.  at RG or sub levl
 #check subscription level
-#az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query [].[roleDefinitionName,scope] | jq -r '.value[] | select(.id)'
 
 echo "Checking contributor level for subscription"
 subscriptionContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
@@ -151,5 +149,3 @@ result="{\"Result\":[\
 {\"SUCCESS\":\"$success\"}
 ]}"
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
-
-
