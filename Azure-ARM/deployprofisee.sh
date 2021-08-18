@@ -189,12 +189,13 @@ if [ "$USEPURVIEW" = "Yes" ]; then
 	echo $"Assigning Azure Graph permissions to Purview service client."
 	# Group.Read.All
 	az ad app permission add --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions 5f8c59db-677d-491f-a6b8-5f174b11ec1d=Scope
+	az ad app permission grant --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000
 	# GroupMember.Read.All
 	az ad app permission add --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions bc024368-1153-4739-b217-4326f2e966d0=Scope
-	# User.Read
-	az ad app permission add --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
+	az ad app permission grant --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000
 	# User.Read.All
 	az ad app permission add --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions a154be20-db9c-4678-8ab7-66f6cc099a59=Scope
+	az ad app permission grant --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000
 fi
 
 #install nginx
