@@ -179,7 +179,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	az keyvault set-policy -n $keyVaultName --certificate-permissions get --spn $akskvidentityClientId --query id
 
 	echo $"Managing Identity configuration for KV access - step 3 finished"
-    echo $"Managing Identity configuration for KV access - finished"
+    	echo $"Managing Identity configuration for KV access - finished"
 fi
 
 if [ "$USEPURVIEW" = "Yes" ]; then
@@ -187,19 +187,20 @@ if [ "$USEPURVIEW" = "Yes" ]; then
 	az role assignment create --role "Purview Data Curator" --assignee $PURVIEWCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$PURVIEWACCOUNTRESOURCEGROUP
 	
 	echo $"Assigning Azure Graph permissions to Purview service client."
+	echo $"{$PURVIEWCLIENTID}"
 	# Remove the permission in case it already exists, and then add it back.
 	# Group.Read.All	
 	az ad app permission delete --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions 5f8c59db-677d-491f-a6b8-5f174b11ec1d=Scope
 	az ad app permission add --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions 5f8c59db-677d-491f-a6b8-5f174b11ec1d=Scope
+	az ad app permission grant --id cd0b8959-a783-4aa4-b50e-4ca38f495c68 --api 00000003-0000-0000-c000-000000000000
 	# GroupMember.Read.All
 	az ad app permission delete --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions bc024368-1153-4739-b217-4326f2e966d0=Scope
 	az ad app permission add --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions bc024368-1153-4739-b217-4326f2e966d0=Scope
+	az ad app permission grant --id cd0b8959-a783-4aa4-b50e-4ca38f495c68 --api 00000003-0000-0000-c000-000000000000
 	# User.Read.All
 	az ad app permission delete --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions a154be20-db9c-4678-8ab7-66f6cc099a59=Scope
 	az ad app permission add --id $PURVIEWCLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions a154be20-db9c-4678-8ab7-66f6cc099a59=Scope
-	
-	echo $"Granting admin consent for Purview service client"
-	az ad app permission admin-consent --id $PURVIEWCLIENTID
+	az ad app permission grant --id cd0b8959-a783-4aa4-b50e-4ca38f495c68 --api 00000003-0000-0000-c000-000000000000
 fi
 
 #install nginx
