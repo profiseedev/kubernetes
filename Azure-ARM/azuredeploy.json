@@ -270,6 +270,14 @@
                     {
                         "name": "KEYVAULT",
                         "value": "[variables('KeyVault')]"
+                    },
+                    {
+                        "name": "USEPURVIEW",
+                        "value": "[variable('UsePurview')]"
+                    },
+                    {
+                        "name": "PURVIEWCLIENTID",
+                        "value": "[variable('PurviewClientId')]"
                     }
                 ]           
             }
