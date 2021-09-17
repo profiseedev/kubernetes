@@ -107,24 +107,24 @@ fi
 # If using Purview, check if your Purview Client has proper permissions. If not, output warnings and continue.
 if [ "$USEPURVIEW" = "Yes" ]; then
 	purviewClientPermissions=$(az ad app permission list --id $PURVIEWCLIENTID --output table --query [].resourceAccess[].id)
-	$hasGroupReadAll=purviewClientPermissions.Contains("5f8c59db-677d-491f-a6b8-5f174b11ec1d")
-	$hasGroupMemberReadAll=purviewClientPermissions.Contains("bc024368-1153-4739-b217-4326f2e966d0")
-	$hasUserRead=purviewClientPermissions.Contains("e1fe6dd8-ba31-4d61-89e7-88639da4683d")
-	$hasUserReadAll=purviewClientPermissions.Contains("a154be20-db9c-4678-8ab7-66f6cc099a59")
+	hasGroupReadAll=$purviewClientPermissions.Contains("5f8c59db-677d-491f-a6b8-5f174b11ec1d")
+	hasGroupMemberReadAll=$purviewClientPermissions.Contains("bc024368-1153-4739-b217-4326f2e966d0")
+	hasUserRead=$purviewClientPermissions.Contains("e1fe6dd8-ba31-4d61-89e7-88639da4683d")
+	hasUserReadAll=$purviewClientPermissions.Contains("a154be20-db9c-4678-8ab7-66f6cc099a59")
 	
-	if [ -NOT $hasGroupReadAll ]; then
+	if [ -NOT hasGroupReadAll ]; then
 		echo "Purview Client is missing Group.Read.All Permissions. Some governance features may not function."
 	fi
 	
-	if [ -NOT $hasGroupMemberReadAll ]; then
+	if [ -NOT hasGroupMemberReadAll ]; then
 		echo "Purview Client is missing GroupMember.Read.All Permissions. Some governance features may not function."
 	fi
 	
-	if [ -NOT $hasUserRead ]; then
+	if [ -NOT hasUserRead ]; then
 		echo "Purview Client is missing User.Read Permissions. Some governance features may not function."
 	fi
 	
-	if [ -NOT $hasUserReadAll ]; then
+	if [ -NOT hasUserReadAll ]; then
 		echo "Purview Client is missing User.Read.All Permissions. Some governance features may not function."
 	fi
 fi 
