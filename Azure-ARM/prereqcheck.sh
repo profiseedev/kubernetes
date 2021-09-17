@@ -106,26 +106,26 @@ fi
 
 # If using Purview, check if your Purview Client has proper permissions. If not, output warnings and continue.
 if [ "$USEPURVIEW" = "Yes" ]; then
-	purviewClientPermissions=$(az ad app permission list --id $PURVIEWCLIENTID --output table --query [].resourceAccess[].id)
-	hasGroupReadAll=$purviewClientPermissions.Contains("5f8c59db-677d-491f-a6b8-5f174b11ec1d")
-	hasGroupMemberReadAll=$purviewClientPermissions.Contains("bc024368-1153-4739-b217-4326f2e966d0")
-	hasUserRead=$purviewClientPermissions.Contains("e1fe6dd8-ba31-4d61-89e7-88639da4683d")
-	hasUserReadAll=$purviewClientPermissions.Contains("a154be20-db9c-4678-8ab7-66f6cc099a59")
+	purviewClientPermissions=$(az ad app permission list --id $PURVIEWCLIENTID --output tsv --query [].resourceAccess[].id)
 	
-	if [ -NOT hasGroupReadAll ]; then
-		echo "Purview Client is missing Group.Read.All Permissions. Some governance features may not function."
+	#User.Read
+	if [[ $purviewClientPermissions != *"e1fe6dd8-ba31-4d61-89e7-88639da4683d"* ]]; then
+		echo "Missing User.Read application permission. Some governance features may not function until this permission is added."
 	fi
-	
-	if [ -NOT hasGroupMemberReadAll ]; then
-		echo "Purview Client is missing GroupMember.Read.All Permissions. Some governance features may not function."
+
+	#User.Read.All
+	if [[ $purviewClientPermissions != *"df021288-bdef-4463-88db-98f22de89214"* ]]; then
+		echo "Missing User.Read.All application permission. Some governance features may not function until this permission is added."
 	fi
-	
-	if [ -NOT hasUserRead ]; then
-		echo "Purview Client is missing User.Read Permissions. Some governance features may not function."
+
+	#Group.Read.All
+	if [[ $purviewClientPermissions != *"5b567255-7703-4780-807c-7be8301ae99b"* ]]; then
+		echo "Missing Group.Read.All application permission. Some governance features may not function until this permission is added."
 	fi
-	
-	if [ -NOT hasUserReadAll ]; then
-		echo "Purview Client is missing User.Read.All Permissions. Some governance features may not function."
+
+	#GroupMember.Read.All
+	if [[ $purviewClientPermissions != *"98830695-27a2-44f7-8c18-0c3ebc9698f6"* ]]; then
+		echo "Missing GroupMember.Read.All application permission. Some governance features may not function until this permission is added."
 	fi
 fi 
 
