@@ -108,7 +108,7 @@ fi
 
 # If using Purview, check if your Purview Client has proper permissions. If not, output warnings and continue.
 if [ "$USEPURVIEW" = "Yes" ]; then
-	$purviewClientPermissions=(az ad app permission list --id $PURVIEWCLIENTID --output table --query [].resourceAccess[].id)
+	$purviewClientPermissions=$(az ad app permission list --id $PURVIEWCLIENTID --output table --query [].resourceAccess[].id)
 	$hasGroupReadAll = $purviewClientPermissions.Contains("5f8c59db-677d-491f-a6b8-5f174b11ec1d")
 	$hasGroupMemberReadAll = $purviewClientPermissions.Contains("bc024368-1153-4739-b217-4326f2e966d0")
 	$hasUserRead = $purviewClientPermissions.Contains("e1fe6dd8-ba31-4d61-89e7-88639da4683d")
