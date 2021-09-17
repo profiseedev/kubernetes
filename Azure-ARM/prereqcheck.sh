@@ -16,8 +16,6 @@ if [ -z "$SUBSCRIPTIONID" ]; then
 	SUBSCRIPTIONID=$SubscriptionId
 fi
 
-if [ -z "UsePurview"
-
 #az login --identity
 
 success='false'
