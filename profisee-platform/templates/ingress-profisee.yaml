@@ -17,6 +17,7 @@ metadata:
     {{- if .Values.profiseeRunTime.useLetsEncrypt }}
     cert-manager.io/cluster-issuer: letsencrypt
     {{- end }}
+    nginx.org/websocket-services: "profisee-service"
 
 spec:
   tls:
