@@ -14,10 +14,10 @@ metadata:
     nginx.ingress.kubernetes.io/http2-max-header-size: "128k"
     nginx.ingress.kubernetes.io/large-client-header-buffers: "8 64k"
     nginx.ingress.kubernetes.io/client_body_buffer_size: "64k"
+    nginx.ingress.kubernetes.io/affinity: cookie
     {{- if .Values.profiseeRunTime.useLetsEncrypt }}
     cert-manager.io/cluster-issuer: letsencrypt
     {{- end }}
-    nginx.org/websocket-services: "profisee-service"
 
 spec:
   tls:
