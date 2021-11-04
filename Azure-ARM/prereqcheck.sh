@@ -37,6 +37,7 @@ echo $"UPDATEAAD is $UPDATEAAD"
 echo $"USEKEYVAULT is $USEKEYVAULT"
 echo $"KEYVAULT is $KEYVAULT"
 echo $"USEPURVIEW is $USEPURVIEW"
+echo $"PURVIEWURL is $PURVIEWURL"
 echo $"PURVIEWCLIENTID is $PURVIEWCLIENTID"
 
 IFS='/' read -r -a miparts <<< "$AZ_SCRIPTS_USER_ASSIGNED_IDENTITY" #splits the mi on slashes
@@ -104,8 +105,22 @@ else
 	echo "Managed Identity is Contributor at subscription level."
 fi
 
-# If using Purview, check if your Purview Client has proper permissions. If not, output warnings and continue.
+# If using Purview, check for the following: 
+# 1. For the Purview client to have the Data Curator role, error out.
+# 2. That the Purview client has proper permissions. If not, output warnings and continue.
 if [ "$USEPURVIEW" = "Yes" ]; then
+
+	# Data Curator 
+	collectionName=$(az rest --method get --url ${PURVIEWURL}collections?api-version=2019-11-01-preview --resource 73c2949e-da2d-457a-9607-fcc665198967 | jq -r .value[0].name)
+	policyId=$(az rest --method get --url  ${PURVIEWURL}policyStore/metadataPolicies?collectionName=$collectionName --resource 73c2949e-da2d-457a-9607-fcc665198967 | jq -r .values[0].id)
+	curatorId=$(az rest --method get --url ${PURVIEWURL}policystore/metadataPolicies/$policyId?api-version=2021-07-01 --resource 73c2949e-da2d-457a-9607-fcc665198967 | jq -r '.properties.attributeRules[] | select(.id | startswith("purviewmetadatarole_builtin_data-curator:")) | .dnfCondition[][] | select(.attributeName == "principal.microsoft.id") | .attributeValueIncludedIn[] | select(contains("'$principalObjId'"))');
+	
+	if [ -z "$curatorId" ]
+		err="ServicePrincipal not assigned data curator role. Exiting with error."
+		echo $err
+		set_resultAndReturn;
+	fi
+
 	purviewClientPermissions=$(az ad app permission list --id $PURVIEWCLIENTID --output tsv --query [].resourceAccess[].id)
 	
 	#User.Read
