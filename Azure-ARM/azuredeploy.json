@@ -276,6 +276,10 @@
                         "value": "[variables('UsePurview')]"
                     },
                     {
+                        "name": "PURVIEWURL",
+                        "value": "[variables('PurviewUrl')]"
+                    },
+                    {
                         "name": "PURVIEWCLIENTID",
                         "value": "[variables('PurviewClientId')]"
                     }
