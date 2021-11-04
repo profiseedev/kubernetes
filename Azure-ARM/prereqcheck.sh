@@ -115,7 +115,7 @@ if [ "$USEPURVIEW" = "Yes" ]; then
 	policyId=$(az rest --method get --url  ${PURVIEWURL}policyStore/metadataPolicies?collectionName=$collectionName --resource 73c2949e-da2d-457a-9607-fcc665198967 | jq -r .values[0].id)
 	curatorId=$(az rest --method get --url ${PURVIEWURL}policystore/metadataPolicies/$policyId?api-version=2021-07-01 --resource 73c2949e-da2d-457a-9607-fcc665198967 | jq -r '.properties.attributeRules[] | select(.id | startswith("purviewmetadatarole_builtin_data-curator:")) | .dnfCondition[][] | select(.attributeName == "principal.microsoft.id") | .attributeValueIncludedIn[] | select(contains("'$principalObjId'"))');
 	
-	if [ -z "$curatorId" ]
+	if [ -z "$curatorId" ]; then
 		err="ServicePrincipal not assigned data curator role. Exiting with error."
 		echo $err
 		set_resultAndReturn;
