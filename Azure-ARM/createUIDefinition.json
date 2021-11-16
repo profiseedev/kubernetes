@@ -99,7 +99,7 @@
             "name": "ProfiseeVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Version",
-            "defaultValue": "2021R3.preview",
+            "defaultValue": "2021R3.0",
             "toolTip": "Which release of the Profisee Platform to start with.",
             "constraints": {
               "required": true,
@@ -129,8 +129,8 @@
                   "value": "profiseeplatform:2021r2.1"
                 },
                 {
-                  "label": "2021R3.preview",
-                  "value": "profiseeplatform:2021r3.preview"
+                  "label": "2021R3.0",
+                  "value": "profiseeplatform:2021r3.0"
                 },
                 {
                   "label": "2021R2.PurviewPreview",
@@ -229,7 +229,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.purviewpreview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'))]"
+            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.purviewpreview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'))]"
           },
           {
             "name": "UserSuppliedClientyId",
