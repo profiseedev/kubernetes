@@ -4,13 +4,13 @@ metadata:
   name: profisee
   labels:
     app: profisee
+    {{- if .Values.cloud.azure.useManagedIdentity}}
+      aadpodidbinding: {{.Values.cloud.azure.managedIdentity.name}}
+    {{- end}}
 spec:
   selector:
     matchLabels:
       app: profisee
-      {{- if .Values.cloud.azure.useManagedIdentity}}
-      aadpodidbinding: {{.Values.cloud.azure.managedIdentity.name}}
-      {{- end}}
   serviceName: profisee-service
   replicas: {{.Values.profiseeRunTime.clusterNodeCount}}
   template:
