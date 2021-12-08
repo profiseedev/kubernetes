@@ -5,7 +5,7 @@ metadata:
   labels:
     app: profisee
     #{{- if .Values.cloud.azure.useManagedIdentity}}
-    aadpodidbinding: {{.Values.cloud.azure.managedIdentity.name}}
+    aadpodidbinding: dude #{{.Values.cloud.azure.managedIdentity.name}}
     #{{- end}}
 spec:
   selector:
