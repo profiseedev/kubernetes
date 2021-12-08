@@ -8,6 +8,9 @@ spec:
   selector:
     matchLabels:
       app: profisee
+      {{- if .Values.cloud.azure.useManagedIdentity}}
+      aadpodidbinding: {{.Values.cloud.azure.managedIdentity.name}}
+      {{- end}}
   serviceName: profisee-service
   replicas: {{.Values.profiseeRunTime.clusterNodeCount}}
   template:
@@ -16,7 +19,7 @@ spec:
       labels:
         app: profisee
     spec:
-      terminationGracePeriodSeconds: 60 #How long kubernetes will wait for a pod to shut down before force deleting it
+      terminationGracePeriodSeconds: 60
       nodeSelector:
         "kubernetes.io/os": windows 
       volumes:
