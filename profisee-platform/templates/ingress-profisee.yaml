@@ -27,7 +27,7 @@ spec:
   - host: {{.Values.profiseeRunTime.externalDnsName}}
     http:
       paths:
-      - path: /(.*)
+      - path: /{{.Values.profiseeRunTime.webAppName}}/(.*)
         pathType: Prefix
         backend:
           service:
