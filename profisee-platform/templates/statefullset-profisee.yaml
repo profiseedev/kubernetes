@@ -4,9 +4,6 @@ metadata:
   name: profisee
   labels:
     app: profisee
-    {{- if .Values.cloud.azure.useManagedIdentity}}
-    aadpodidbinding: dude #{{.Values.cloud.azure.managedIdentity.name}}
-    {{- end}}
 spec:
   selector:
     matchLabels:
@@ -18,6 +15,9 @@ spec:
       name: profisee
       labels:
         app: profisee
+        {{- if .Values.cloud.azure.useManagedIdentity}}
+        aadpodidbinding: dude #{{.Values.cloud.azure.managedIdentity.name}}
+        {{- end}}
     spec:
       terminationGracePeriodSeconds: 60
       nodeSelector:
