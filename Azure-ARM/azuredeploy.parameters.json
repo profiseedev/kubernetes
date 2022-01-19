@@ -11,6 +11,9 @@
         "ProfiseeLicense": {
             "value": ""
         },
+        "ProfiseeWebAppName": {
+            "value": ""
+        },
         "ActiveDirectoryCreateApp": {
             "value": "Yes"
         },

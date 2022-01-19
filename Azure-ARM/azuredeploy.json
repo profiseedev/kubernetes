@@ -11,6 +11,9 @@
     "ProfiseeLicense": {
       "type": "String"
     },
+    "ProfiseeWebAppName": {
+      "type": "String"
+    },
     "ActiveDirectoryCreateApp": {
       "type": "String"
     },
@@ -169,6 +172,7 @@
     "PROFISEEVERSION":"[parameters('ProfiseeVersion')]",
     "ADMINACCOUNTNAME":"[parameters('ProfiseeAdminUserAccount')]",
     "LICENSEDATA":"[parameters('ProfiseeLicense')]",
+    "WEBAPPNAME":"[parameters('ProfiseeWebAppName')]",
     "ACRUSER":"",
     "ACRUSERPASSWORD":"",
 
@@ -769,6 +773,10 @@
                     {
                       "name": "PURVIEWACCOUNTRESOURCEGROUP",
                       "value": "[variables('PurviewAccountResourceGroup')]"
+                    },
+                    {
+                      "name": "WEBAPPNAME",
+                      "value": "[variables('WEBAPPNAME')]"
                     }
                 ],
                 "primaryScriptUri": "[variables('ScriptURL')]"         

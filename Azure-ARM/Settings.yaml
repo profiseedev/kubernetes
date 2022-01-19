@@ -15,7 +15,7 @@ profiseeRunTime:
         fileShareName: "$FILEREPOSHARENAME"
     externalDnsUrl: "$EXTERNALDNSURL"
     externalDnsName: "$EXTERNALDNSNAME"
-    webAppName: ""
+    webAppName: "$WEBAPPNAME"
     oidc:
         name: "Azure Active Directory"
         authority: "$OIDCURL"
