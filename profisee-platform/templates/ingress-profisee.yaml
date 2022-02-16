@@ -9,8 +9,8 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffers: "4 256k"
     nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"
     nginx.ingress.kubernetes.io/client-header-buffer-size: "64k"
-    nginx.ingress.kubernetes.io/http2-max-field-size: "16k"
-    nginx.ingress.kubernetes.io/http2-max-header-size: "128k"
+    #nginx.ingress.kubernetes.io/http2-max-field-size: "16k"
+    #nginx.ingress.kubernetes.io/http2-max-header-size: "128k"
     nginx.ingress.kubernetes.io/large-client-header-buffers: "8 64k"
     nginx.ingress.kubernetes.io/client_body_buffer_size: "64k"
     {{- if .Values.profiseeRunTime.useLetsEncrypt }}
