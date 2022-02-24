@@ -13,6 +13,10 @@ metadata:
     #nginx.ingress.kubernetes.io/http2-max-header-size: "128k"
     nginx.ingress.kubernetes.io/large-client-header-buffers: "8 64k"
     nginx.ingress.kubernetes.io/client_body_buffer_size: "64k"
+    {{- if eq .Values.profiseeRunTime.webAppName | lower "profisee" }}
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    {{- end }}
+    
     {{- if .Values.profiseeRunTime.useLetsEncrypt }}
     cert-manager.io/cluster-issuer: letsencrypt
     {{- end }}
@@ -26,7 +30,11 @@ spec:
   - host: {{.Values.profiseeRunTime.externalDnsName}}
     http:
       paths:
+      {{- if eq .Values.profiseeRunTime.webAppName | lower "profisee" }}
+      - path: /(.*)
+      {{- else }}
       - path: /{{.Values.profiseeRunTime.webAppName}}/?(.*)$
+      {{- end }}
         pathType: Prefix
         backend:
           service:
