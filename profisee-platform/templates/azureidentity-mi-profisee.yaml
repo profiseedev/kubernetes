@@ -1,14 +1,3 @@
-{{- if .Values.cloud.azure.useKeyVault -}}
-apiVersion: aadpodidentity.k8s.io/v1
-kind: AzureIdentity
-metadata:
-    name: "akskvidentity"
-spec:
-    type: 0
-    resourceID: {{.Values.cloud.azure.keyVault.identity.resourceId }}
-    clientID: {{.Values.cloud.azure.keyVault.identity.clientId }}
-{{- end }}
-
 {{- if .Values.cloud.azure.useManagedIdentity -}}
 apiVersion: aadpodidentity.k8s.io/v1
 kind: AzureIdentity
