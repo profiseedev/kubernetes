@@ -16,6 +16,8 @@ profiseeRunTime:
     externalDnsUrl: ""
     externalDnsName: "$EXTERNALDNSNAME"
     webAppName: ""
+    deployIngressRule: true
+    isPaaS: true
     oidc:
         name: "Azure Active Directory"
         authority: "$OIDCURL"
