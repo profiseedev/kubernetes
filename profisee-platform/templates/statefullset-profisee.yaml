@@ -71,6 +71,15 @@ spec:
           initialDelaySeconds: 60
           timeoutSeconds: 1
           periodSeconds: 60
+        startupProbe:
+          exec:
+            command:
+              - powershell
+              - >-
+                if((Get-Service profisee).Status -eq 'Running'){return
+                0}else{throw 'Profisee service is down'}
+          failureThreshold: 10
+          periodSeconds: 60
         volumeMounts:
         - name: data-volume
           mountPath: C:\data
