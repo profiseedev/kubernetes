@@ -68,17 +68,8 @@ spec:
               - >-
                 if((Get-Service profisee).Status -eq 'Running'){return
                 0}else{throw 'Profisee service is down'}
-          initialDelaySeconds: 60
+          initialDelaySeconds: 600
           timeoutSeconds: 1
-          periodSeconds: 60
-        startupProbe:
-          exec:
-            command:
-              - powershell
-              - >-
-                if((Get-Service profisee).Status -eq 'Running'){return
-                0}else{throw 'Profisee service is down'}
-          failureThreshold: 10
           periodSeconds: 60
         volumeMounts:
         - name: data-volume
