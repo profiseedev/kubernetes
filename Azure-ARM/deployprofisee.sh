@@ -275,7 +275,7 @@ rm -f tls.cert
 rm -f tls.key
 
 #create the azure app id (clientid)
-azureAppReplyUrl="${EXTERNALDNSURL}/profisee/auth/signin-microsoft"
+azureAppReplyUrl="${EXTERNALDNSURL}/${WEBAPPNAME}/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
 	echo "Update AAD started";
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
