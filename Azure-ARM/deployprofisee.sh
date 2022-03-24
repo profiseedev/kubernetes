@@ -446,7 +446,7 @@ echo $"Profisee deploymented finished $(date +"%Y-%m-%d %T")";
 
 result="{\"Result\":[\
 {\"IP\":\"$nginxip\"},\
-{\"WEBURL\":\"${EXTERNALDNSURL}/Profisee\"},\
+{\"WEBURL\":\"${EXTERNALDNSURL}/${WEBAPPNAME}\"},\
 {\"FILEREPOUSERNAME\":\"$FILEREPOUSERNAME\"},\
 {\"FILEREPOURL\":\"$FILEREPOURL\"},\
 {\"AZUREAPPCLIENTID\":\"$CLIENTID\"},\
