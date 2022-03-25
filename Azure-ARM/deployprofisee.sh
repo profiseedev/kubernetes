@@ -345,6 +345,7 @@ IFS=':' read -r -a repostring <<< "$PROFISEEVERSION"
 #lowercase is the ,,
 ACRREPONAME="${repostring[0],,}"; 
 ACRREPOLABEL="${repostring[1],,}"
+WEBAPPNAME="${$WEBAPPNAME,,}"
 
 #set values in Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
