@@ -274,6 +274,10 @@ sed -e '/$TLSKEY/ {' -e 'r tls.key' -e 'd' -e '}' -i Settings.yaml
 rm -f tls.cert
 rm -f tls.key
 
+echo $"WEBAPPNAME is $WEBAPPNAME";
+WEBAPPNAME="${WEBAPPNAME,,}"
+echo $"WEBAPPNAME is now lower $WEBAPPNAME";
+
 #create the azure app id (clientid)
 azureAppReplyUrl="${EXTERNALDNSURL}/${WEBAPPNAME}/auth/signin-microsoft"
 if [ "$UPDATEAAD" = "Yes" ]; then
@@ -345,10 +349,6 @@ IFS=':' read -r -a repostring <<< "$PROFISEEVERSION"
 #lowercase is the ,,
 ACRREPONAME="${repostring[0],,}"; 
 ACRREPOLABEL="${repostring[1],,}"
-
-echo $"WEBAPPNAME is $WEBAPPNAME";
-WEBAPPNAME="${WEBAPPNAME,,}"
-echo $"WEBAPPNAME is now lower (hope) $WEBAPPNAME";
 
 #set values in Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
