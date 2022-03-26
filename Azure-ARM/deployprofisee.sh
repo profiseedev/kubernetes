@@ -331,7 +331,7 @@ if [ "$SQLSERVERCREATENEW" = "Yes" ]; then
 	echo "Adding firewall rule to sql finished";
 fi
 
-
+echo "about to set vars in settings.yaml"
 #storage vars
 FILEREPOUSERNAME="Azure\\\\\\\\${STORAGEACCOUNTNAME}"
 FILEREPOURL="\\\\\\\\\\\\\\\\${STORAGEACCOUNTNAME}.file.core.windows.net\\\\\\\\${STORAGEACCOUNTFILESHARENAME}"
@@ -345,7 +345,10 @@ IFS=':' read -r -a repostring <<< "$PROFISEEVERSION"
 #lowercase is the ,,
 ACRREPONAME="${repostring[0],,}"; 
 ACRREPOLABEL="${repostring[1],,}"
-WEBAPPNAME="${$WEBAPPNAME,,}"
+
+echo $"WEBAPPNAME is $WEBAPPNAME";
+WEBAPPNAME="${WEBAPPNAME,,}"
+echo $"WEBAPPNAME is now lower (hope) $WEBAPPNAME";
 
 #set values in Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
