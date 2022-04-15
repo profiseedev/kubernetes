@@ -134,11 +134,11 @@
                 },
                 {
                   "label": "2021R3.0.saas",
-                  "value": "profiseeplatform:2021R3.0.saas"
+                  "value": "profiseeplatform:2021r3.0.saas"
                 },
                 {
                   "label": "2022R1.preview",
-                  "value": "profiseeplatform:2022R1.preview"
+                  "value": "profiseeplatform:2022r1.preview"
                 }
               ]
             },
