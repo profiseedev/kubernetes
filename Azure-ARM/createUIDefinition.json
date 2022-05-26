@@ -99,7 +99,7 @@
             "name": "ProfiseeVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Version",
-            "defaultValue": "2021R3.0",
+            "defaultValue": "2022R1.0",
             "toolTip": "Which release of the Profisee Platform to start with.",
             "constraints": {
               "required": true,
@@ -137,7 +137,7 @@
                   "value": "profiseeplatform:2021r3.0.saas"
                 },
                 {
-                  "label": "2022R1.preview",
+                  "label": "2022R1.0",
                   "value": "profiseeplatform:2022r1.preview"
                 }
               ]
