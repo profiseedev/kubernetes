@@ -141,8 +141,8 @@
                   "value": "profiseeplatform:2022r1.preview"
                 },
                 {
-                  "label": "2022R1.0.history",
-                  "value": "profiseeplatform:2022r1.preview-history"
+                  "label": "2022R2.0.history",
+                  "value": "profiseeplatform:2022r2.preview-history"
                 }
               ]
             },
@@ -233,7 +233,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion,'profiseeplatform:2022r1.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.preview-history'))]"
+            "visible": "[or(equals(steps('profisee').ProfiseeVersion,'profiseeplatform:2022r1.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.preview-history'))]"
           },
           {
             "name": "UserSuppliedClientyId",
