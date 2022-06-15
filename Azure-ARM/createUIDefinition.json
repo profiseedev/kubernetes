@@ -147,6 +147,10 @@
                 {
                   "label": "2022R2.preview-history",
                   "value": "profiseeplatform:2022r2.preview-history"
+                },
+                {
+                  "label": "2022R2.preview-matching",
+                  "value": "profiseeplatform:2022r2.preview-matching"
                 }
               ]
             },
