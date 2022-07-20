@@ -296,6 +296,8 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 		echo $"CLIENTID is $CLIENTID";
 	fi
 	echo "Creating app registration finished"
+	echo "Sleeping for 20 seconds to wait for app registration to be ready."
+	sleep 20;
 
 	echo "Updating app registration permissions step 1 started"
 	#add a Graph API permission of "Sign in and read user profile"
