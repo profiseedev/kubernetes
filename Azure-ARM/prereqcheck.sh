@@ -63,11 +63,11 @@ fi
 echo "Is the Deployment Managed Identity assigned the Contributor Role at the Subscription or at the Resource Group level?"
 subscriptionContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 if [ -z "$subscriptionContributor" ]; then
-	echo "The Deployment Managed Identity is NOT assigned the Contributor role at the Subscription level, checking the Resource Group level now."
+	echo "Role is NOT assigned at Subscription level, checking Resource Group level assignment now."
 	#not subscription level, check resource group level
 	rgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$RESOURCEGROUPNAME'].roleDefinitionName" --output tsv)
 	if [ -z "$rgContributor" ]; then
-		err="The Deployment Managed Identity is NOT assigned the Contributor Role at the Resource Group level. Exiting with error."
+		err="Role is NOT assigned at either Subscription or Resource Group level. Exiting with error."
 		echo $err
 		set_resultAndReturn;
 	else
@@ -102,7 +102,7 @@ if [ -z "$subscriptionContributor" ]; then
 	# fi
 
 else
-	echo "The Managed Identity is assigned the Contributor role at Subscription level."
+	echo "Yes, it is, continuing checks."
 fi
 
 # If using Purview, check for the following: 
