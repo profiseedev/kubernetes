@@ -77,7 +77,7 @@ if [ -z "$subscriptionContributor" ]; then
 	#If updating , check to make sure you have effective contributor access to the dns resource group
 	if [ "$UPDATEDNS" = "Yes" ]; then
 		echo "Is the Deployment Managed Identity assigned the DNS Zone Contributor role to the DNS zone itself?"
-		dnsrgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='DNS Zone Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$DOMAINNAMERESOURCEGROUP/$DNSDOMAINNAME'].roleDefinitionName" --output tsv)
+		dnsrgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='DNS Zone Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$DOMAINNAMERESOURCEGROUP/providers/Microsoft.Network/dnszones/$DNSDOMAINNAME'].roleDefinitionName" --output tsv)
 		if [ -z "$dnsrgContributor" ]; then
 			err="Role is NOT assigned. Exiting with error. Please assign the DNS Zone Contributor role to the Deployment Managed Identity for the DNS zone you want updated. Please visit https://support.profisee.com/wikis/2022_r1_support/planning_your_managed_identity_configuration for more information."
 			echo $err
