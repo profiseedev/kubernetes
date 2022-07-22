@@ -122,27 +122,27 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#We are not but if this is to run on a windows node, then you use this --set windows.enabled=true --set secrets-store-csi-driver.windows.enabled=true
 	helm install --namespace profisee csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --set secrets-store-csi-driver.syncSecret.enabled=true
 
-	echo $"Installing keyvault csi driver - finished"
+	echo $"Installation of Key Vault Container Storage Interface (CSI) driver finished."
 
-	echo $"Installing keyvault aad pod identity - started"
-	#Install the Azure Active Directory (Azure AD) identity into AKS.
+	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started."
+	#Install AAD pod identity into AKS.
 	helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
 	helm install --namespace profisee pod-identity aad-pod-identity/aad-pod-identity
-	echo $"Installing keyvault aad pod identity - finished"
+	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver finished."
 
-	#Assign roles needed for kv
-	echo $"Managing Identity configuration for KV access - started"
+	#Assign AAD roles to the AKS AgentPool Managed Identity needed to access the Key Vault.
+	echo $"AKS Managed Identity configuration for Key Vault access started."
 
-	echo $"Managing Identity configuration for KV access - step 1 started"
+	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 started."
 	echo "Running az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME"
 	az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME
 	echo "Running az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME"
 	az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
 	echo "Running az role assignment create --role "Virtual Machine Contributor" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME"
 	az role assignment create --role "Virtual Machine Contributor" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
-	echo $"Managing Identity configuration for KV access - step 1 finished"
+	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 finished."
 
-	#Create AD Identity, get clientid and principalid to assign the reader role to (next command)
+	#Create Azure AD Managed Identity specifically for Key Vault, get its ClientiId and PrincipalId so we can assign to it the Reader role in steps 3a, 3b and 3c to.
 	echo $"Managing Identity configuration for KV access - step 2 started"
 	identityName="AKSKeyVaultUser"
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
@@ -158,13 +158,10 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	keyVaultName=${kv[-1]}
 	keyVaultResourceGroup=${kv[4]}
 	keyVaultSubscriptionId=${kv[2]}
-	echo $"principalId is $principalId"
 	echo $"KEYVAULT is $KEYVAULT"
 	echo $"keyVaultName is $keyVaultName"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
 
-	#echo $"Managing Identity configuration for KV access - step 4a started"
-	#az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
     rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
 
     #if rabc, add to rile, if not (policy based) - add policies
