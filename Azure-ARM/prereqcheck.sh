@@ -137,7 +137,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo "Is the Deployment Managed Identity assigned the Managed Identity Contributor role at the Subscription level?"
 	subscriptionMIContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Managed Identity Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 	if [ -z "$subscriptionMIContributor" ]; then
-		err="Role is NOT assigned. Exiting with error. "
+		err="Role is NOT assigned. Exiting with error. If using Key Vault, this role is required so that the Deployment Managed Identity can create the Managed Identity that will be used to communicated with Key Vault."
 		echo $err
 		set_resultAndReturn;
 	else
@@ -147,7 +147,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo "Is the Deployment Managed Identity assigned the User Access Administrator role at Subscription level?"
 	subscriptionUAAContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='User Access Administrator' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 	if [ -z "$subscriptionUAAContributor" ]; then
-		err="The Deployment Managed Identity is NOT assigned the User Access Administrator at subscription level. Exiting with error."
+		err="The Deployment Managed Identity is NOT assigned the User Access Administrator at subscription level. Exiting with error. If using Key Vault, this role is required so that the Deployment Managed Identity can assign the Key Vault Secrets User role (if using RBAC KV), OR the Get policies (if using policy based KV) to the Key Vault Specific Managed Identity."
 		echo $err
 		set_resultAndReturn;
 	else
@@ -155,17 +155,17 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	fi
 fi
 
-#If updating AAD, make sure you have Application Administrator role
+#If Deployment Managed Identity will be creating the Azure AD application registration, make sure that the Application Administrator role is assigned to it.
 if [ "$UPDATEAAD" = "Yes" ]; then
 	echo "Is the Deployment Managed Identity assigned the Application Administrator Role in Azure Active Directory?"
 	appDevRoleId=$(az rest --method get --url https://graph.microsoft.com/v1.0/directoryRoles/ | jq -r '.value[] | select(.displayName | contains("Application Administrator")).id')
 	minameinrole=$(az rest --method GET --uri "https://graph.microsoft.com/beta/directoryRoles/$appDevRoleId/members" | jq -r '.value[] | select(.displayName | contains("'"$miname"'")).displayName')
 	if [ -z "$minameinrole" ]; then
-		err="The Deployment Managed Identity is NOT assigned the Application Administrator role in Azure Active Directory. Exiting with error."
+		err="The Deployment Managed Identity is NOT assigned the Application Administrator role in Azure Active Directory. Exiting with error. This role is required so that the Deployment Managed Identity can create the Azure AD Application registration. For more information please visit https://support.profisee.com/wikis/2022_r1_support/planning_your_managed_identity_configuration."
 		echo $err
 		set_resultAndReturn;
 	else
-		echo "Role is assigned."
+		echo "Role is assigned. All checks completed."
 	fi
 fi
 
