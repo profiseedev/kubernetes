@@ -31,7 +31,7 @@ printenv;
 
 #az login --identity
 
-#Get AKS credentials, this allows us to use kubectl commands, if neededI
+#Get AKS credentials, this allows us to use kubectl commands, if needed.
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
 
 #Install dotnet core.
