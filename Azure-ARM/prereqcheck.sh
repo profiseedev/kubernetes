@@ -147,7 +147,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo "Is the Deployment Managed Identity assigned the User Access Administrator role at Subscription level?"
 	subscriptionUAAContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='User Access Administrator' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 	if [ -z "$subscriptionUAAContributor" ]; then
-		err="The Deployment Managed Identity is NOT assigned the User Access Administrator at subscription level. Exiting with error. If using Key Vault, this role is required so that the Deployment Managed Identity can assign the Key Vault Secrets User role (if using RBAC KV), OR the Get policies (if using policy based KV) to the Key Vault Specific Managed Identity."
+		err="The Deployment Managed Identity is NOT assigned the User Access Administrator at subscription level. Exiting with error. If using Key Vault, this role is required so that the Deployment Managed Identity can assign the Key Vault Secrets User role, if using RBAC KV, OR the Get policies, if using policy based KV, to the Key Vault Specific Managed Identity."
 		echo $err
 		set_resultAndReturn;
 	else
