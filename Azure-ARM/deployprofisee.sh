@@ -167,21 +167,21 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
     #if rabc, add to rile, if not (policy based) - add policies
     if [ "$rbacEnabled" = true ]; then
 		echo $"Setting rbac role."
-		echo "Running az role assignment create --role 'Key Vault Secrets Officer' --assignee $akskvidentityClientId --scope $KEYVAULT"
-		az role assignment create --role "Key Vault Secrets Officer" --assignee $akskvidentityClientId --scope $KEYVAULT
+		echo "Running az role assignment create --role 'Key Vault Secrets Officer' --assignee $principalId --scope $KEYVAULT"
+		az role assignment create --role "Key Vault Secrets Officer" --assignee $principalId --scope $KEYVAULT
 	else
 		echo $"Setting policies."
 		echo $"Managing Identity configuration for KV access - step 3a started"
 		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $akskvidentityClientId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $akskvidentityClientId --query id
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3b started"
 		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $akskvidentityClientId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $akskvidentityClientId --query id
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3c started"
 		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $akskvidentityClientId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $akskvidentityClientId --query id
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3 finished"
 		echo $"Managing Identity configuration for KV access - finished"
