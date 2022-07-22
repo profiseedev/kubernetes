@@ -31,20 +31,20 @@ printenv;
 
 #az login --identity
 
-#get the aks creds, this allows us to use kubectl commands if needed
+#Get AKS credentials, this allows us to use kubectl commands, if neededI
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
 
-#install dotnet core
-echo $"Installing dotnet core started";
+#Install dotnet core.
+echo $"Installation of dotnet core started.";
 curl -fsSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
-#set permisssions
+#Set permisssions for installation script.
 chmod 755 ./dotnet-install.sh
-#install dotnet
+#Install dotnet.
 ./dotnet-install.sh -c Current
-echo $"Installing dotnet core finished";
+echo $"Installation of dotnet core finished.";
 
-#Downloadind and extracting license reader
-echo $"Downloading and extracting license reader started";
+#Downloadind and extracting Proisee license reader.
+echo $"Download and extraction of Profisee license reader started.";
 curl -fsSL -o LicenseReader.tar.001 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.001"
 curl -fsSL -o LicenseReader.tar.002 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.002"
 curl -fsSL -o LicenseReader.tar.003 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.003"
@@ -54,15 +54,15 @@ rm LicenseReader.tar.001
 rm LicenseReader.tar.002
 rm LicenseReader.tar.003
 rm LicenseReader.tar.004
-echo $"Downloading and extracting license reader finished";
+echo $"Download and extraction of Profisee license reader finished.";
 
-echo $"Cleaning license string to remove and unwanted characters - linebreaks, spaces, etc...";
+echo $"Clean Profisee license string of any unwanted characters such as linebreaks, spaces, etc...";
 LICENSEDATA=$(echo $LICENSEDATA|tr -d '\n')
 
-echo $"Getting values from license started";
+echo $"Search Profisee license for the fully qualified domain name value...";
 EXTERNALDNSURLLICENSE=$(./LicenseReader "ExternalDnsUrl" $LICENSEDATA)
 
-#use whats in the license otherwise use whats passed in which is a generated hostname
+#Use FQDN that is in license, otherwise use the Azure generated FQDN.
 #EXTERNALDNSURLLICENSE=$(<ExternalDnsUrl.txt)
 if [ "$EXTERNALDNSURLLICENSE" = "" ]; then
 	echo $"EXTERNALDNSURLLICENSE is empty"
@@ -76,44 +76,44 @@ echo $"EXTERNALDNSURL is $EXTERNALDNSURL";
 echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
 echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
-#If acr info is passed in (via legacy script) use it, otherwise pull it from license
+#If ACR credentials are passed in via legacy script use those. Otherwise, pull ACR credentials from license.
 if [ "$ACRUSER" = "" ]; then
-	echo $"ACR info was not passed in, values in license are being used."
+	echo $"ACR credentials were not passed in, will use values from license."
 	#ACRUSER=$(<ACRUserName.txt)
 	#ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 	ACRUSER=$(./LicenseReader "ACRUserName" $LICENSEDATA)
     ACRUSERPASSWORD=$(./LicenseReader "ACRUserPassword" $LICENSEDATA)
 else
-	echo $"ACR info that was passed in is being used."
+	echo $"Using ACR credentials that were passed in."
 fi
 echo $"ACRUSER is $ACRUSER";
 echo $"ACRUSERPASSWORD is $ACRUSERPASSWORD";
 
-echo $"Getting values from license finished";
+echo $"Finished parsing values from Profisee license.";
 
-#install helm
-echo $"Installing helm started";
+#Install Helm
+echo $"Installation of Helm started.";
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3;
 chmod 700 get_helm.sh;
 ./get_helm.sh;
-echo $"Installing helm finished";
+echo $"Installation of Helm finished.";
 
-echo $"Installing kubectl started";
+echo $"Installation of kubectl started.";
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-echo $"Installing kubectl finished";
+echo $"Installation of kubectl finished.";
 
-#create profisee namespace
-echo $"Creating profisee namespace in kubernetes started";
+#Create profisee namespace in AKS cluster.
+echo $"Creation of profisee namespace in cluster started.";
 kubectl create namespace profisee
-echo $"Creating profisee namespace in kubernetes finished";
+echo $"Creation of profisee namespace in cluster finished.";
 
-#download the settings.yaml
+#Download settings.yaml file from Profisee repo.
 curl -fsSL -o Settings.yaml "$REPOURL/Azure-ARM/Settings.yaml";
 
-#install keyvault drivers
+#Installation of Key Vault Container Storage Interface (CSI) driver started.
 if [ "$USEKEYVAULT" = "Yes" ]; then
-	echo $"Installing keyvault csi driver - started"
+	echo $"Installation of Key Vault Container Storage Interface (CSI) driver started."
 	#Install the Secrets Store CSI driver and the Azure Key Vault provider for the driver
 	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
 	
