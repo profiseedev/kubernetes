@@ -76,7 +76,7 @@ echo $"EXTERNALDNSURL is $EXTERNALDNSURL";
 echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
 echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
-#If ACR credentials are passed in via legacy script use those. Otherwise, pull ACR credentials from license.
+#If ACR credentials are passed in via legacy script, use those. Otherwise, pull ACR credentials from license.
 if [ "$ACRUSER" = "" ]; then
 	echo $"ACR credentials were not passed in, will use values from license."
 	#ACRUSER=$(<ACRUserName.txt)
@@ -98,6 +98,7 @@ chmod 700 get_helm.sh;
 ./get_helm.sh;
 echo $"Installation of Helm finished.";
 
+#Install kubectl
 echo $"Installation of kubectl started.";
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
@@ -121,16 +122,15 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#The behavior changed so now you have to enable the secrets-store-csi-driver.syncSecret.enabled=true
 	#We are not but if this is to run on a windows node, then you use this --set windows.enabled=true --set secrets-store-csi-driver.windows.enabled=true
 	helm install --namespace profisee csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --set secrets-store-csi-driver.syncSecret.enabled=true
-
 	echo $"Installation of Key Vault Container Storage Interface (CSI) driver finished."
-
-	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started."
+	
 	#Install AAD pod identity into AKS.
+	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started."
 	helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
 	helm install --namespace profisee pod-identity aad-pod-identity/aad-pod-identity
 	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver finished."
 
-	#Assign AAD roles to the AKS AgentPool Managed Identity needed to access the Key Vault.
+	#Assign AAD roles to the AKS AgentPool Managed Identity. The Pod identity communicates with the AgentPool MI, which in turn communicates with the Key Vault specific Managed Identity.
 	echo $"AKS Managed Identity configuration for Key Vault access started."
 
 	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 started."
