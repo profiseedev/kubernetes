@@ -30,7 +30,7 @@
         "label": "Managed Identity",
         "toolTip": {
           "systemAssignedIdentity": "",
-          "userAssignedIdentity": " The identity used to run the Profisee deployment"
+          "userAssignedIdentity": " The Managed Identity used to run the Profisee deployment."
         },
         "defaultValue": {
           "systemAssignedIdentity": "OffOnly"
@@ -50,8 +50,8 @@
         "visible": true,
         "options": {
           "icon": "Info",
-          "text": "Click here to learn more about managed identities.",
-          "uri": "https://support.profisee.com/wikis/2020_r2_support/planning_your_managed_identity_configuration"
+          "text": "Click here to learn more about the use of Managed Identities by Profisee.",
+          "uri": "https://support.profisee.com/wikis/2022_r1_support/planning_your_managed_identity_configuration"
         }
       }
 
@@ -66,7 +66,7 @@
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Use Key Vault?",
             "defaultValue": "No, I will supply them.",
-            "toolTip": "",
+            "toolTip": "Profisee can pull SQL Username, SQL Password and Profisee License as Key Vault secrets and a TLS certificate as Key Vault certificate.",
             "constraints": {
               "allowedValues": [
                 {
@@ -100,7 +100,7 @@
             "type": "Microsoft.Common.DropDown",
             "label": "Version",
             "defaultValue": "2022R1.0",
-            "toolTip": "Which release of the Profisee Platform to start with.",
+            "toolTip": "Which release of the Profisee Platform to deploy.",
             "constraints": {
               "required": true,
               "allowedValues": [
@@ -159,7 +159,7 @@
           {
             "name": "ProfiseeAdminUserAccount",
             "type": "Microsoft.Common.TextBox",
-            "label": "Admin User Account",
+            "label": "SuperAdmin User Account",
             "defaultValue": "",
             "placeholder": "first.last@company.com",
             "toolTip": "The first Super User, who will be able to login and add other users.",
@@ -174,7 +174,7 @@
             "name": "ProfiseeLicense",
             "type": "Microsoft.Common.FileUpload",
             "label": "License",
-            "toolTip": "",
+            "toolTip": "This file will be provided by Profisee Support.",
             "constraints": {
               "required": true,
               "accept": ".txt"
@@ -193,7 +193,7 @@
             "label": "License",
             "defaultValue": "",
             "placeholder": "License secret name in KeyVault",
-            "toolTip": "",
+            "toolTip": "Ex. profisee-license",
             "constraints": {
               "required": true,
               "regex": "",
@@ -204,8 +204,8 @@
           {
             "name": "ActiveDirectoryCreateApp",
             "type": "Microsoft.Common.OptionsGroup",
-            "label": "Do you want the deployment to create a new Azure Active Directory app registration for you?",
-            "defaultValue": "Yes, create and configure a new Azure Active Directory app registration",
+            "label": "The Deployment Managed Identity can create a new Azure Active Directory app registration for you?",
+            "defaultValue": "Yes, create and configure a new Azure Active Directory app registration.",
             "toolTip": "",
             "constraints": {
               "allowedValues": [
