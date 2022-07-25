@@ -264,6 +264,10 @@
                         "value": "[variables('DNSUpdate')]"
                     },
                     {
+                        "name": "DNSDOMAINNAME",
+                        "value": "[variables('DNSDomainName')]"
+                    },
+                    {
                         "name": "UPDATEAAD",
                         "value": "[variables('UPDATEAAD')]"
                     },
