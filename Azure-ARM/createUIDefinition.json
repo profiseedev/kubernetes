@@ -30,7 +30,7 @@
         "label": "Managed Identity",
         "toolTip": {
           "systemAssignedIdentity": "",
-          "userAssignedIdentity": " The Managed Identity that will run the Profisee deployment."
+          "userAssignedIdentity": "The Managed Identity that will run the Profisee deployment."
         },
         "defaultValue": {
           "systemAssignedIdentity": "OffOnly"
@@ -50,7 +50,7 @@
         "visible": true,
         "options": {
           "icon": "Info",
-          "text": "Click here to learn how Profisee uses a Managed Identities.",
+          "text": "Click here to learn how Profisee uses Managed Identities.",
           "uri": "https://support.profisee.com/wikis/2022_r1_support/planning_your_managed_identity_configuration"
         }
       }
@@ -65,8 +65,8 @@
             "name": "UseKeyVault",
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Use Key Vault?",
-            "defaultValue": "No, I will supply them.",
-            "toolTip": "Profisee can pull a TLS certificate and these secrets: SQL Username, SQL Password and Profisee License.",
+            "defaultValue": "No, I will supply the required values.",
+            "toolTip": "Profisee can pull a TLS certificate from a Key Vault, as well as these secrets: SQL Username, SQL Password and Profisee License.",
             "constraints": {
               "allowedValues": [
                 {
@@ -74,7 +74,7 @@
                   "value": "Yes"
                 },
                 {
-                  "label": "No, I will supply them.",
+                  "label": "No, I will supply the required values.",
                   "value": "No"
                 }
               ],
@@ -98,7 +98,7 @@
           {
             "name": "ProfiseeVersion",
             "type": "Microsoft.Common.DropDown",
-            "label": "Version",
+            "label": "Profisee version",
             "defaultValue": "2022R1.0",
             "toolTip": "Which release of the Profisee Platform to deploy.",
             "constraints": {
@@ -159,7 +159,7 @@
           {
             "name": "ProfiseeAdminUserAccount",
             "type": "Microsoft.Common.TextBox",
-            "label": "SuperAdmin User Account",
+            "label": "Super Admin Account",
             "defaultValue": "",
             "placeholder": "first.last@company.com",
             "toolTip": "The first Super User, who will be able to login and add other users.",
@@ -173,8 +173,8 @@
           {
             "name": "ProfiseeLicense",
             "type": "Microsoft.Common.FileUpload",
-            "label": "License",
-            "toolTip": "This file will be provided by Profisee Support.",
+            "label": "Profisee license",
+            "toolTip": "This file will be provided by Profisee Support. Please provide the file in txt format.",
             "constraints": {
               "required": true,
               "accept": ".txt"
@@ -192,8 +192,8 @@
             "type": "Microsoft.Common.TextBox",
             "label": "License",
             "defaultValue": "",
-            "placeholder": "License secret name in KeyVault",
-            "toolTip": "Ex. profisee-license",
+            "placeholder": "License secret name in Key Vault",
+            "toolTip": "This file will be provided by Profisee Support. Please provide the name of the secret that holds the Profisee license: ex. profisee-license",
             "constraints": {
               "required": true,
               "regex": "",
@@ -206,7 +206,7 @@
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Create a new Azure AD application registration for you?",
             "defaultValue": "Yes, create and configure it for me.",
-            "toolTip": "An Azure AD application registration will be used for authentication via ID tokens.",
+            "toolTip": "An Azure AD application registration will be used for authentication via ID tokens. For more information please visit https://support.profisee.com/wikis/2022_r1_support/deploying_the_AKS_cluster_with_the_arm_template.",
             "constraints": {
               "allowedValues": [
                 {
@@ -352,7 +352,7 @@
             "type": "Microsoft.Common.TextBox",
             "label": "Infrastructure Resource Group Name",
             "defaultValue": "",
-            "toolTip": "Leave blank for default of MC_resourcegroupname_clustername_location, or enter the resouce group name you want to use.  It must be new, cannot already exist.",
+            "toolTip": "Leave blank for default of MC_ResourceGroupName_ClusterName_Location, or enter the resouce group name you want to use. You can only specify the name, you can NOT precreate it.",
             "constraints": {
               "required": false,
               "regex": "",
@@ -381,7 +381,7 @@
               {
                 "name": "KubernetesLinuxNodeSize",
                 "type": "Microsoft.Compute.SizeSelector",
-                "label": "Size",
+                "label": "VM Size",
                 "toolTip": "Pick VM size for the instances in the Linux nodepool. An 's' in the size will result in use of a Premium SSD. Ex. Standard_D2s_v5 will use Premium SSD, Standard_D2_v5 will use HDD.",
                 "recommendedSizes": [
                   "Standard_D2_v5"
@@ -422,7 +422,7 @@
               {
                 "name": "KubernetesWindowsNodeSize",
                 "type": "Microsoft.Compute.SizeSelector",
-                "label": "Size",
+                "label": "VM Size",
                 "toolTip": "Pick VM size for the instances in the Windows nodepool. An 's' in the size will result in use of a Premium SSD. Ex. Standard_D2s_v5 will use Premium SSD, Standard_D2_v5 will use HDD.",
                 "recommendedSizes": [
                   "Standard_D4_v5"
@@ -465,7 +465,7 @@
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Configure advanced Kubernetes networking settings?",
             "defaultValue": "No, use default settings",
-            "toolTip": "If you do not plan to peer the AKS VNet, then defaults will be fine. If you will, you must configure these.",
+            "toolTip": "Kubernetes might fail deploying if the default settings overlap with any vnets in your tenant. It is recommended that you configure these.",
             "constraints": {
               "allowedValues": [
                 {
@@ -528,7 +528,7 @@
                 "type": "Microsoft.Common.TextBox",
                 "label": "Service CIDR",
                 "defaultValue": "10.0.0.0/24",
-                "toolTip": "A CIDR notation IP range from which to assign IP addresses for cluster services. This range must differ from the AKS subnet.",
+                "toolTip": "A CIDR notation IP range from which to assign IP addresses for cluster services. This range MUST differ from the AKS subnet selected above. This range can be reused between clusters.",
                 "constraints": {
                   "required": false,
                   "regex": "",
@@ -634,9 +634,9 @@
           {
             "name": "SQLServerUser",
             "type": "Microsoft.Common.TextBox",
-            "label": "User",
+            "label": "SQL Username",
             "defaultValue": "sqladmin",
-            "toolTip": "Administrator SQL login name to create with the new SQL Server or to use to connect to existing SQL Server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols.",
+            "toolTip": "Administrator SQL login name to create with the new SQL Server OR provide the login to connect to an existing SQL Server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols.",
             "constraints": {
               "required": true,
               "regex": "",
@@ -647,9 +647,9 @@
           {
             "name": "SQLServerUserSecret",
             "type": "Microsoft.Common.TextBox",
-            "label": "User",
-            "placeholder": "Key Vault secret name for the SQL username. Ex. profisee-sql-username",
-            "toolTip": "Administrator SQL login name to create with the new SQL Server or to use to connect to existing SQL Server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols.",
+            "label": "SQL Username",
+            "placeholder": "Key Vault secret name: ex. profisee-sql-username",
+            "toolTip": "Administrator SQL login name to create with the new SQL Server OR provide the login to connect to existing SQL Server.  Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.).  Your login name must not include non-alphanumeric characters.  Your login name must not start with numbers or symbols.",
             "constraints": {
               "required": true,
               "regex": "",
@@ -661,7 +661,7 @@
             "name": "SQLServerPassword",
             "type": "Microsoft.Common.PasswordBox",
             "label": {
-              "password": "Password",
+              "password": " SQL Password",
               "confirmPassword": "Confirm password"
             },
             "toolTip": "",
@@ -678,9 +678,9 @@
           {
             "name": "SQLServerPasswordSecret",
             "type": "Microsoft.Common.TextBox",
-            "label": "Password",
+            "label": "SQL Password",
             "defaultValue": "",
-            "placeholder": "Key Vault secret name for the SQL server password. Ex. profisee-sql-password",
+            "placeholder": "Key Vault secret name: ex. profisee-sql-password",
             "toolTip": "",
             "constraints": {
               "required": true,
@@ -814,11 +814,11 @@
                 "type": "Microsoft.Common.OptionsGroup",
                 "label": "Are your domain DNS records hosted in an Azure Public DNS Zone?",
                 "defaultValue": "Yes, I use an Azure Public DNS zone for my domain.",
-                "toolTip": "You have an Azure DNS zone for your domain. The Name Servers of your domain are set as the Azure DNS zone ones.",
+                "toolTip": "You have an Azure DNS zone for your domain. The Name Servers of your domain at your domain registrar (ex. Google, Cloudflare, GoDaddy) are set as the Azure Public DNS zone ones.",
                 "constraints": {
                   "allowedValues": [
                     {
-                      "label": "Yes, I use an Azure Public DNS zone for my domain.",
+                      "label": "Yes, I use Azure Public DNS zone to host my domain records.",
                       "value": "Yes"
                     },
                     {
@@ -936,7 +936,7 @@
                 "name": "HttpsCertificatePrivateKey",
                 "type": "Microsoft.Common.FileUpload",
                 "label": "TLS Certificate Private Key",
-                "toolTip": "Please provide the certificate's private key in either .txt or .key formats.",
+                "toolTip": "Please provide the certificate's private key in either .txt or .key format.",
                 "constraints": {
                   "required": true,
                   "accept": ".txt,.key"
