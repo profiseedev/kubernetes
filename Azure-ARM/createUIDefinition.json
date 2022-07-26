@@ -849,8 +849,8 @@
                 "type": "Microsoft.Common.TextBox",
                 "label": "DNS Domain Name",
                 "defaultValue": "",
-                "placeholder":"mydomain.com",
-                "toolTip": "",
+                "placeholder":"This value is CaSe SeNSitiVe! mydomain.com",
+                "toolTip": "This value is CaSe SeNSitiVe!",
                 "constraints": {
                   "required": true,
                   "regex": "",
@@ -863,8 +863,8 @@
                 "type": "Microsoft.Common.TextBox",
                 "label": "DNS Zone Resource Group",
                 "defaultValue": "",
-                "placeholder": "mydnszoneresourcegroup",
-                "toolTip": "Please type the name of the Azure Resource group that contains your Azure DNS Zone.",
+                "placeholder": "This value is CaSe SeNSitiVe! mydnszoneresourcegroup",
+                "toolTip": "This value is CaSe SeNSitiVe! Please type the name of the Azure Resource group that contains your Azure DNS Zone.",
                 "constraints": {
                   "required": true,
                   "regex": "",
