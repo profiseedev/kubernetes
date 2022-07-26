@@ -162,7 +162,7 @@
             "label": "Super Admin Account",
             "defaultValue": "",
             "placeholder": "first.last@company.com",
-            "toolTip": "The first Super User, who will be able to login and add other users.",
+            "toolTip": "The first Super User, who will be able to log in and add other users.",
             "constraints": {
               "required": true,
               "regex": "",
@@ -190,7 +190,7 @@
           {
             "name": "ProfiseeLicenseSecret",
             "type": "Microsoft.Common.TextBox",
-            "label": "License",
+            "label": " Profisee License",
             "defaultValue": "",
             "placeholder": "License secret name in Key Vault",
             "toolTip": "This file will be provided by Profisee Support. Please provide the name of the secret that holds the Profisee license: ex. profisee-license",
