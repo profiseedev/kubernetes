@@ -30,7 +30,7 @@
         "label": "Managed Identity",
         "toolTip": {
           "systemAssignedIdentity": "",
-          "userAssignedIdentity": "The Managed Identity that will run the Profisee deployment."
+          "userAssignedIdentity": "Pick the Managed Identity that will run the Profisee deployment."
         },
         "defaultValue": {
           "systemAssignedIdentity": "OffOnly"
