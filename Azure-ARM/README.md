@@ -1,21 +1,39 @@
 # DEVELOPMENT.  INTERNAL USE ONLY
-# Deploy Profisee platform on to AKS using ARM template
+# Deploying Profisee Platform on AKS using the ARM template
 
-This ARM template deploys Profisee platform into a Azure Kubernetes Service cluster.
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseeadmin%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofiseeadmin%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinition.json)
 
 ## Prerequisites
 
-1.  Managed Identity
-    - A user assigned managed identity configured ahead of time.  The managed identity must have Contributor role for the resource group, and the DNS zone resource group if updating Azure DNS.  This can be done by assigning the contributor role to each individual resource group, or assigning the subscription level resource group.  If creating an Azure Active Directory application registration, the managed identity must have the Application Developer role assigned to it.  Click [here](https://support.profisee.com/wikis/2020_r2_support/planning_your_managed_identity_configuration) for more information.
-2.  License
-    - Profisee license associated with the dns for the environment.
+Please **DO** review the guide and links below **before** you run the Azure ARM template. We have a pre-requisites script that runs before the deployment to check on the permissions needed.
+
+Click [here](https://support.profisee.com/wikis/2022_r1_support/deploying_the_AKS_cluster_with_the_arm_template) for a detailed deployment guide for Profisee ver. 2022R1 and [here](https://support.profisee.com/lms/courseinfo?id=00u00000000002b00aM&mode=browsecourses) for video training course and slide deck.
+
+
+Here's **what** you will need. You will need a license tied to the DNS URL that will be used by the environment (ex. customer.eastus2.cloudapp.azure.com OR YourOwnEnvironment.Customer.com) This license can be acquired from [Profisee Support](https://support.profisee.com/aspx/ProfiseeCustomerHome). 
+
+Here's **what** will be deployed, or used if available, by the ARM template:
+1. An AKS Cluster with a **publicly** accessible Management API.
+2. Two Public IPs for Ingress and Egress
+3. A Load Balancer needed for Nginx
+4. A SQL Server, or use one that you already have. You can either pre-create the database or let the Managed Identity create one for you.
+5. A Storage account, or use one that you already have.
+6. A DNS entry into a zone, assuming the necessary permissions are there. If using external DNS, you'd have to update/create the record with the Egress IP.
+7. A free Let's Encrypt certificate, if you choose that option. Please be aware that if you plan to use your own domain with Let's Encrypt you'll need to make sure that if there is a [CAA record set](https://letsencrypt.org/docs/caa/) on your domain it allows Let's Encrypt as the Issuing Authority.
+
+Here's **how** it will be deployed. You must have a Managed Identity created to run the deployment. This Managed Identity must have the following permissions ONLY when running a deployment. After it is done, the Managed Identity can be deleted. Based on your ARM template choices, you will need some or all of the following permissions assigned to your Managed Identity:
+1. **Contributor** role to the Resource Group where AKS will be deployed. This can either be assigned directly to the Resource Group OR at Subscription level.
+2. **DNS Zone Contributor** role to the particular DNS zone where the entry will be created OR **Contributor** role to the DNS Zone Resource Group.This is needed only if updating DNS hosted in Azure. To follow best practice for least access, the DNS Zone Contributor on the zone itself is the recommended option.
+3. **Application Administrator** role in Azure Active Directory so the Application registration can be created by the Deployment Managed Identity and the required permissions can be assigned to it.
+4. **Managed Identity Contributor** and **User Access Administrator** at the Subscription level. These two are needed in order for the ARM template Deployment Managed Identity to be able to create the Key Vault specific Managed Identity that will be used by Profisee to pull the values stored in the Key Vault, as well as to assign the AKSCluster-agentpool the Managed Identity Operator roles (to the Resource and Infrastructure Resource groups) and Virtual Machine Operator (to the Infrastructure Resource group). If Key Vault will not be used, these roles are not required.
+
+If Purview will be configured, the Purview specific Application Registration will need to be assigned the **Data Curator Role** in the Purview account.
+
     
 ## Deployment steps
 
-Click the "Deploy to Azure" button at the beginning of this document.
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofisee%2Fkubernetes%2Fmaster%2FAzure-ARM%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2Fprofisee%2Fkubernetes%2Fmaster%2FAzure-ARM%2FcreateUIDefinition.json)
 
 ## Troubleshooting
 
-All troubleshooting is in the [Wiki](https://github.com/profiseeadmin/kubernetes/wiki)
+All troubleshooting is in the [Wiki](https://github.com/profisee/kubernetes/wiki)
+
