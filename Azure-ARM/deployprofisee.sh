@@ -167,8 +167,8 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
     #if rabc, add to rile, if not (policy based) - add policies
     if [ "$rbacEnabled" = true ]; then
 		echo $"Setting rbac role."
-		echo "Running az role assignment create --role 'Key Vault Secrets Officer' --assignee $principalId --scope $KEYVAULT"
-		az role assignment create --role "Key Vault Secrets Officer" --assignee $principalId --scope $KEYVAULT
+		echo "Running az role assignment create --role 'Key Vault Secrets User' --assignee $principalId --scope $KEYVAULT"
+		az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $KEYVAULT
 	else
 		echo $"Setting policies."
 		echo $"Managing Identity configuration for KV access - step 3a started"
