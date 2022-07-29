@@ -206,6 +206,8 @@ curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
 nginxpresent=$(helm list -n profisee -f nginx -o table --short)
 if [ "$nginxpresent" = "nginx" ]; then
 	helm uninstall -n profisee nginx;
+	echo $"Will sleep for a minute to allow clean uninstall of nginx."
+	sleep 60;
 fi
 
 #Install nginx either with or without Let's Encrypt
@@ -443,6 +445,7 @@ helm repo update
 profiseepresent=$(helm list -n profisee -f profiseeplatform -o table --short)
 if [ "$profiseepresent" = "profiseeplatform" ]; then
 	helm -n profisee uninstall profiseeplatform;
+	sleep 30;
 fi
 
 helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
