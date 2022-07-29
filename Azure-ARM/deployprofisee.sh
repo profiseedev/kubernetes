@@ -300,6 +300,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	echo "Updating app registration permissions step 1 started"
 	#add a Graph API permission of "Sign in and read user profile"
 	az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
+	az ad sp create --id $CLIENTID
 	echo "Updating app registration permissions step 1 finished"
 
 	echo "Updating app registration permissions step 2 started"
