@@ -13,7 +13,7 @@ if [ -f "$FILE" ]; then
 	exit 1;
 fi
 
-REPONAME="profiseedev"
+REPONAME="profiseeadmin"
 REPOURL="https://raw.githubusercontent.com/$REPONAME/kubernetes/master";
 HELMREPOURL="https://$REPONAME.github.io/kubernetes";
 echo $"REPOURL is $REPOURL";
@@ -31,20 +31,20 @@ printenv;
 
 #az login --identity
 
-#get the aks creds, this allows us to use kubectl commands if needed
+#Get AKS credentials, this allows us to use kubectl commands, if needed.
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
 
-#install dotnet core
-echo $"Installing dotnet core started";
+#Install dotnet core.
+echo $"Installation of dotnet core started.";
 curl -fsSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
-#set permisssions
+#Set permisssions for installation script.
 chmod 755 ./dotnet-install.sh
-#install dotnet
+#Install dotnet.
 ./dotnet-install.sh -c Current
-echo $"Installing dotnet core finished";
+echo $"Installation of dotnet core finished.";
 
-#Downloadind and extracting license reader
-echo $"Downloading and extracting license reader started";
+#Downloadind and extracting Proisee license reader.
+echo $"Download and extraction of Profisee license reader started.";
 curl -fsSL -o LicenseReader.tar.001 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.001"
 curl -fsSL -o LicenseReader.tar.002 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.002"
 curl -fsSL -o LicenseReader.tar.003 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.003"
@@ -54,15 +54,15 @@ rm LicenseReader.tar.001
 rm LicenseReader.tar.002
 rm LicenseReader.tar.003
 rm LicenseReader.tar.004
-echo $"Downloading and extracting license reader finished";
+echo $"Download and extraction of Profisee license reader finished.";
 
-echo $"Cleaning license string to remove and unwanted characters - linebreaks, spaces, etc...";
+echo $"Clean Profisee license string of any unwanted characters such as linebreaks, spaces, etc...";
 LICENSEDATA=$(echo $LICENSEDATA|tr -d '\n')
 
-echo $"Getting values from license started";
+echo $"Search Profisee license for the fully qualified domain name value...";
 EXTERNALDNSURLLICENSE=$(./LicenseReader "ExternalDnsUrl" $LICENSEDATA)
 
-#use whats in the license otherwise use whats passed in which is a generated hostname
+#Use FQDN that is in license, otherwise use the Azure generated FQDN.
 #EXTERNALDNSURLLICENSE=$(<ExternalDnsUrl.txt)
 if [ "$EXTERNALDNSURLLICENSE" = "" ]; then
 	echo $"EXTERNALDNSURLLICENSE is empty"
@@ -76,44 +76,45 @@ echo $"EXTERNALDNSURL is $EXTERNALDNSURL";
 echo $"EXTERNALDNSNAME is $EXTERNALDNSNAME";
 echo $"DNSHOSTNAME is $DNSHOSTNAME";
 
-#If acr info is passed in (via legacy script) use it, otherwise pull it from license
+#If ACR credentials are passed in via legacy script, use those. Otherwise, pull ACR credentials from license.
 if [ "$ACRUSER" = "" ]; then
-	echo $"ACR info was not passed in, values in license are being used."
+	echo $"ACR credentials were not passed in, will use values from license."
 	#ACRUSER=$(<ACRUserName.txt)
 	#ACRUSERPASSWORD=$(<ACRUserPassword.txt)
 	ACRUSER=$(./LicenseReader "ACRUserName" $LICENSEDATA)
     ACRUSERPASSWORD=$(./LicenseReader "ACRUserPassword" $LICENSEDATA)
 else
-	echo $"ACR info that was passed in is being used."
+	echo $"Using ACR credentials that were passed in."
 fi
 echo $"ACRUSER is $ACRUSER";
 echo $"ACRUSERPASSWORD is $ACRUSERPASSWORD";
 
-echo $"Getting values from license finished";
+echo $"Finished parsing values from Profisee license.";
 
-#install helm
-echo $"Installing helm started";
+#Install Helm
+echo $"Installation of Helm started.";
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3;
 chmod 700 get_helm.sh;
 ./get_helm.sh;
-echo $"Installing helm finished";
+echo $"Installation of Helm finished.";
 
-echo $"Installing kubectl started";
+#Install kubectl
+echo $"Installation of kubectl started.";
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-echo $"Installing kubectl finished";
+echo $"Installation of kubectl finished.";
 
-#create profisee namespace
-echo $"Creating profisee namespace in kubernetes started";
+#Create profisee namespace in AKS cluster.
+echo $"Creation of profisee namespace in cluster started.";
 kubectl create namespace profisee
-echo $"Creating profisee namespace in kubernetes finished";
+echo $"Creation of profisee namespace in cluster finished.";
 
-#download the settings.yaml
+#Download settings.yaml file from Profisee repo.
 curl -fsSL -o Settings.yaml "$REPOURL/Azure-ARM/Settings.yaml";
 
-#install keyvault drivers
+#Installation of Key Vault Container Storage Interface (CSI) driver started.
 if [ "$USEKEYVAULT" = "Yes" ]; then
-	echo $"Installing keyvault csi driver - started"
+	echo $"Installation of Key Vault Container Storage Interface (CSI) driver started."
 	#Install the Secrets Store CSI driver and the Azure Key Vault provider for the driver
 	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
 	
@@ -121,28 +122,27 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#The behavior changed so now you have to enable the secrets-store-csi-driver.syncSecret.enabled=true
 	#We are not but if this is to run on a windows node, then you use this --set windows.enabled=true --set secrets-store-csi-driver.windows.enabled=true
 	helm install --namespace profisee csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --set secrets-store-csi-driver.syncSecret.enabled=true
-
-	echo $"Installing keyvault csi driver - finished"
-
-	echo $"Installing keyvault aad pod identity - started"
-	#Install the Azure Active Directory (Azure AD) identity into AKS.
+	echo $"Installation of Key Vault Container Storage Interface (CSI) driver finished."
+	
+	#Install AAD pod identity into AKS.
+	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started."
 	helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
 	helm install --namespace profisee pod-identity aad-pod-identity/aad-pod-identity
-	echo $"Installing keyvault aad pod identity - finished"
+	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver finished."
 
-	#Assign roles needed for kv
-	echo $"Managing Identity configuration for KV access - started"
+	#Assign AAD roles to the AKS AgentPool Managed Identity. The Pod identity communicates with the AgentPool MI, which in turn communicates with the Key Vault specific Managed Identity.
+	echo $"AKS Managed Identity configuration for Key Vault access started."
 
-	echo $"Managing Identity configuration for KV access - step 1 started"
+	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 started."
 	echo "Running az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME"
 	az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME
 	echo "Running az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME"
 	az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
 	echo "Running az role assignment create --role "Virtual Machine Contributor" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME"
 	az role assignment create --role "Virtual Machine Contributor" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
-	echo $"Managing Identity configuration for KV access - step 1 finished"
+	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 finished."
 
-	#Create AD Identity, get clientid and principalid to assign the reader role to (next command)
+	#Create Azure AD Managed Identity specifically for Key Vault, get its ClientiId and PrincipalId so we can assign to it the Reader role in steps 3a, 3b and 3c to.
 	echo $"Managing Identity configuration for KV access - step 2 started"
 	identityName="AKSKeyVaultUser"
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
@@ -158,33 +158,31 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	keyVaultName=${kv[-1]}
 	keyVaultResourceGroup=${kv[4]}
 	keyVaultSubscriptionId=${kv[2]}
-	echo $"principalId is $principalId"
 	echo $"KEYVAULT is $KEYVAULT"
 	echo $"keyVaultName is $keyVaultName"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
+	echo $"principalId is $principalId"
 
-	#echo $"Managing Identity configuration for KV access - step 4a started"
-	#az role assignment create --role "Reader" --assignee $principalId --scope $KEYVAULT
     rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
 
     #if rabc, add to rile, if not (policy based) - add policies
     if [ "$rbacEnabled" = true ]; then
 		echo $"Setting rbac role."
-		echo "Running az role assignment create --role 'Key Vault Secrets Officer' --assignee $akskvidentityClientId --scope $KEYVAULT"
-		az role assignment create --role "Key Vault Secrets Officer" --assignee $akskvidentityClientId --scope $KEYVAULT
+		echo "Running az role assignment create --role 'Key Vault Secrets User' --assignee $principalId --scope $KEYVAULT"
+		az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $KEYVAULT
 	else
 		echo $"Setting policies."
 		echo $"Managing Identity configuration for KV access - step 3a started"
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $akskvidentityClientId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $akskvidentityClientId --query id
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id"
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3b started"
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $akskvidentityClientId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $akskvidentityClientId --query id
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id"
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3c started"
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $akskvidentityClientId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $akskvidentityClientId --query id
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id"
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3 finished"
 		echo $"Managing Identity configuration for KV access - finished"
@@ -296,6 +294,8 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 		echo $"CLIENTID is $CLIENTID";
 	fi
 	echo "Creating app registration finished"
+	echo "Sleeping for 20 seconds to wait for app registration to be ready."
+	sleep 20;
 
 	echo "Updating app registration permissions step 1 started"
 	#add a Graph API permission of "Sign in and read user profile"
