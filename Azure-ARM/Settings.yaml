@@ -78,7 +78,7 @@ cloud:
         resourceGroup: "$KEYVAULTRESOURCEGROUP"
         subscriptionId: "$AZURESUBSCRIPTIONID"
         tenantId: "$AZURETENANTID"
-        clusterClientId: "$KUBERNETESCLIENTID" #principalId of the AKSCluster-agentpool identity; The "Managed Identity Operator" role must be assigned to the RG and Node RG; "Virtual Machine Contributor" role must be assigned to the Node RG.
+        clusterClientId: "$KUBERNETESCLIENTID" #clientId of the AKSCluster-agentpool identity; The "Managed Identity Operator" role must be assigned to the RG and Node RG; "Virtual Machine Contributor" role must be assigned to the Node RG.
       useManagedIdentity: false
       managedIdentity:
         name: ""
