@@ -384,7 +384,7 @@
                 "label": "VM Size",
                 "toolTip": "Pick VM size for the instances in the Linux nodepool. An 's' in the size will result in use of a Premium SSD. Ex. Standard_D2s_v5 will use Premium SSD, Standard_D2_v5 will use HDD.",
                 "recommendedSizes": [
-                  "Standard_D2_v5"
+                  "Standard_B2s"
                 ],
                 "constraints": {
                   "allowedSizes": []
@@ -425,7 +425,7 @@
                 "label": "VM Size",
                 "toolTip": "Pick VM size for the instances in the Windows nodepool. An 's' in the size will result in use of a Premium SSD. Ex. Standard_D2s_v5 will use Premium SSD, Standard_D2_v5 will use HDD.",
                 "recommendedSizes": [
-                  "Standard_D4_v5"
+                  "Standard_B4ms"
                 ],
                 "constraints": {
                   "allowedSizes": []
