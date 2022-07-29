@@ -161,6 +161,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"KEYVAULT is $KEYVAULT"
 	echo $"keyVaultName is $keyVaultName"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
+	echo $"principalId is $principalId"
 
     rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
 
@@ -172,15 +173,15 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	else
 		echo $"Setting policies."
 		echo $"Managing Identity configuration for KV access - step 3a started"
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $akskvidentityClientId --query id"
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id"
 		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3b started"
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $akskvidentityClientId --query id"
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id"
 		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3c started"
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $akskvidentityClientId --query id"
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id"
 		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id
 
 		echo $"Managing Identity configuration for KV access - step 3 finished"
