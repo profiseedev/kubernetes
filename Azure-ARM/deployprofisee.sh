@@ -143,14 +143,14 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 finished."
 
 	#Create Azure AD Managed Identity specifically for Key Vault, get its ClientiId and PrincipalId so we can assign to it the Reader role in steps 3a, 3b and 3c to.
-	echo $"Managing Identity configuration for KV access - step 2 started"
+	echo $"Key Vault Specific Managed Identity configuration for Key Vault access step 2 started."
 	identityName="AKSKeyVaultUser"
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
 	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
 	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId' -o tsv)
-	echo $"Managing Identity configuration for KV access - step 2 finished"
+	echo $"Key VAult Specific Managed  Identity configuration for Key Vault access step 2 finished."
 
-	echo $"Managing Identity configuration for KV access - step 3 started"
+	echo $"Key Vault Specific Managed Identity configuration for KV access step 3 started."
 	echo "Sleeping for 60 seconds to wait for MI to be ready"
 	sleep 60;
 	#KEYVAULT looks like this this /subscriptions/$SUBID/resourceGroups/$kvresourceGroup/providers/Microsoft.KeyVault/vaults/$kvname
@@ -165,40 +165,48 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 
     rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
 
-    #if rabc, add to rile, if not (policy based) - add policies
+    #If Key Vault is RBAC based, assign Key Vault Secrets User role to the Key Vault Specific Managed Identity, otherwise assign Get policies for Keys, Secrets and Certificates.
     if [ "$rbacEnabled" = true ]; then
-		echo $"Setting rbac role."
+		echo $"Setting Key Vault Secrets User RBAC role to the Key Vault Specific Managed Idenity."
 		echo "Running az role assignment create --role 'Key Vault Secrets User' --assignee $principalId --scope $KEYVAULT"
 		az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $KEYVAULT
 	else
-		echo $"Setting policies."
-		echo $"Managing Identity configuration for KV access - step 3a started"
+		echo $"Setting Key Vault access policies to the Key Vault Specific Managed Identity."
+		echo $"Key Vault Specific Managed Identity configuration for KV access step 3a started. Assigning Get access policy for secrets."
 		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id"
 		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id
+		echo $"Key Vault Specific Managed Identity configuration for KV access step 3a finished. Assignment completed."
 
-		echo $"Managing Identity configuration for KV access - step 3b started"
+		echo $"Key Vault Specific Managed Identity configuration for KV access step 3b started. Assigning Get access policy for keys."
 		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id"
 		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id
+		echo $"Key Vault Specific Managed Identity configuration for KV access step 3b finished. Assignment completed."
 
-		echo $"Managing Identity configuration for KV access - step 3c started"
+		echo $"Key Vault Specific Managed Identity configuration for KV access step 3c started. Assigning Get access policy for certificates."
 		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id"
 		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id
+		eecho $"Key Vault Specific Managed Identity configuration for KV access step 3c finished. Assignment completed."
 
-		echo $"Managing Identity configuration for KV access - step 3 finished"
-		echo $"Managing Identity configuration for KV access - finished"
+		echo $"Key Vault Specific Managed Identity setup is now finished."
 	fi
 	
 fi
 
-#install nginx
-echo $"Installing nginx started";
+#Install nginx
+echo $"Installation of nginx ingress started.";
 
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
-#get profisee nginx settings
+#Get profisee nginx settings
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
-helm uninstall --namespace profisee nginx
 
+#If nginx is present, uninstall it. If not, proceeed to installation.
+nginxpresent=$(helm list -n profisee -f nginx -o table --short)
+if [ "$nginxpresent" = "nginx" ]; then
+	helm uninstall -n profisee nginx;
+fi
+
+#Install nginx whether 
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Installing nginx for Lets Encrypt and setting the dns name for its IP."
 	helm install --namespace profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
@@ -427,7 +435,13 @@ kubectl create secret generic profisee-settings --namespace profisee --from-file
 echo "Install Profisee started $(date +"%Y-%m-%d %T")";
 helm repo add profisee $HELMREPOURL
 helm repo update
-helm uninstall --namespace profisee profiseeplatform
+
+#If Profisee is present, uninstall it. If not, proceeed to installation.
+profiseepresent=$(helm list -n profisee -f profiseeplatform -o table --short)
+if [ "$profiseepresent" = "profiseeplatform" ]; then
+	helm -n profisee uninstall profiseeplatform;
+fi
+
 helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
 
 kubectl delete secret profisee-deploymentlog --namespace profisee --ignore-not-found
