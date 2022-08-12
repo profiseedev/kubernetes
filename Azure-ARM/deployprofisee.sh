@@ -116,7 +116,7 @@ curl -fsSL -o Settings.yaml "$REPOURL/Azure-ARM/Settings.yaml";
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"Installation of Key Vault Container Storage Interface (CSI) driver started."
 	#Install the Secrets Store CSI driver and the Azure Key Vault provider for the driver
-	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
+	helm repo add csi-secrets-store-provider-azure https://azure.github.io/secrets-store-csi-driver-provider-azure/charts
 	
 	#If Key Vault CSI driver is present, uninstall it.
         kvcsipresent=$(helm list -n profisee -f csi-secrets-store-provider-azure -o table --short)
