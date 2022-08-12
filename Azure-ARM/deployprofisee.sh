@@ -112,7 +112,7 @@ namespacepresent=$(kubectl get namespace -o jsonpath='{.items[?(@.metadata.name=
 if [ "$namespacepresent" = "profisee" ]; then
 	echo $"Namespace is already created, continuing."
 else
-kubectl create namespace profisee
+	kubectl create namespace profisee
 fi
 echo $"Creation of profisee namespace in cluster finished.";
 
@@ -442,7 +442,6 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$AZURESUBSCRIPTIONID/'"$keyVaultSubscriptionId"'/g' Settings.yaml
 	sed -i -e 's/$AZURETENANTID/'"$TENANTID"'/g' Settings.yaml
 
-	$SUBSCRIPTIONID
 else
 	sed -i -e 's/$USEKEYVAULT/'false'/g' Settings.yaml
 fi
