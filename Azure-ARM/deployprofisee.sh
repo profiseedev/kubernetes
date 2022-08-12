@@ -325,18 +325,25 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	echo "Sleeping for 20 seconds to wait for the app registration to be ready."
 	sleep 20;
 
-	echo "Update of the application registration's permissions, step 1 started."
-	#Add a Graph API permission to "Sign in and read user profile"
-	az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
-	echo "Creation of the service principal started."
-	az ad sp create --id $CLIENTID
-	echo "Creation of the service principal finished."
-	echo "Update of the application registration's permissions, step 1 finished."
+	#If Azure Application Registration User.Read permission is present, skip adding it.
+        appregpermissionspresent=$(az ad app permission list --id $CLIENTID --query "[].resourceAccess[].id" -o tsv)
+        if [ "$appregpermissionspresent" = "e1fe6dd8-ba31-4d61-89e7-88639da4683d" ]; then
+	        echo $"User.Read permissions already present, no need to add it."
+	else
+	
+	        echo "Update of the application registration's permissions, step 1 started."
+	        #Add a Graph API permission to "Sign in and read user profile"
+	        az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
+	        echo "Creation of the service principal started."
+	        az ad sp create --id $CLIENTID
+	        echo "Creation of the service principal finished."
+	        echo "Update of the application registration's permissions, step 1 finished."
 
-	echo "Update of the application registration's permissions, step 2 started."
-	az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
-	echo "Update of the application registration's permissions, step 2 finished."
-	echo "Update of Azure Active Directory finished.";
+	        echo "Update of the application registration's permissions, step 2 started."
+	        az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
+	        echo "Update of the application registration's permissions, step 2 finished."
+	        echo "Update of Azure Active Directory finished.";
+	fi
 fi
 
 #If not supplied, acquire storage account credentials.
