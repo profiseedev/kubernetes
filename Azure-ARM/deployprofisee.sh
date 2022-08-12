@@ -118,11 +118,27 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#Install the Secrets Store CSI driver and the Azure Key Vault provider for the driver
 	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
 	
+	#If Key Vault CSI driver is present, uninstall it.
+        kvcsipresent=$(helm list -n profisee -f csi-secrets-store-provider-azure -o table --short)
+        if [ "$kvcsipresent" = "csi-secrets-store-provider-azure" ]; then
+	        helm uninstall -n profisee csi-secrets-store-provider-azure;
+	        echo $"Will sleep for 30 seconds to allow clean uninstall of Key Vault CSI driver."
+	        sleep 30;
+        fi
+	
 	#https://github.com/Azure/secrets-store-csi-driver-provider-azure/releases/tag/0.0.16
 	#The behavior changed so now you have to enable the secrets-store-csi-driver.syncSecret.enabled=true
 	#We are not but if this is to run on a windows node, then you use this --set windows.enabled=true --set secrets-store-csi-driver.windows.enabled=true
 	helm install --namespace profisee csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --set secrets-store-csi-driver.syncSecret.enabled=true
 	echo $"Installation of Key Vault Container Storage Interface (CSI) driver finished."
+	
+	#If AAD Pod Identity is present, uninstall it.
+        aadpodpresent=$(helm list -n profisee -f pod-identity -o table --short)
+        if [ "$aadpodpresent" = "pod-identity" ]; then
+	        helm uninstall -n profisee pod-identity;
+	        echo $"Will sleep for 30 seconds to allow clean uninstall of AAD Pod Identity."
+	        sleep 30;
+        fi
 	
 	#Install AAD pod identity into AKS.
 	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started."
@@ -420,6 +436,13 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	helm repo add jetstack https://charts.jetstack.io
 	# Update your local Helm chart repository cache
 	helm repo update
+	#If cert-manager is present, uninstall it.
+        certmgrpresent=$(helm list -n profisee -f cert-manager -o table --short)
+        if [ "$certmgrpresent" = "cert-manager" ]; then
+	        helm uninstall -n profisee cert-manager;
+	        echo $"Will sleep for 20 seconds to allow clean uninstall of cert-manager."
+	        sleep 20;
+        fi
 	# Install the cert-manager Helm chart
 	helm install cert-manager jetstack/cert-manager --namespace profisee --set installCRDs=true --set nodeSelector."kubernetes\.io/os"=linux --set webhook.nodeSelector."kubernetes\.io/os"=linux --set cainjector.nodeSelector."kubernetes\.io/os"=linux --set startupapicheck.nodeSelector."kubernetes\.io/os"=linux
 	# Wait for the cert manager to be ready
