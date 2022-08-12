@@ -105,8 +105,15 @@ install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 echo $"Installation of kubectl finished.";
 
 #Create profisee namespace in AKS cluster.
-echo $"Creation of profisee namespace in cluster started.";
+echo $"Creation of profisee namespace in cluster started. If present, we skip creation and use it.";
+
+#If namespace exists, skip creating it.
+namespacepresent=$(kubectl get namespace -o jsonpath='{.items[?(@.metadata.name=="profisee")].metadata.name}')
+if [ "$namespacepresent" = "profisee" ]; then
+	echo $"Namespace is already created, continuing."
+else
 kubectl create namespace profisee
+fi
 echo $"Creation of profisee namespace in cluster finished.";
 
 #Download Settings.yaml file from Profisee repo.
@@ -114,7 +121,7 @@ curl -fsSL -o Settings.yaml "$REPOURL/Azure-ARM/Settings.yaml";
 
 #Installation of Key Vault Container Storage Interface (CSI) driver started.
 if [ "$USEKEYVAULT" = "Yes" ]; then
-	echo $"Installation of Key Vault Container Storage Interface (CSI) driver started."
+	echo $"Installation of Key Vault Container Storage Interface (CSI) driver started. If present, we uninstall and reinstall it."
 	#Install the Secrets Store CSI driver and the Azure Key Vault provider for the driver
 	helm repo add csi-secrets-store-provider-azure https://azure.github.io/secrets-store-csi-driver-provider-azure/charts
 	
@@ -132,6 +139,9 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	helm install --namespace profisee csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --set secrets-store-csi-driver.syncSecret.enabled=true
 	echo $"Installation of Key Vault Container Storage Interface (CSI) driver finished."
 	
+	
+	#Install AAD pod identity into AKS.
+	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started. If present, we uninstall and reinstall it."
 	#If AAD Pod Identity is present, uninstall it.
         aadpodpresent=$(helm list -n profisee -f pod-identity -o table --short)
         if [ "$aadpodpresent" = "pod-identity" ]; then
@@ -140,8 +150,6 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	        sleep 30;
         fi
 	
-	#Install AAD pod identity into AKS.
-	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started."
 	helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
 	helm install --namespace profisee pod-identity aad-pod-identity/aad-pod-identity
 	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver finished."
@@ -212,13 +220,15 @@ fi
 
 #Installation of nginx
 echo $"Installation of nginx ingress started.";
-
+echo $"Adding ingress-nginx repo."
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
 #Get profisee nginx settings
+echo $"Acquiring nginxSettings.yaml file from Profisee repo."
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
 
 #If nginx is present, uninstall it.
+echo "If nginx is installed, we'll uninstall it first."
 nginxpresent=$(helm list -n profisee -f nginx -o table --short)
 if [ "$nginxpresent" = "nginx" ]; then
 	helm uninstall -n profisee nginx;
@@ -240,6 +250,7 @@ echo $"Installation of nginx finished, sleeping for 30 seconds to wait for the l
 sleep 30;
 
 #Get the load balancer's public IP so it can be used later on.
+echo $"Let's see if the the load balancer's IP address is available."
 nginxip=$(kubectl --namespace profisee get services nginx-ingress-nginx-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
 #
 if [ -z "$nginxip" ]; then
@@ -326,6 +337,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	sleep 20;
 
 	#If Azure Application Registration User.Read permission is present, skip adding it.
+	echo $"Let's check to see if the User.Read permission is granted, skip if has been.
         appregpermissionspresent=$(az ad app permission list --id $CLIENTID --query "[].resourceAccess[].id" -o tsv)
         if [ "$appregpermissionspresent" = "e1fe6dd8-ba31-4d61-89e7-88639da4683d" ]; then
 	        echo $"User.Read permissions already present, no need to add it."
@@ -472,12 +484,18 @@ helm repo add profisee $HELMREPOURL
 helm repo update
 
 #If Profisee is present, uninstall it. If not, proceeed to installation.
+echo "If profisee is installed, uninstall it first."
 profiseepresent=$(helm list -n profisee -f profiseeplatform -o table --short)
 if [ "$profiseepresent" = "profiseeplatform" ]; then
 	helm -n profisee uninstall profiseeplatform;
+	echo "Will sleep for 30 seconds to allow clean uninstall."
 	sleep 30;
 fi
 
+echo "If we are using Key Vault and Profisee was uninstalled, then the profisee-license and other secrets are missing. We need to restart the key-vault pod so that we can re-pull and mount the secrets."
+#Find and delete the key-vault pod
+
+echo "Now let's install Profisee."
 helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
 
 kubectl delete secret profisee-deploymentlog --namespace profisee --ignore-not-found
