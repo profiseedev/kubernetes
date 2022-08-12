@@ -337,7 +337,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	sleep 20;
 
 	#If Azure Application Registration User.Read permission is present, skip adding it.
-	echo $"Let's check to see if the User.Read permission is granted, skip if has been.
+	echo $"Let's check to see if the User.Read permission is granted, skip if has been."
         appregpermissionspresent=$(az ad app permission list --id $CLIENTID --query "[].resourceAccess[].id" -o tsv)
         if [ "$appregpermissionspresent" = "e1fe6dd8-ba31-4d61-89e7-88639da4683d" ]; then
 	        echo $"User.Read permissions already present, no need to add it."
