@@ -63,7 +63,7 @@ fi
 echo "Is the Deployment Managed Identity assigned the Contributor Role at the Subscription or at the Resource Group level?"
 subscriptionContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 if [ -z "$subscriptionContributor" ]; then
-	echo "Role is NOT assigned at Subscription level, checking Resource Group level assignment now."
+	echo "Role is NOT assigned at Subscription level, checking Resource Group level assignment now. Please bear in mind that if you plan on having the Deployment Managed Identity create the Resource Group for you, then you will need to grant Contributor role at Subscription level."
 	#DMInot subscription level, check resource group level
 	rgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$RESOURCEGROUPNAME'].roleDefinitionName" --output tsv)
 	if [ -z "$rgContributor" ]; then
