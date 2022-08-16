@@ -813,12 +813,12 @@
                 "name": "DNSUpdate2",
                 "type": "Microsoft.Common.OptionsGroup",
                 "label": "Are your domain DNS records hosted in an Azure Public DNS Zone?",
-                "defaultValue": "Yes, I use an Azure Public DNS zone for my domain records.",
+                "defaultValue": "Yes, I use an Azure Public DNS zone to host my domain records.",
                 "toolTip": "You have an Azure DNS zone for your domain. The Name Servers of your domain at your domain registrar (ex. Google, Cloudflare, GoDaddy) are set as the Azure Public DNS zone ones.",
                 "constraints": {
                   "allowedValues": [
                     {
-                      "label": "Yes, I use Azure Public DNS zone to host my domain records.",
+                      "label": "Yes, I use an Azure Public DNS zone to host my domain records.",
                       "value": "Yes"
                     },
                     {
