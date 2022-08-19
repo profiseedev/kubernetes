@@ -199,18 +199,18 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	else
 		echo $"Setting Key Vault access policies to the Key Vault Specific Managed Identity."
 		echo $"Key Vault Specific Managed Identity configuration for KV access step 3a started. Assigning Get access policy for secrets."
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --spn $principalId --query id
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --object-id $principalId --query id"
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --secret-permissions get --object-id $principalId --query id
 		echo $"Key Vault Specific Managed Identity configuration for KV access step 3a finished. Assignment completed."
 
 		echo $"Key Vault Specific Managed Identity configuration for KV access step 3b started. Assigning Get access policy for keys."
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --spn $principalId --query id
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --object-id $principalId --query id"
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --key-permissions get --object-id $principalId --query id
 		echo $"Key Vault Specific Managed Identity configuration for KV access step 3b finished. Assignment completed."
 
 		echo $"Key Vault Specific Managed Identity configuration for KV access step 3c started. Assigning Get access policy for certificates."
-		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id"
-		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --spn $principalId --query id
+		echo "Running az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --object-id $principalId --query id"
+		az keyvault set-policy -n $keyVaultName --subscription $keyVaultSubscriptionId --certificate-permissions get --object-id $principalId --query id
 		eecho $"Key Vault Specific Managed Identity configuration for KV access step 3c finished. Assignment completed."
 
 		echo $"Key Vault Specific Managed Identity setup is now finished."
