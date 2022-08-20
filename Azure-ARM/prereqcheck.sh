@@ -52,7 +52,7 @@ echo "Running az identity show -g $mirg -n $miname --query principalId -o tsv"
 currentIdentityId=$(az identity show -g $mirg -n $miname --query principalId -o tsv)
 
 if [ -z "$currentIdentityId" ]; then
-	err="Unable to query the Deployment Managed Identity to get principal id. Exiting with error."
+	err="Unable to query the Deployment Managed Identity to get principal id. Exiting with error. IF the Deployment Managed Identity has just been created, this issue is most likely intermittent. Please retry your deployment."
 	echo $err
 	set_resultAndReturn;
 fi
@@ -63,8 +63,8 @@ fi
 echo "Is the Deployment Managed Identity assigned the Contributor Role at the Subscription or at the Resource Group level?"
 subscriptionContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)
 if [ -z "$subscriptionContributor" ]; then
-	echo "Role is NOT assigned at Subscription level, checking Resource Group level assignment now. Please bear in mind that if you plan on having the Deployment Managed Identity create the Resource Group for you, then you will need to grant Contributor role at Subscription level."
-	#DMInot subscription level, check resource group level
+	echo "Role is NOT assigned at Subscription level, checking Resource Group level assignment now. Please bear in mind that if you plan to have the Deployment Managed Identity create the Resource Group for you, then you will need to grant it Contributor role at Subscription level."
+	#Deployment MAnaged Identity is not granted Contributor at Subscription level, checking Resource Group level.
 	rgContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$RESOURCEGROUPNAME'].roleDefinitionName" --output tsv)
 	if [ -z "$rgContributor" ]; then
 		err="Role is NOT assigned at either Subscription or Resource Group level. Exiting with error. Please assign the Contributor role to the Deployment Managed Identity at either Subscription or Resource Group level. Please visit https://support.profisee.com/wikis/2022_r1_support/planning_your_managed_identity_configuration for more information."
@@ -74,7 +74,7 @@ if [ -z "$subscriptionContributor" ]; then
 		echo "Role is assigned at Resource level. Continuing checks."
 	fi
 
-	#If updating , check to make sure you have effective contributor access to the dns resource group
+	#If updating DNS, check to make sure you have effective contributor access to the DNS zone itself.
 	if [ "$UPDATEDNS" = "Yes" ]; then
 		echo "Is the Deployment Managed Identity assigned the DNS Zone Contributor role to the DNS zone itself?"
 		dnsznContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='DNS Zone Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$DOMAINNAMERESOURCEGROUP/providers/Microsoft.Network/dnszones/$DNSDOMAINNAME'].roleDefinitionName" --output tsv)
@@ -111,28 +111,28 @@ fi
 if [ "$USEPURVIEW" = "Yes" ]; then
 	purviewClientPermissions=$(az ad app permission list --id $PURVIEWCLIENTID --output tsv --query [].resourceAccess[].id)
 	
-	#User.Read
+	#Check if User.Read permission has been granted to the Purview specific Azure Application Registration.
 	if [[ $purviewClientPermissions != *"e1fe6dd8-ba31-4d61-89e7-88639da4683d"* ]]; then
-		echo "The Purview Azure AD application registration is missing the Microsoft Graph API User.Read delegated permission. Some governance features may not function until this permission is granted. This permissions might require an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information. "
+		echo "The Purview Azure AD application registration is missing the Microsoft Graph API User.Read delegated permission. Some governance features may not function until this permission is granted. This permission might require an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information. "
 	fi
 
-	#User.Read.All
+	#Check if User.Read.All permission has been granted to the Purview specific Azure Application Registration.
 	if [[ $purviewClientPermissions != *"df021288-bdef-4463-88db-98f22de89214"* ]]; then
-		echo "The Purview Azure AD application registration is missing the Microsoft Graph API User.Read.All application permission. Some governance features may not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information."
+		echo "The Purview Azure AD application registration is missing the Microsoft Graph API User.Read.All application permission. Some governance features will not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information."
 	fi
 
-	#Group.Read.All
+	#Check if Group.Read.All permission has been granted to the Purview specific Azure Application Registration.
 	if [[ $purviewClientPermissions != *"5b567255-7703-4780-807c-7be8301ae99b"* ]]; then
-		echo "The Purview Azure AD application registration is missing the Microsoft Graph API Group.Read.All application permission. Some governance features may not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information."
+		echo "The Purview Azure AD application registration is missing the Microsoft Graph API Group.Read.All application permission. Some governance features will not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information."
 	fi
 
-	#GroupMember.Read.All
+	#Check if GroupMember.Read.All permission has been granted to the Purview specific Azure Application Registration.
 	if [[ $purviewClientPermissions != *"98830695-27a2-44f7-8c18-0c3ebc9698f6"* ]]; then
-		echo "The Purview Azure AD application registration is missing the Microsoft Graph API GroupMember.Read.All application permission. Some governance features may not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information."
+		echo "The Purview Azure AD application registration is missing the Microsoft Graph API GroupMember.Read.All application permission. Some governance features will not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information."
 	fi
 fi 
 
-#If using keyvault, checks to make sure that the Deployment Managed Identity has been assigned the Managed Identity Contributor role AND User Access Administrator as Subscription level.
+#If using Key Vault, checks to make sure that the Deployment Managed Identity has been assigned the Managed Identity Contributor role AND User Access Administrator as Subscription level.
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo "Is the Deployment Managed Identity assigned the Managed Identity Contributor role at the Subscription level?"
 	subscriptionMIContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='Managed Identity Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID'].roleDefinitionName" --output tsv)

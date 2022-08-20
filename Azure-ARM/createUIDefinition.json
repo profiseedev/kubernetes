@@ -235,7 +235,7 @@
                   "value": "Yes"
                 },
                 {
-                  "label": "No, not at this time.",
+                  "label": "No, no need at this point.",
                   "value": "No"
                 }
               ],
@@ -787,12 +787,12 @@
             "name": "DNSUpdate",
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Use default Azure DNS?",
-            "defaultValue": "Yes, use default Azure DNS and Let’s Encrypt certificate (ex. https://[profisee].[region].cloudapp.azure.com/profisee)",
+            "defaultValue": "Yes, use default Azure DNS and Let’s Encrypt for certificates (ex. https://[profisee].[region].cloudapp.azure.com/profisee)",
             "toolTip": "Profisee will configure Let's Encrypt to generate and auto-renew a TLS certificate for use with Azure hosted DNS. Ex. profisee.eastus2.cloudapp.azure.com/{web app name}.",
             "constraints": {
               "allowedValues": [
                 {
-                  "label": "Yes, use default Azure DNS and Let’s Encrypt for certificates (ex. https://[profisee name].[region].cloudapp.azure.com/profisee)",
+                  "label": "Yes, use default Azure DNS and Let’s Encrypt for certificates (ex. https://[profisee].[region].cloudapp.azure.com/profisee)",
                   "value": "No"
                 },
                 {
@@ -813,12 +813,12 @@
                 "name": "DNSUpdate2",
                 "type": "Microsoft.Common.OptionsGroup",
                 "label": "Are your domain DNS records hosted in an Azure Public DNS Zone?",
-                "defaultValue": "Yes, I use an Azure Public DNS zone for my domain.",
+                "defaultValue": "Yes, I use an Azure Public DNS zone to host my domain records.",
                 "toolTip": "You have an Azure DNS zone for your domain. The Name Servers of your domain at your domain registrar (ex. Google, Cloudflare, GoDaddy) are set as the Azure Public DNS zone ones.",
                 "constraints": {
                   "allowedValues": [
                     {
-                      "label": "Yes, I use Azure Public DNS zone to host my domain records.",
+                      "label": "Yes, I use an Azure Public DNS zone to host my domain records.",
                       "value": "Yes"
                     },
                     {
@@ -864,7 +864,7 @@
                 "label": "DNS Zone Resource Group",
                 "defaultValue": "",
                 "placeholder": "This value is CaSe SeNSitiVe! mydnszoneresourcegroup",
-                "toolTip": "This value is CaSe SeNSitiVe! Please type the name of the Azure Resource group that contains your Azure DNS Zone.",
+                "toolTip": "This value is CaSe SeNSitiVe! Please type the name of the Azure Resource group that contains your Azure DNS Zone. Check for case sensitivity by looking in Resource Groups in Azure vs which Resource Group the DNS zone itself belongs to.",
                 "constraints": {
                   "required": true,
                   "regex": "",
