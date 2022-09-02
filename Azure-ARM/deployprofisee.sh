@@ -172,7 +172,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
 	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
 	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId' -o tsv)
-	echo $"Key VAult Specific Managed  Identity configuration for Key Vault access step 2 finished."
+	echo $"Key VAult Specific Managed Identity configuration for Key Vault access step 2 finished."
 
 	echo $"Key Vault Specific Managed Identity configuration for KV access step 3 started."
 	echo "Sleeping for 60 seconds to wait for MI to be ready"
@@ -193,7 +193,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 
     #If Key Vault is RBAC based, assign Key Vault Secrets User role to the Key Vault Specific Managed Identity, otherwise assign Get policies for Keys, Secrets and Certificates.
     if [ "$rbacEnabled" = true ]; then
-		echo $"Setting Key Vault Secrets User RBAC role to the Key Vault Specific Managed Idenity."
+		echo $"Setting Key Vault Secrets User RBAC role to the Key Vault Specific Managed Identity."
 		echo "Running az role assignment create --role 'Key Vault Secrets User' --assignee $principalId --scope $KEYVAULT"
 		az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $KEYVAULT
 	else
