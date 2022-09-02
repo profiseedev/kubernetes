@@ -306,7 +306,7 @@
                     },
                     {
                         "name": "PURVIEWCLIENTSECRET",
-                        "value": "[variables('PurviewClientId')]"
+                        "value": "[variables('PurviewClientSecret')]"
                     }
                 ]           
             }
