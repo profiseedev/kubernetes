@@ -511,8 +511,6 @@ else
 	helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml
 
 fi
-
-
 	
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
