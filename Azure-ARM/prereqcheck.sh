@@ -38,7 +38,10 @@ echo $"USEKEYVAULT is $USEKEYVAULT"
 echo $"KEYVAULT is $KEYVAULT"
 echo $"USEPURVIEW is $USEPURVIEW"
 echo $"PURVIEWURL is $PURVIEWURL"
+echo $"PURVIEWCOLLECTIONNAME is $PURVIEWCOLLECTIONNAME"
 echo $"PURVIEWCLIENTID is $PURVIEWCLIENTID"
+echo $"PURVIEWCLIENTSECRET is $PURVIEWCLIENTSECRET"
+echo $"TENANTID is $TENANTID"
 
 IFS='/' read -r -a miparts <<< "$AZ_SCRIPTS_USER_ASSIGNED_IDENTITY" #splits the mi on slashes
 mirg=${miparts[4]}
@@ -129,6 +132,17 @@ if [ "$USEPURVIEW" = "Yes" ]; then
 	#Check if GroupMember.Read.All permission has been granted to the Purview specific Azure Application Registration.
 	if [[ $purviewClientPermissions != *"98830695-27a2-44f7-8c18-0c3ebc9698f6"* ]]; then
 		echo "The Purview Azure AD application registration is missing the Microsoft Graph API GroupMember.Read.All application permission. Some governance features will not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/2022_r1_support/prerequisites_for_integrating_with_purview for more information."
+	fi
+	#Check if the provided Purview Collection name exists.
+	#Acquire token
+	echo "Checking if provided Purview collection name exists."
+	purviewtoken=$(curl --location --request GET "https://login.microsoftonline.com/$TENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net' | jq --raw-output '.access_token');
+	collectionnamenotfound=$(curl --location --request GET "$PURVIEWURL/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONNAME'") | .name');
+	if [ -z "$collectionnamenotfound" ]; then
+		err=$"The $PURVIEWCOLLECTIONNAME provided could NOT be found. Exiting with error."
+		echo $err
+	else
+		echo $" The $PURVIEWCOLLECTIONNAME provided was found. Continuing checks."
 	fi
 fi 
 

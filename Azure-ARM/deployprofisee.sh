@@ -368,6 +368,7 @@ else
 	echo $"FILEREPOPASSWORD was passed in, we'll use it."
 fi
 
+echo $"Correction of TLS variables finished.";
 
 #If deployment of a new SQL database has been selected, we will create a SQL firewall rule to allow traffic from the AKS cluster's egress IP. 
 if [ "$SQLSERVERCREATENEW" = "Yes" ]; then
@@ -383,6 +384,18 @@ if [ "$SQLSERVERCREATENEW" = "Yes" ]; then
 	echo "The load balancer's egress public IP is $OutIP"
 	az sql server firewall-rule create --resource-group $RESOURCEGROUPNAME --server $sqlServerName --name "aks lb ip" --start-ip-address $OutIP --end-ip-address $OutIP
 	echo "Addition of the SQL firewall rule finished.";
+fi
+
+#Acquire the collection id from the collection name
+if [ "$USEPURVIEW" = "Yes" ]; then
+	echo "Obtain collection id from provided collection friendly name started.";
+	echo "Grab a token."
+	purviewtoken=$(curl --location --request GET "https://login.microsoftonline.com/$TENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net'  | jq --raw-output '.access_token');
+	echo "Token acquired."
+	echo "Find collection Id.";
+	COLLECTIONID=$(curl --location --request GET "$PURVIEWURL/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONNAME'") | .name');
+	echo $"Collection id is $COLLECTIONID, using that.";
+	echo "Obtain collection id from provided collection friendly name completed.";
 fi
 
 echo "The variables will now be set in the Settings.yaml file"
@@ -421,6 +434,7 @@ sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 sed -i -e 's~$PURVIEWURL~'"$PURVIEWURL"'~g' Settings.yaml
 sed -i -e 's/$PURVIEWTENANTID/'"$TENANTID"'/g' Settings.yaml
+sed -i -e 's/$PURVIEWCOLLECTIONNAME/'"$COLLECTIONID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTID/'"$PURVIEWCLIENTID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTSECRET/'"$PURVIEWCLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$WEBAPPNAME/'"$WEBAPPNAME"'/g' Settings.yaml
