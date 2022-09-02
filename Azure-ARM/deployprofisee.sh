@@ -505,20 +505,9 @@ if [ "$profiseepresent" = "profiseeplatform" ]; then
 	sleep 30;
 fi
 
-echo "If we are using Key Vault and Profisee was uninstalled, then the profisee-license, profisee-sql-username, profisee-sql-password and profisee-tls-ingress secrets are missing. We need to find and restart the key-vault pod so that we can re-pull and re-mount the secrets."
-#Find and delete the key-vault pod
-if [ "$USEKEYVAULT" = "Yes" ]; then
-	findkvpod=$(kubectl get pods -n profisee -o jsonpath='{.items[?(@.metadata.labels.app=="profisee-keyvault")].metadata.name}')
-	if [ "$findkvpod" = "$findkvpod" ]; then
-	echo $"Profisee Key Vault pod name is $findkvpod, deleting it."
-	kubectl delete pod -n profisee $findkvpod --force --grace-period=0
-	echo "Now let's install Profisee."
-	helm install -n profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
-	fi
-else
-	echo "Now let's install Profisee."
-	helm install -n profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
-fi
+echo "Now let's install Profisee."
+helm install -n profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
+
 	
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
