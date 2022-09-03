@@ -89,7 +89,7 @@ cloud:
         clientSecret: "$PURVIEWCLIENTSECRET"
         tenantId: "$PURVIEWTENANTID"
         url: "$PURVIEWURL"
-        purviewCollectionId: "$PURVIEWCOLLECTIONID"  
+        collectionId: "$PURVIEWCOLLECTIONID"  
     aws:
       isProvider: false
     google:
