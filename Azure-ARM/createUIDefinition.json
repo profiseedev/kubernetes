@@ -292,7 +292,7 @@
           "label": "Purview Collection Friendly Name",
           "defaultValue": "",
           "placeholder": "tHiS iS CaSe SenSiTiVe!",
-          "toolTip": "Please provide the Purview Collection Friendly Name that you see in your Purview account. Profisee will deploy to that collection.",
+          "toolTip": "Please provide the Purview Collection Friendly Name that you see in your Purview account. Profisee will deploy to that collection. If you would like to deploy in the root collection, please specify its friendly name.",
           "constraints": {
             "required": true,
             "regex": "",
