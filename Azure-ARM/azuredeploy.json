@@ -297,7 +297,7 @@
                         "value": "[variables('PurviewUrl')]"
                     },
                     {
-                        "name": "PURVIEWCOLLECTIONFFRIENDLYNAME",
+                        "name": "PURVIEWCOLLECTIONFRIENDLYNAME",
                         "value": "[variables('PurviewCollectionFriendlyName')]"
                     },
                     {
