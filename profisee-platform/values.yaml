@@ -89,6 +89,7 @@ cloud:
         clientSecret: "$OIDCCLIENTSECRET"
         instanceName: "$PURVIEWINSTANCENAME"
         baseUrl: "$PURVIEWBASEURL"
+        collectionId: "$PURVIEWCOLLECTIONID"
     aws:
       isProvider: false
       ebsVolumeId: ""
