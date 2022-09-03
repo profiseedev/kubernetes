@@ -85,11 +85,11 @@ cloud:
         clientId: ""
         resourceId: ""
       purview:
-        clientId: "$PURVIEWCLIENTID"
-        clientSecret: "$PURVIEWCLIENTSECRET"
         tenantId: "$PURVIEWTENANTID"
         url: "$PURVIEWURL"
-        collectionId: "$PURVIEWCOLLECTIONID"  
+        collectionId: "$PURVIEWCOLLECTIONID"
+        clientId: "$PURVIEWCLIENTID"
+        clientSecret: "$PURVIEWCLIENTSECRET"
     aws:
       isProvider: false
     google:
