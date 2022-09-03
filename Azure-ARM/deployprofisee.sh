@@ -396,7 +396,7 @@ if [ "$USEPURVIEW" = "Yes" ]; then
 	echo $"Stripping /catalog from $PURVIEWURL."
 	PURVIEWACCOUNTFQDN=${PURVIEWURL::-8}
 	echo $"Purview account name is $PURVIEWACCOUNTFQDN. Using it."
-	COLLECTIONID=$(curl --location --request GET "$PURVIEWACCOUNTFQDN/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONNAME'") | .name')
+	COLLECTIONID=$(curl --location --request GET "$PURVIEWACCOUNTFQDN/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONFRIENDLYNAME'") | .name')
 	echo $"Collection id is $COLLECTIONID, using that.";
 	echo "Obtain collection id from provided collection friendly name completed.";
 fi
@@ -437,7 +437,7 @@ sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 sed -i -e 's~$PURVIEWURL~'"$PURVIEWURL"'~g' Settings.yaml
 sed -i -e 's/$PURVIEWTENANTID/'"$TENANTID"'/g' Settings.yaml
-sed -i -e 's/$PURVIEWCOLLECTIONNAME/'"$COLLECTIONID"'/g' Settings.yaml
+sed -i -e 's/$PURVIEWCOLLECTIONID/'"$COLLECTIONID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTID/'"$PURVIEWCLIENTID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTSECRET/'"$PURVIEWCLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$WEBAPPNAME/'"$WEBAPPNAME"'/g' Settings.yaml

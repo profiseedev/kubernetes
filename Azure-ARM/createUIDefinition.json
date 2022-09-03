@@ -287,7 +287,7 @@
           }
         },
         {
-          "name": "PurviewCollectionName",
+          "name": "PurviewCollectionFriendlyName",
           "type": "Microsoft.Common.TextBox",
           "label": "Purview Collection Friendly Name",
           "defaultValue": "",
@@ -1022,7 +1022,7 @@
     "UsePurview":"[steps('profisee').UsePurview]",
     "PurviewUrl":"[steps('profisee').GetPurviewUrlRestApiResponse.properties.endpoints.catalog]",
     "PurviewClientId":"[steps('profisee').PurviewClientID]",
-    "PurviewCollectionName":"[steps('profisee').PurviewCollectionName]",
+    "PurviewCollectionFriendlyName":"[steps('profisee').PurviewCollectionFriendlyName]",
     "PurviewClientSecret":"[steps('profisee').PurviewClientSecret]",
     "PurviewAccountResourceGroup":"[last(take(split(steps('profisee').PurviewAccountName.id, '/'), 5))]",
     "ProfiseeWebAppName":"[steps('profisee').ProfiseeWebAppName]"

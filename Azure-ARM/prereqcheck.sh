@@ -38,7 +38,7 @@ echo $"USEKEYVAULT is $USEKEYVAULT"
 echo $"KEYVAULT is $KEYVAULT"
 echo $"USEPURVIEW is $USEPURVIEW"
 echo $"PURVIEWURL is $PURVIEWURL"
-echo $"PURVIEWCOLLECTIONNAME is $PURVIEWCOLLECTIONNAME"
+echo $"PURVIEWCOLLECTIONFRIENDLYNAME is $PURVIEWCOLLECTIONFRIENDLYNAME"
 echo $"PURVIEWCLIENTID is $PURVIEWCLIENTID"
 echo $"PURVIEWCLIENTSECRET is $PURVIEWCLIENTSECRET"
 echo $"TENANTID is $TENANTID"
@@ -135,17 +135,17 @@ if [ "$USEPURVIEW" = "Yes" ]; then
 	fi
 	#Check if the provided Purview Collection name exists.
 	#Acquire token
-	echo "Checking if provided Purview collection name exists."
+	echo "Checking if provided Purview collection friendly name exists."
 	purviewtoken=$(curl --location --request GET "https://login.microsoftonline.com/$TENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net' | jq --raw-output '.access_token');
 	#Strip /catalog from end of Purview URL
 	PURVIEWACCOUNTFQDN=${PURVIEWURL::-8}
 	collectionnamenotfound=$(curl --location --request GET "$PURVIEWACCOUNTFQDN/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONNAME'") | .name');
 	if [ -z "$collectionnamenotfound" ]; then
-		err=$"The "$PURVIEWCOLLECTIONNAME" collection name provided could NOT be found. Exiting with error."
+		err=$"The "$PURVIEWCOLLECTIONFRIENDLYNAME" collection name provided could NOT be found. Exiting with error."
 		echo $err
 		set_resultAndReturn;
 	else
-		echo $"The "$PURVIEWCOLLECTIONNAME" collection name provided was found. Continuing checks."
+		echo $"The "$PURVIEWCOLLECTIONFRIENDLYNAME" collection name provided was found. Continuing checks."
 	fi
 fi 
 

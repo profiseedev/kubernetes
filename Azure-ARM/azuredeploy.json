@@ -29,7 +29,7 @@
       "defaultValue": "",
       "type": "String"
     },
-    "PurviewCollectionName": {
+    "PurviewCollectionFriendlyName": {
       "defaultValue": "",
       "type": "String"
     },
@@ -230,7 +230,7 @@
 
     "UsePurview":"[parameters('UsePurview')]",
     "PurviewUrl":"[parameters('PurviewUrl')]",
-    "PurviewCollectionName":"[parameters('PurviewCollectionName')]",
+    "PurviewCollectionFriendlyName":"[parameters('PurviewCollectionFriendlyName')]",
     "PurviewClientId":"[parameters('PurviewClientId')]",
     "PurviewClientSecret":"[parameters('PurviewClientSecret')]",
     "PurviewAccountResourceGroup":"[parameters('PurviewAccountResourceGroup')]"
@@ -297,8 +297,8 @@
                         "value": "[variables('PurviewUrl')]"
                     },
                     {
-                        "name": "PURVIEWCOLLECTIONNAME",
-                        "value": "[variables('PurviewCollectionName')]"
+                        "name": "PURVIEWCOLLECTIONFFRIENDLYNAME",
+                        "value": "[variables('PurviewCollectionFriendlyName')]"
                     },
                     {
                         "name": "PURVIEWCLIENTID",
@@ -770,8 +770,8 @@
                         "value": "[variables('PurviewUrl')]"
                     },
                     {
-                        "name": "PURVIEWCOLLECTIONNAME",
-                        "value": "[variables('PurviewCollectionName')]"
+                        "name": "PURVIEWCOLLECTIONFRIENDLYNAME",
+                        "value": "[variables('PurviewCollectionFriendlyName')]"
                     },
                     {
                         "name": "PURVIEWCLIENTID",

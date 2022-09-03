@@ -128,11 +128,11 @@ spec:
             secretKeyRef:
                 name: profisee-purview
                 key: ProfiseePurviewUrl
-        - name: ProfiseePurviewCollectionName
+        - name: ProfiseePurviewCollectionFriendlyName
           valueFrom:
             secretKeyRef:
                 name: profisee-purview
-                key: ProfiseePurviewCollectionName
+                key: ProfiseePurviewCollectionFriendlyName
         - name: ProfiseePurviewTenantId
           valueFrom:
             secretKeyRef:
