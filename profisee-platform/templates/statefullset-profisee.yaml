@@ -132,7 +132,7 @@ spec:
           valueFrom:
             secretKeyRef:
                 name: profisee-purview
-                key: ProfiseePurviewCollectionFriendlyName
+                key: ProfiseePurviewCollectionId
         - name: ProfiseePurviewTenantId
           valueFrom:
             secretKeyRef:

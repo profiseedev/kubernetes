@@ -390,13 +390,13 @@ fi
 if [ "$USEPURVIEW" = "Yes" ]; then
 	echo "Obtain collection id from provided collection friendly name started.";
 	echo "Grab a token."
-	purviewtoken=$(curl --location --request GET "https://login.microsoftonline.com/$TENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net'  | jq --raw-output '.access_token');
+	purviewtoken=$(curl --location --no-progress-meter --request GET "https://login.microsoftonline.com/$TENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net'  | jq --raw-output '.access_token');
 	echo "Token acquired."
 	echo "Find collection Id.";
 	echo $"Stripping /catalog from $PURVIEWURL."
 	PURVIEWACCOUNTFQDN=${PURVIEWURL::-8}
 	echo $"Purview account name is $PURVIEWACCOUNTFQDN. Using it."
-	COLLECTIONID=$(curl --location --request GET "$PURVIEWACCOUNTFQDN/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONFRIENDLYNAME'") | .name')
+	COLLECTIONID=$(curl --location --no-progress-meter --request GET "$PURVIEWACCOUNTFQDN/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONFRIENDLYNAME'") | .name')
 	echo $"Collection id is $COLLECTIONID, using that.";
 	echo "Obtain collection id from provided collection friendly name completed.";
 fi

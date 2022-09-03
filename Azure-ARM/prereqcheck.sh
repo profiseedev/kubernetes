@@ -136,10 +136,10 @@ if [ "$USEPURVIEW" = "Yes" ]; then
 	#Check if the provided Purview Collection name exists.
 	#Acquire token
 	echo "Checking if provided Purview collection friendly name exists."
-	purviewtoken=$(curl --location --request GET "https://login.microsoftonline.com/$TENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net' | jq --raw-output '.access_token');
+	purviewtoken=$(curl --location --no-progress-meter --request GET "https://login.microsoftonline.com/$TENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net' | jq --raw-output '.access_token');
 	#Strip /catalog from end of Purview URL
 	PURVIEWACCOUNTFQDN=${PURVIEWURL::-8}
-	collectionnamenotfound=$(curl --location --request GET "$PURVIEWACCOUNTFQDN/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONFRIENDLYNAME'") | .name');
+	collectionnamenotfound=$(curl --location --no-progress-meter --request GET "$PURVIEWACCOUNTFQDN/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONFRIENDLYNAME'") | .name');
 	if [ -z "$collectionnamenotfound" ]; then
 		err=$"The "$PURVIEWCOLLECTIONFRIENDLYNAME" collection name provided could NOT be found. Exiting with error."
 		echo $err
