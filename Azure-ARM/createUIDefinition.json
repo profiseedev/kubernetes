@@ -298,7 +298,7 @@
             "regex": "",
             "validationMessage": ""
           },
-          "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.preview')]"
+          "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.preview'))]"
         },
         {
           "name": "PurviewClientID",
