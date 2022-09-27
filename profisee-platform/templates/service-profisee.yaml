@@ -8,6 +8,7 @@ spec:
   ports:
   - port: 80
     protocol: TCP
+    appProtocol: TCP
   selector:
       app: profisee
   type: ClusterIP
