@@ -54,6 +54,7 @@ image:
 licenseFileData: $LICENSEDATA
 preInitScriptData: Cg==
 postInitScriptData: Cg==
+COMPlus_gcServer: '0 /m'
 oidcFileData: |
     {      
     }
