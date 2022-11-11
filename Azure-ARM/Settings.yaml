@@ -87,9 +87,8 @@ cloud:
       purview:
         tenantId: "$PURVIEWTENANTID"
         url: "$PURVIEWURL"
-        collectionId: "$PURVIEWCOLLECTIONID"
         clientId: "$PURVIEWCLIENTID"
-        clientSecret: "$PURVIEWCLIENTSECRET"
+        clientSecret: "$PURVIEWCLIENTSECRET"        
     aws:
       isProvider: false
     google:

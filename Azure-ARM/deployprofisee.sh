@@ -158,12 +158,12 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"AKS Managed Identity configuration for Key Vault access started."
 
 	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 started."
-	echo "Running az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME"
-	az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME
-	echo "Running az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME"
-	az role assignment create --role "Managed Identity Operator" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
-	echo "Running az role assignment create --role "Virtual Machine Contributor" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME"
-	az role assignment create --role "Virtual Machine Contributor" --assignee $KUBERNETESCLIENTID --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
+	echo "Running az role assignment create --role "Managed Identity Operator" --assignee-object-id $KUBERNETESOBJECTID --assignee-principal-type ServicePrincipal --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME"
+	az role assignment create --role "Managed Identity Operator" --assignee-object-id $KUBERNETESOBJECTID --assignee-principal-type ServicePrincipal --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME
+	echo "Running az role assignment create --role "Managed Identity Operator" --assignee-object-id $KUBERNETESOBJECTID --assignee-principal-type ServicePrincipal --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME"
+	az role assignment create --role "Managed Identity Operator" --assignee-object-id $KUBERNETESOBJECTID --assignee-principal-type ServicePrincipal --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
+	echo "Running az role assignment create --role "Virtual Machine Contributor" --assignee-object-id $KUBERNETESOBJECTID --assignee-principal-type ServicePrincipal --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME"
+	az role assignment create --role "Virtual Machine Contributor" --assignee-object-id $KUBERNETESOBJECTID --assignee-principal-type ServicePrincipal --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$AKSINFRARESOURCEGROUPNAME
 	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 finished."
 
 	#Create Azure AD Managed Identity specifically for Key Vault, get its ClientiId and PrincipalId so we can assign to it the Reader role in steps 3a, 3b and 3c to.
@@ -172,7 +172,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
 	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
 	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId' -o tsv)
-	echo $"Key VAult Specific Managed Identity configuration for Key Vault access step 2 finished."
+	echo $"Key VAult Specific Managed  Identity configuration for Key Vault access step 2 finished."
 
 	echo $"Key Vault Specific Managed Identity configuration for KV access step 3 started."
 	echo "Sleeping for 60 seconds to wait for MI to be ready"
@@ -243,7 +243,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip --set controller.service.appProtocol=false --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 else
 	echo $"Install nginx without integration with Let's Encrypt's automatic certificate provisioning and renewal, also do not set the DNS FQDN to the load balancer's ingress public IP address."
-	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip  --set controller.service.appProtocol=false
+	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip --set controller.service.appProtocol=false
 fi
 
 echo $"Installation of nginx finished, sleeping for 30 seconds to wait for the load balancer's public IP to become available.";
@@ -386,21 +386,6 @@ if [ "$SQLSERVERCREATENEW" = "Yes" ]; then
 	echo "Addition of the SQL firewall rule finished.";
 fi
 
-#Acquire the collection id from the collection name
-if [ "$USEPURVIEW" = "Yes" ]; then
-	echo "Obtain collection id from provided collection friendly name started.";
-	echo "Grab a token."
-	purviewtoken=$(curl --location --no-progress-meter --request GET "https://login.microsoftonline.com/$TENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net'  | jq --raw-output '.access_token');
-	echo "Token acquired."
-	echo "Find collection Id.";
-	echo $"Stripping /catalog from $PURVIEWURL."
-	PURVIEWACCOUNTFQDN=${PURVIEWURL::-8}
-	echo $"Purview account name is $PURVIEWACCOUNTFQDN. Using it."
-	COLLECTIONTRUEID=$(curl --location --no-progress-meter --request GET "$PURVIEWACCOUNTFQDN/account/collections?api-version=2019-11-01-preview" --header "Authorization: Bearer $purviewtoken" | jq --raw-output '.value | .[] | select(.friendlyName=="'$PURVIEWCOLLECTIONID'") | .name')
-	echo $"Collection id is $COLLECTIONTRUEID, using that.";
-	echo "Obtain collection id from provided collection friendly name completed.";
-fi
-
 echo "The variables will now be set in the Settings.yaml file"
 #Setting storage related variables
 FILEREPOUSERNAME="Azure\\\\\\\\${STORAGEACCOUNTNAME}"
@@ -437,7 +422,6 @@ sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 sed -i -e 's~$PURVIEWURL~'"$PURVIEWURL"'~g' Settings.yaml
 sed -i -e 's/$PURVIEWTENANTID/'"$TENANTID"'/g' Settings.yaml
-sed -i -e 's/$PURVIEWCOLLECTIONID/'"$COLLECTIONTRUEID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTID/'"$PURVIEWCLIENTID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTSECRET/'"$PURVIEWCLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$WEBAPPNAME/'"$WEBAPPNAME"'/g' Settings.yaml
@@ -511,7 +495,7 @@ else
 	helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml
 
 fi
-	
+
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
 

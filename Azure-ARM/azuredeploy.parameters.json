@@ -14,9 +14,6 @@
         "ProfiseeWebAppName": {
             "value": ""
         },
-        "TenantId": {
-            "value": ""
-        },
         "ActiveDirectoryCreateApp": {
             "value": "Yes"
         },
@@ -24,9 +21,6 @@
             "value": ""
         },
         "PurviewUrl": {
-            "value": ""
-        },
-        "PurviewCollectionFriendlyName": {
             "value": ""
         },
         "PurviewClientId": {
