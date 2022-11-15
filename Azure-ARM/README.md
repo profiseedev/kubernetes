@@ -35,11 +35,10 @@ For customers upgrading **from** v2022**R1** and earlier. There are two changes 
 1. Purview Collections integration necessitated changes in the ARM template, container and deployment templates. Please **DO** review the upgrade instructions posted below **before** you start the upgrade process.
 2. History tables improvements - you will need to run this immediately **after** the upgrade to 2022**R2**, one time **only**. 
 
-Please the full through the upgrade instructions both here and in our Support portal and prepare for the upgrade process.
+Please read through the upgrade instructions both here and in our Support portal and prepare for the upgrade process. The instructions below are combined for both Purview Collections and the History table improvements. 
 
-**Purview collections
 For customers who do **NOT** use Purview.
-1. Connect to your cluster from the Azure portal or powershell. For customers running Private PaaS please connect to your jumpbox first then connect via powershell or Lens.
+1. Connect to your cluster from the Azure portal or powershell. For customers running Private PaaS please connect to your jumpbox first, then connect via powershell or Lens.
 2. Run the following commands (if you do not have the repo added that would be the first step):  
 helm -n profisee repo add profisee https://profiseedev.github.io/kubernetes  
 helm repo update  
@@ -49,7 +48,7 @@ kubectl logs -n profisee profisee-0 -f #this will allow you to follow the upgrad
 4. To run the Histroy tables upgrade please follow the steps as outlined [here](https://support.profisee.com/wikis/release_notes/upgrade_considerations_and_prerequisites)
     
 For customers who **DO** use Purview.
-1. Connect to your cluster from the Azure portal or powershell. For customers running Private PaaS please connect to your jumpbox first then connect via powershell or Lens.
+1. Connect to your cluster from the Azure portal or powershell. For customers running Private PaaS please connect to your jumpbox first, then connect via powershell or Lens.
 2. Locate your Purview collection Id by visiting your MS Purview Governance Portal. Go to the collection where you would like Profisee to deploy to. Your URL will look like so: web.purview.azure.com/resource/**YourPurviewAccountName**/main/datasource/collections?collection=**ThisIsTheCollectionId**&feature.tenant=**YourAzureTenantId**
 3. Run the following commands (if you do not have the repo added that would be the first step):  
 helm -n profisee repo add profisee https://profiseedev.github.io/kubernetes  
