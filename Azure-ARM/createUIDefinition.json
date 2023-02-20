@@ -50,7 +50,7 @@
         "options": {
           "icon": "Info",
           "text": "Click here to learn how Profisee uses Managed Identities.",
-          "uri": "https://support.profisee.com/wikis/2022_r1_support/planning_your_managed_identity_configuration"
+          "uri": "https://support.profisee.com/wikis/2022_r2_support/planning_your_managed_identity_configuration"
         }
       }
     ],
@@ -97,23 +97,11 @@
             "name": "ProfiseeVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Profisee version",
-            "defaultValue": "2022R1.0",
+            "defaultValue": "2022R2.0",
             "toolTip": "Which release of the Profisee Platform to deploy.",
             "constraints": {
               "required": true,
               "allowedValues": [
-                {
-                  "label": "2020R1.0",
-                  "value": "profiseeplatform:2020r1.0"
-                },
-                {
-                  "label": "2020R1.1",
-                  "value": "profiseeplatform:2020r1.1"
-                },
-                {
-                  "label": "2020R2.0",
-                  "value": "profiseeplatform:2020r2.0"
-                },
                 {
                   "label": "2021R1.0",
                   "value": "profiseeplatform:2021r1.0"
@@ -131,10 +119,6 @@
                   "value": "profiseeplatform:2021r3.0"
                 },
                 {
-                  "label": "2021R3.0.saas",
-                  "value": "profiseeplatform:2021r3.0.saas"
-                },
-                {
                   "label": "2022R1.0",
                   "value": "profiseeplatform:2022r1.0"
                 },
@@ -143,16 +127,12 @@
                   "value": "profiseeplatform:2022r1-126062"
                 },
                 {
-                  "label": "2022R2.preview",
-                  "value": "profiseeplatform:2022r2.preview"
+                  "label": "2022R2.0",
+                  "value": "profiseeplatform:2022r2.0"
                 },
                 {
-                  "label": "2022R2.preview-history",
-                  "value": "profiseeplatform:2022r2.preview-history"
-                },
-                {
-                  "label": "2022R2.preview-matching",
-                  "value": "profiseeplatform:2022r2.preview-matching"
+                  "label": "2023R1.preview",
+                  "value": "profiseeplatform:2023r1.preview"
                 }
               ]
             },
@@ -208,7 +188,7 @@
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Create a new Azure AD application registration for you?",
             "defaultValue": "Yes, create and configure it for me.",
-            "toolTip": "An Azure AD application registration will be used for authentication via ID tokens. For more information please visit https://support.profisee.com/wikis/2022_r1_support/deploying_the_AKS_cluster_with_the_arm_template.",
+            "toolTip": "An Azure AD application registration will be used for authentication via ID tokens. For more information please visit https://support.profisee.com/wikis/2022_r2_support/deploying_the_AKS_cluster_with_the_arm_template.",
             "constraints": {
               "allowedValues": [
                 {
@@ -264,7 +244,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1-126062'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.preview-history'))]"
+            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1-126062'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.preview'))]"
           },
           {
             "name": "PurviewAccountName",
@@ -300,7 +280,7 @@
               "regex": "",
               "validationMessage": ""
             },
-            "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.preview'))]"
+            "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.preview')))]"
           },
           {
             "name": "PurviewClientID",
