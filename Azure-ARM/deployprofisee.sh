@@ -506,11 +506,9 @@ if [ "$profiseepresent" = "profiseeplatform" ]; then
 	helm -n profisee uninstall profiseeplatform;
 	echo "Will sleep for 30 seconds to allow clean uninstall."
 	sleep 30;
-else
+fi
 	echo "Profisee is not installed, proceeding to install it."
 	helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml
-
-fi
 	
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
