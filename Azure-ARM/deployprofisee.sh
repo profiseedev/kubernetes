@@ -325,7 +325,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	echo $"azureAppReplyUrl is $azureAppReplyUrl";
 
 	echo "Creation of the Azure Active Directory application registration started."
-	CLIENTID=$(az ad app create --display-name $azureClientName --web-redirect-uris $azureAppReplyUrl --query 'appId' -o tsv);
+	CLIENTID=$(az ad app create --display-name $azureClientName --web-redirect-uris $azureAppReplyUrl --enable-id-token-issuance --query 'appId' -o tsv);
 	echo $"CLIENTID is $CLIENTID";
 	if [ -z "$CLIENTID" ]; then
 		echo $"CLIENTID is null fetching";
