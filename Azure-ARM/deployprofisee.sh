@@ -325,7 +325,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	echo $"azureAppReplyUrl is $azureAppReplyUrl";
 
 	echo "Creation of the Azure Active Directory application registration started."
-	CLIENTID=$(az ad app create --display-name $azureClientName --reply-urls $azureAppReplyUrl --query 'appId' -o tsv);
+	CLIENTID=$(az ad app create --display-name $azureClientName --web-redirect-uris $azureAppReplyUrl --query 'appId' -o tsv);
 	echo $"CLIENTID is $CLIENTID";
 	if [ -z "$CLIENTID" ]; then
 		echo $"CLIENTID is null fetching";
@@ -352,7 +352,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	        echo "Update of the application registration's permissions, step 1 finished."
 
 	        echo "Update of the application registration's permissions, step 2 started."
-	        az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000
+	        az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --scope User.Read
 	        echo "Update of the application registration's permissions, step 2 finished."
 	        echo "Update of Azure Active Directory finished.";
 	fi
