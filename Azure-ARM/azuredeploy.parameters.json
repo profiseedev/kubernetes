@@ -36,7 +36,7 @@
             "value": ""
         },
         "ManagedIdentityName": {
-            "value": {              
+            "value": {
             }
         },
         "KubernetesClusterName": {
@@ -136,6 +136,9 @@
             "value": ""
         },
         "KubenetesInfrastructureResourceGroupName": {
+            "value": ""
+        },
+        "AuthenticationType":{
             "value": ""
         }
     }
