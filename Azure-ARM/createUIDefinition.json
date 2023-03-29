@@ -373,16 +373,16 @@
             "name": "AuthenticationType",
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Authentication and Authorization",
-            "defaultValue": "Kubernetes with local Accounts",
+            "defaultValue": "Local Accounts with Kubernetes RBAC",
             "toolTip": "Choose among native Kubernetes RBAC managed locally or leverage Azure AD to manage identities for your Kubernetes RBAC needs. Azure RBAC for AKS is a fully managed RBAC solution providing both authentication and authorization through Azure IAM.",
             "constraints": {
               "allowedValues": [
                 {
-                  "label": "Kubernetes with local Accounts",
+                  "label": "Local Accounts with Kubernetes RBAC",
                   "value": "LocalAccounts"
                 },
                 {
-                  "label": "Azure with RBAC",
+                  "label": "Azure AD authentication with Azure RBAC",
                   "value": "AzureRBAC"
                 }
               ],
