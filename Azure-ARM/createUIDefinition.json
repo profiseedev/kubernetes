@@ -370,6 +370,27 @@
             "visible": true
           },
           {
+            "name": "AuthenticationType",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Authentication and Authorization",
+            "defaultValue": "Local Accounts with Kubernetes RBAC",
+            "toolTip": "Choose among native Kubernetes RBAC managed locally or leverage Azure AD to manage identities for your Kubernetes RBAC needs. Azure RBAC for AKS is a fully managed RBAC solution providing both authentication and authorization through Azure IAM.",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "Local Accounts with Kubernetes RBAC",
+                  "value": "LocalAccounts"
+                },
+                {
+                  "label": "Azure AD authentication with Azure RBAC",
+                  "value": "AzureRBAC"
+                }
+              ],
+              "required": true
+            },
+            "visible": true
+          },
+          {
             "name": "KubernetesLinuxNodeSizeSection",
             "type": "Microsoft.Common.Section",
             "label": "Linux Nodepool",
@@ -960,6 +981,7 @@
       "KubernetesLinuxNodeCount": "[steps('kubernetes').KubernetesLinuxNodeCount]",
       "KubernetesWindowsNodeSize": "[steps('kubernetes').KubernetesWindowsNodeSizeSection.KubernetesWindowsNodeSize]",
       "KubernetesWindowsNodeCount": "[steps('kubernetes').KubernetesWindowsNodeCount]",
+      "AuthenticationType": "[steps('kubernetes').AuthenticationType]",
       "KubernetesVnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.name]",
       "KubernetesVnetResourceGroup": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.resourceGroup]",
       "KubernetesSubnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.subnets.subnet1.name]",
