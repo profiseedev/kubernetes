@@ -544,7 +544,7 @@ result="{\"Result\":[\
 ]}"
 
 echo $result
-
+az ad user show --id $ADMINACCOUNTNAME
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
 az ad user show --id $ADMINACCOUNTNAME --query "objectId" -o tsv
