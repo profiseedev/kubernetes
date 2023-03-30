@@ -547,13 +547,15 @@ echo $result
 
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
-
+az ad user show --id $ADMINACCOUNTNAME --query "objectId" -o tsv
 echo $"AuthenticationType is $AUTHENTICATIONTYPE";
 echo $"Resourcegroup is $RESOURCEGROUPNAME";
 echo $"clustername is $CLUSTERNAME";
+ID="$(az ad user show --id $ADMINACCOUNTNAME --query "objectId" -o tsv)"
+echo $"ID is $ID";
 if [ "$AUTHENTICATIONTYPE" = "AzureRBAC" ]; then
-	az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-aad --enable-azure-rbac
-	ObjectId=$(az ad user show --id $ADMINACCOUNTNAME --query 'objectId' -o tsv)
+	az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-aad --enable-azure-rbac --disable-local-accounts
+	ObjectId="$(az ad user show --id $ADMINACCOUNTNAME --query "objectId" -o tsv)"
 	echo $"ObjectId of ADMIN is $ObjectId";
 	az role assignment create --role "Azure Kubernetes Service RBAC Cluster Admin" --assignee-object-id $ObjectId --assignee-principal-type User --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME
 fi;
