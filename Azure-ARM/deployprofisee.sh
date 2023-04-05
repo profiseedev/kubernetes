@@ -33,7 +33,13 @@ printenv;
 
 #Get AKS credentials, this allows us to use kubectl commands, if needed.
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
-
+az extension add --name aks-preview
+az extension update --name aks-preview
+az feature register --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
+az feature show --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
+az provider register --namespace Microsoft.ContainerService
+az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-oidc-issuer --enable-workload-identity
+OIDC_ISSUER="$(az aks show -n $CLUSTERNAME -g $RESOURCEGROUPNAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 #Install dotnet core.
 echo $"Installation of dotnet core started.";
 curl -fsSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
