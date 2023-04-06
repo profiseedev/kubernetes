@@ -21,7 +21,7 @@ spec:
         {{- end}}
     spec:
       terminationGracePeriodSeconds: 60
-      #serviceAccountName: profiseeserviceaccount
+      serviceAccountName: profiseeserviceaccount
       nodeSelector:
         "kubernetes.io/os": windows
       volumes:
