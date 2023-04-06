@@ -10,6 +10,7 @@ spec:
       app: profisee
   serviceName: profisee-service
   replicas: {{.Values.profiseeRunTime.clusterNodeCount}}
+  serviceAccountName: profiseeserviceaccount
   template:
     metadata:
       name: profisee
@@ -22,7 +23,6 @@ spec:
       terminationGracePeriodSeconds: 60
       nodeSelector:
         "kubernetes.io/os": windows
-      serviceAccountName: profiseeserviceaccount
       volumes:
       - name: data-volume
         projected:
