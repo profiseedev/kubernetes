@@ -147,17 +147,17 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#Install AAD pod identity into AKS.
 	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started. If present, we uninstall and reinstall it."
 	#If AAD Pod Identity is present, uninstall it.
-        aadpodpresent=$(helm list -n kube-system -f workload-identity -o table --short)
-        if [ "$aadpodpresent" = "workload-identity" ]; then
-	        helm uninstall -n profisee workload-identity;
-	        echo $"Will sleep for 30 seconds to allow clean uninstall of AAD Pod Identity."
-	        sleep 30;
-        fi
+        # workloadpodpresent=$(kubectl get pods -A | grep azure-wi-webhook-controller)
+        # if [ "$workloadpodpresent" = "workload-identity" ]; then
+	    #     az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-workload-identity false
+	    #     echo $"Will sleep for 30 seconds to allow clean uninstall of AAD Pod Identity."
+	    #     sleep 30;
+        # fi
     az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-oidc-issuer --enable-workload-identity
 	OIDC_ISSUER="$(az aks show -n $CLUSTERNAME -g $RESOURCEGROUPNAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 	# helm repo add azure-workload-identity https://azure.github.io/azure-workload-identity/charts
 	# helm install -n profisee v1.0.0 azure-workload-identity/workload-identity-webhook --set azureTenantID=$TENANTID
-	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver finished."
+	echo $"Installation of Key Vault Azure Active Directory workload Identity driver finished."
 
 	#Assign AAD roles to the AKS AgentPool Managed Identity. The Pod identity communicates with the AgentPool MI, which in turn communicates with the Key Vault specific Managed Identity.
 	echo $"AKS Managed Identity configuration for Key Vault access started."
@@ -175,7 +175,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"Key Vault Specific Managed Identity configuration for Key Vault access step 2 started."
 	identityName="AKSKeyVaultUser"
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
-	az identity federated-credential create --name federatedIdentityName --identity-name $identityName  --resource-group $AKSINFRARESOURCEGROUPNAME --issuer $OIDC_ISSUER --subject system:serviceaccount:kube-system:profiseeserviceaccount --audience api://AzureADTokenExchange
+	az identity federated-credential create --name federatedIdentityName --identity-name $identityName  --resource-group $AKSINFRARESOURCEGROUPNAME --issuer $OIDC_ISSUER --subject system:serviceaccount:profisee:profiseeserviceaccount --audience api://AzureADTokenExchange
 	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
 	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId' -o tsv)
 	echo $"Key VAult Specific Managed Identity configuration for Key Vault access step 2 finished."
