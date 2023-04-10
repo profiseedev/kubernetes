@@ -149,15 +149,15 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	#Install AAD pod identity into AKS.
 	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started. If present, we uninstall and reinstall it."
 	#If AAD Pod Identity is present, uninstall it.
-        aadpodpresent=$(helm list -n profisee -f pod-identity -o table --short)
-        if [ "$aadpodpresent" = "pod-identity" ]; then
-	        helm uninstall -n profisee pod-identity;
+        aadpodpresent=$(helm list -n profisee -f workload-identity -o table --short)
+        if [ "$aadpodpresent" = "workload-identity" ]; then
+	        helm uninstall -n profisee workload-identity;
 	        echo $"Will sleep for 30 seconds to allow clean uninstall of AAD Pod Identity."
 	        sleep 30;
         fi
 
-	helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
-	helm install -n profisee pod-identity aad-pod-identity/aad-pod-identity
+	helm repo add azure-workload-identity https://azure.github.io/azure-workload-identity/charts
+	helm install -n profisee v1.0.0 azure-workload-identity/workload-identity-webhook --set azureTenantID=$TENANTID
 	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver finished."
 
 	#Assign AAD roles to the AKS AgentPool Managed Identity. The Pod identity communicates with the AgentPool MI, which in turn communicates with the Key Vault specific Managed Identity.
