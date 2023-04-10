@@ -38,7 +38,7 @@ az extension update --name aks-preview
 az feature register --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
 az feature show --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
 az provider register --namespace Microsoft.ContainerService
-az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-oidc-issuer --enable-workload-identity
+# az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-oidc-issuer --enable-workload-identity
 OIDC_ISSUER="$(az aks show -n $CLUSTERNAME -g $RESOURCEGROUPNAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 #Install dotnet core.
 echo $"Installation of dotnet core started.";
