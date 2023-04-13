@@ -338,23 +338,55 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 
 	#If Azure Application Registration User.Read permission is present, skip adding it.
 	echo $"Let's check to see if the User.Read permission is granted, skip if has been."
-        appregpermissionspresent=$(az ad app permission list --id $CLIENTID --query "[].resourceAccess[].id" -o tsv)
-        if [ "$appregpermissionspresent" = "e1fe6dd8-ba31-4d61-89e7-88639da4683d" ]; then
-	        echo $"User.Read permissions already present, no need to add it."
+    appregpermissionspresent=$(az ad app permission list --id $CLIENTID --query "[].resourceAccess[].id" -o tsv)
+    if [ "$appregpermissionspresent" = "e1fe6dd8-ba31-4d61-89e7-88639da4683d" ]; then
+	    echo $"User.Read permissions already present, no need to add it."
 	else
+	    echo "Update of the application registration's permissions, step 1 started."
+	    #Add a Graph API permission to "Sign in and read user profile"
+	    az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
+	    echo "Creation of the service principal started."
+	    az ad sp create --id $CLIENTID
+	    echo "Creation of the service principal finished."
+	    echo "Update of the application registration's permissions, step 1 finished."
 
-	        echo "Update of the application registration's permissions, step 1 started."
-	        #Add a Graph API permission to "Sign in and read user profile"
-	        az ad app permission add --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
-	        echo "Creation of the service principal started."
-	        az ad sp create --id $CLIENTID
-	        echo "Creation of the service principal finished."
-	        echo "Update of the application registration's permissions, step 1 finished."
-
-	        echo "Update of the application registration's permissions, step 2 started."
-	        az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --scope User.Read
-	        echo "Update of the application registration's permissions, step 2 finished."
-	        echo "Update of Azure Active Directory finished.";
+	    echo "Update of the application registration's permissions, step 2 started."
+	    az ad app permission grant --id $CLIENTID --api 00000003-0000-0000-c000-000000000000 --scope User.Read
+	    echo "Update of the application registration's permissions, step 2 finished."
+	    echo "Update of Azure Active Directory finished.";
+	fi
+	#If Azure Application Registration "groups" idToken is present, skip adding it.
+	echo $"Let's check to see if the "groups" idToken is present, skip if present."
+    appregidtokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].idToken[].name" -o tsv)
+    if [ "$appregidtokengroupsclaimpresent" = "groups" ]; then
+	    echo $"Token is configured with groups idToken claim, no need to add it."
+	else
+	    echo "Update of the application registration's token configuration started."
+	    #Add a groups claim token for idTokens
+	    az ad app update --id $CLIENTID --optional-claims '{"idToken":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}]}'
+	    echo "Update of the application registration's token configuration finished."
+	fi
+	#If Azure Application Registration "groups" accessToken is present, skip adding it.
+	echo $"Let's check to see if the "groups" accessToken is present, skip if present."
+    appregaccesstokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].accessToken[].name" -o tsv)
+    if [ "$appregaccesstokengroupsclaimpresent" = "groups" ]; then
+	    echo $"Token is configured with groups accessToken claim, no need to add it."
+	else
+	    echo "Update of the application registration's token configuration started."
+	    #Add a groups claim token for accessTokens
+	    az ad app update --id $CLIENTID --optional-claims '{"accessToken":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}]}'
+	    echo "Update of the application registration's token configuration finished."
+	fi
+	#If Azure Application Registration "groups" saml2Token is present, skip adding it.
+	echo $"Let's check to see if the "groups" saml2Token is present, skip if present."
+    appregsaml2tokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].saml2Token[].name" -o tsv)
+    if [ "$appregsaml2tokengroupsclaimpresent" = "groups" ]; then
+	    echo $"Token is configured with groups saml2Token claim, no need to add it."
+	else
+	    echo "Update of the application registration's token configuration started."
+	    #Add a groups claim token for saml2Tokens
+	    az ad app update --id $CLIENTID --optional-claims '{"saml2Token":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}]}'
+	    echo "Update of the application registration's token configuration finished."
 	fi
 fi
 
