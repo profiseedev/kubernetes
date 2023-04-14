@@ -364,6 +364,8 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	    echo "Update of the application registration's token configuration started."
 	    #Add a groups claim token for idTokens
 	    az ad app update --id $CLIENTID --optional-claims '{"idToken":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}]}'
+		appregidtokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].idToken[].name" -o tsv)
+		echo $"idToken claim $appregidtokengroupsclaimpresent"
 	    echo "Update of the application registration's token configuration finished."
 	fi
 	#If Azure Application Registration "groups" accessToken is present, skip adding it.
@@ -375,6 +377,8 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	    echo "Update of the application registration's token configuration started."
 	    #Add a groups claim token for accessTokens
 	    az ad app update --id $CLIENTID --optional-claims '{"accessToken":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}]}'
+		appregaccesstokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].accessToken[].name" -o tsv)
+		echo $"idToken claim $appregaccesstokengroupsclaimpresent"
 	    echo "Update of the application registration's token configuration finished."
 	fi
 	#If Azure Application Registration "groups" saml2Token is present, skip adding it.
@@ -386,6 +390,8 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	    echo "Update of the application registration's token configuration started."
 	    #Add a groups claim token for saml2Tokens
 	    az ad app update --id $CLIENTID --optional-claims '{"saml2Token":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}]}'
+		appregsaml2tokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].saml2Token[].name" -o tsv)
+		echo $"idToken claim $appregsaml2tokengroupsclaimpresent"
 	    echo "Update of the application registration's token configuration finished."
 	fi
 fi
