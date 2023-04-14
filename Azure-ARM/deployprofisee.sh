@@ -132,11 +132,16 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	        echo $"Will sleep for 30 seconds to allow clean uninstall of Key Vault CSI driver."
 	        sleep 30;
         fi
+		kvcsipresentinkubesystem=$(helm list -n kube-system -f csi-secrets-store-provider-azure -o table --short)
+        if [ "$kvcsipresentinkubesystem" = "csi-secrets-store-provider-azure" ]; then
+	        helm uninstall -n kube-system csi-secrets-store-provider-azure;
+	        echo $"Will sleep for 30 seconds to allow clean uninstall of Key Vault CSI driver."
+	        sleep 30;
+        fi
 
-	#https://github.com/Azure/secrets-store-csi-driver-provider-azure/releases/tag/0.0.16
-	#The behavior changed so now you have to enable the secrets-store-csi-driver.syncSecret.enabled=true
 	#We are not but if this is to run on a windows node, then you use this --set windows.enabled=true --set secrets-store-csi-driver.windows.enabled=true
-	helm install -n profisee csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --set secrets-store-csi-driver.syncSecret.enabled=true
+	#Recommendation is to have CSI installed in kube-system as per https://azure.github.io/secrets-store-csi-driver-provider-azure/docs/getting-started/installation/
+	helm install -n kube-system csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --set secrets-store-csi-driver.syncSecret.enabled=true
 	echo $"Installation of Key Vault Container Storage Interface (CSI) driver finished."
 
 
