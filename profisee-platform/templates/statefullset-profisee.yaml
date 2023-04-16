@@ -63,7 +63,7 @@ spec:
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
         livenessProbe:
-        {{- if atoi substr 0 4 {{ .Values.image.tag }} ge 2023}}
+        {{- if atoi substr 0 4 "{{ .Values.image.tag }}" ge 2023 }}
           httpGet:
             path: /rest/health
             port: 80
