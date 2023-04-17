@@ -63,19 +63,19 @@ spec:
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
         livenessProbe:
-        {{- if contains "2023" "{{ .Values.image.tag }}" }}
+        # {{- if contains "2023" "{{ .Values.image.tag }}" }}
           httpGet:
             path: /rest/health
             port: 80
             scheme: HTTPS
-        {{ else }}
-          exec:
-            command:
-              - powershell
-              - >-
-                if((Get-Service profisee).Status -ne 'Stopped'){return
-                0}else{throw 'Profisee service is down'}
-        {{ end }}
+        # {{ else }}
+        #   exec:
+        #     command:
+        #       - powershell
+        #       - >-
+        #         if((Get-Service profisee).Status -ne 'Stopped'){return
+        #         0}else{throw 'Profisee service is down'}
+        # {{ end }}
           initialDelaySeconds: 600
           timeoutSeconds: 5
           periodSeconds: 60
