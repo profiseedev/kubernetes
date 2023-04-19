@@ -62,14 +62,15 @@ spec:
       - name: profisee
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
-        profiseeversion: atoi substr 0 4 "{{ .Values.image.tag }}"
+        profiseeversion: substr 0 4 "{{ .Values.image.tag | quote }}"
+        profiseeversiontag: atoi .profiseeversion
         livenessProbe:
-        {{- if profiseeversion ge 2023 }}
+        {{- if .profiseeversiontag ge 2023 }}
           httpGet:
             path: /rest/health
             port: 80
             scheme: HTTP
-        {{ else }}
+        {{- else }}
           exec:
             command:
               - powershell
