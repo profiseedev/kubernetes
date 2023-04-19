@@ -62,11 +62,21 @@ spec:
       - name: profisee
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
+        profiseeversion: atoi substr 0 4 "{{ .Values.image.tag }}"
         livenessProbe:
+        {{- if profiseeversion ge 2023 }}
           httpGet:
             path: /rest/health
             port: 80
             scheme: HTTP
+        {{ else }}
+          exec:
+            command:
+              - powershell
+              - >-
+                if((Get-Service profisee).Status -ne 'Stopped'){return
+                0}else{throw 'Profisee service is down'}
+        {{ end }}
           initialDelaySeconds: 600
           timeoutSeconds: 5
           periodSeconds: 60

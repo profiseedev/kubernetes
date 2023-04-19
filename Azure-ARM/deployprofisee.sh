@@ -563,3 +563,26 @@ if [ "$AUTHENTICATIONTYPE" = "AzureRBAC" ]; then
 fi;
 
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
+
+# echo "Profisee is not installed, proceeding to install it." 
+# #Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly. 
+# echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected." 
+# findwinnodename=$(kubectl get nodes -l=kubernetes.io/os=windows -o 'jsonpath={.items[*].metadata.name}') 
+# findallocatablecpu=$(kubectl get nodes $findwindowsnode -o 'jsonpath={.status.allocatable.cpu}') 
+# findallocatablememory=$(kubectl get nodes $findwindowsnode -o 'jsonpath={.status.allocatable.memory}') 
+# #Math around safe vCPU values 
+# vcpubarevalue=${findallocatablecpu::-1}
+# safecpuvalue=$(($vcpubarevalue-800)) 
+# safecpuvalueinmilicores="${safecpuvalue}m" 
+# echo $"The safe vCPU value to assign to Profisee pod is $safecpuvalueinmilicores." 
+# #Math around safe RAM values 
+# vrambarevalue=${findallocatablememory::-2} 
+# saferamvalue=$(($vrambarevalue-2253125)) 
+# saferamvalueinkibibytes="${saferamvalue}Ki" 
+# echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes." 
+# helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml 
+# #Patch stateful set for safe vCPU and RAM values 
+# kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/cpu", "value":'"$safecpuvalueinmilicores"'}]' 
+# echo $"Profisee's stateful set has been patched to use $safecpuvalueinmilicores for CPU." 
+# kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]' 
+# echo $"Profisee's stateful set has been patched to use $saferamvalueinkibibytes for RAM."
