@@ -76,7 +76,7 @@ spec:
               - >-
                 if((Get-Service profisee).Status -ne 'Stopped'){return
                 0}else{throw 'Profisee service is down'}
-        {{ end }}
+        {{- end }}
           initialDelaySeconds: 600
           timeoutSeconds: 5
           periodSeconds: 60
