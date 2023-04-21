@@ -64,7 +64,7 @@ spec:
         imagePullPolicy: Always
         livenessProbe:
         {{- $profiseeversion := substr .Values.image.tag 0 4 -}}
-        {{- $profiseeversiontag := toInt $profiseeversion -}}
+        {{- $profiseeversiontag := int $profiseeversion -}}
         {{- if $profiseeversiontag ge 2023 }}
           httpGet:
             httpHeaders:
