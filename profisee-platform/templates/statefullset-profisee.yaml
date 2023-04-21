@@ -65,7 +65,7 @@ spec:
         livenessProbe:
         {{ $profiseeversion := substr 0 4 .Values.image.tag|int|quote }}
         #{{- $profiseeversiontag := int $profiseeversion -}}
-        {{- if $profiseeversion ge 2023 }}
+        {{- if profiseeversion ge 2023 }}
           httpGet:
             httpHeaders:
               - name: Host
