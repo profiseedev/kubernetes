@@ -64,7 +64,6 @@ spec:
         imagePullPolicy: Always
         livenessProbe:
         {{- $profiseeversion := (substr 0 4 .Values.image.tag)|int }}
-        #{{- $profiseeversiontag := int $profiseeversion -}}
         {{- if ge $profiseeversion 2023 }}
           httpGet:
             httpHeaders:
@@ -81,6 +80,9 @@ spec:
                 if((Get-Service profisee).Status -ne 'Stopped'){return
                 0}else{throw 'Profisee service is down'}
         {{- end }}
+          initialDelaySeconds: 600
+          timeoutSeconds: 5
+          periodSeconds: 60
         volumeMounts:
         - name: data-volume
           mountPath: C:\data
