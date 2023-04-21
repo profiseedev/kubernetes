@@ -65,7 +65,7 @@ spec:
         profiseeversion: substr 0 4 "{{ .Values.image.tag | quote }}"
         profiseeversiontag: atoi .profiseeversion
         livenessProbe:
-        {{ if .profiseeversiontag ge 2023 }}
+        {{ if profiseeversiontag ge 2023 }}
           httpGet:
             httpHeaders:
               - name: Host
