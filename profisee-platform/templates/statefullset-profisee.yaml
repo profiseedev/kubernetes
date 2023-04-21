@@ -62,7 +62,10 @@ spec:
       - name: profisee
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
+        profiseeversion: substr 0 4 "{{ .Values.image.tag | quote }}"
+        profiseeversiontag: atoi .profiseeversion
         livenessProbe:
+        {{ if .profiseeversiontag ge 2023 }}
           httpGet:
             httpHeaders:
               - name: Host
@@ -70,9 +73,14 @@ spec:
             path: /{{.Values.profiseeRunTime.webAppName}}/rest/health
             port: 80
             scheme: HTTP
-          initialDelaySeconds: 600
-          timeoutSeconds: 5
-          periodSeconds: 60
+        {{ else }}
+          exec:
+            command:
+              - powershell
+              - >-
+                if((Get-Service profisee).Status -ne 'Stopped'){return
+                0}else{throw 'Profisee service is down'}
+        {{ end }}
         volumeMounts:
         - name: data-volume
           mountPath: C:\data
