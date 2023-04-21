@@ -63,9 +63,9 @@ spec:
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
         livenessProbe:
-        {{- $profiseeversion := substr {{.Values.image.tag}} 0 4 -}}
-        {{- $profiseeversiontag := int $profiseeversion -}}
-        {{- if $profiseeversiontag ge 2023 }}
+        {{ $profiseeversion := substr 0 4 .Values.image.tag|int|quote }}
+        #{{- $profiseeversiontag := int $profiseeversion -}}
+        {{- if $profiseeversion ge 2023 }}
           httpGet:
             httpHeaders:
               - name: Host
