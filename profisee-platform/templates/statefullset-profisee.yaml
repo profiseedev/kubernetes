@@ -62,10 +62,10 @@ spec:
       - name: profisee
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
-        profiseeversion: substr 0 4 "{{ .Values.image.tag | quote }}"
-        profiseeversiontag: atoi .profiseeversion
         livenessProbe:
-        {{ if profiseeversiontag ge 2023 }}
+        {{ $profiseeversion := substr 0 4 .Values.image.tag }}
+        {{ $profiseeversiontag := atoi $profiseeversion -}}
+        {{ if $profiseeversiontag ge 2023 }}
           httpGet:
             httpHeaders:
               - name: Host
