@@ -424,7 +424,7 @@ ACRREPOLABEL="${repostring[1],,}"
 
 #Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly. 
 # echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected." 
-findwinnodename=$(kubectl get nodes -l=kubernetes.io/os=windows -o 'jsonpath={.items[*].metadata.name}') 
+findwinnodename=$(kubectl get nodes -l kubernetes.io/os=windows -o 'jsonpath={.items[*].metadata.name}') 
 findallocatablecpu=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.cpu}') 
 findallocatablememory=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.memory}')
 vcpubarevalue=${findallocatablecpu::-1}

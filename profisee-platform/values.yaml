@@ -32,8 +32,8 @@ profiseeRunTime:
     clusterNodeCount: 1
 clusterNode:
     limits:
-      cpu: $CPULIMITSVALUE
-      memory: $MEMORYLIMITSVALUE
+      cpu: 1000
+      memory: 10T
     requests:
       cpu: 1
       memory: 1000M
