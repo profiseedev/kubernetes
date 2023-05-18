@@ -33,13 +33,13 @@ spec:
                 secretKeyRef:
                     name: profisee-sql-password
                     key: ProfiseeSqlPassword
-               resources:
-            limits:
-              cpu: {{.Values.clusterNode.limits.cpu}}
-              memory: {{.Values.clusterNode.limits.memory}}
-            requests:
-              cpu: {{.Values.clusterNode.requests.cpu}}
-              memory: {{.Values.clusterNode.requests.memory}}
+            resources:
+              limits:
+                cpu: {{.Values.clusterNode.limits.cpu}}
+                memory: {{.Values.clusterNode.limits.memory}}
+              requests:
+                cpu: {{.Values.clusterNode.requests.cpu}}
+                memory: {{.Values.clusterNode.requests.memory}}
             command:
             - $sqlScriptPath='C:\sqlMaintenance.sql';
             - Invoke-WebRequest -outfile $sqlScriptPath -usebasicparsing https://raw.githubusercontent.com/ProfiseeAdmin/kubernetes/master/Azure-ARM/sqlmaintenance.sql
