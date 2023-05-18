@@ -1,6 +1,3 @@
-if object_id('AzureSQLMaintenance') is null
-	exec('create procedure AzureSQLMaintenance as /*dummy procedure body*/ select 1;')	
-GO
 ALTER PROCEDURE [AzureSQLMaintenance]
 	(
 		@operation nvarchar(10) = null,
@@ -489,5 +486,4 @@ begin
 	if @LogToTable=1 insert into AzureSQLMaintenanceLog values(@OperationTime,null,null,sysdatetime(),sysdatetime(),'End of operation')
 	if @ScriptHasAnError=1 	raiserror('Script has errors - please review the log.',16,1)
 end
-GO
-print 'Execute AzureSQLMaintenance to get help'
+print 'Create or Alter Stored Procedure Done'
