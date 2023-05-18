@@ -28,7 +28,7 @@ spec:
                 secretKeyRef:
                     name: profisee-sql-password
                     key: ProfiseeSqlPassword
-            command: ["powershell"]
+            command:
             - $sqlScriptPath='C:\sqlMaintenance.sql';
             - Invoke-WebRequest -outfile $sqlScriptPath -usebasicparsing https://raw.githubusercontent.com/ProfiseeAdmin/kubernetes/master/Azure-ARM/sqlmaintenance.sql
             - $sqlText = Get-Content $sqlScriptPath -Raw
@@ -43,7 +43,7 @@ spec:
             - $SqlCmd.ExecuteNonQuery();
             - $SqlConnection.Close();
           restartPolicy: Never
-    selector:
-      app: profisee
-  backoffLimit: 0
+  #   selector:
+  #     app: profisee
+  # backoffLimit: 0
 {{- end }}
