@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: sqlmaintenance
-  namespace: {{ .Release.Namespace }}
+  namespace: {{.Release.Namespace}}
 spec:
   schedule: "0 * * * *"
   jobTemplate:
@@ -13,10 +13,10 @@ spec:
           containers:
           - name: profisee
             image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             envFrom:
             - configMapRef:
-               name: profisee-settings
+                name: profisee-settings
             env:
             - name: ProfiseeSqlUserName
               valueFrom:
@@ -46,4 +46,4 @@ spec:
     selector:
       app: profisee
   backoffLimit: 0
-{{- end }}  
+{{- end }}
