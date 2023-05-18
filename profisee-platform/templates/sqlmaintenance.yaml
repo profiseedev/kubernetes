@@ -1,0 +1,49 @@
+{{- if not .Values.profiseeRunTime.isPaaS }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sqlmaintenance
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: profisee
+            image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: IfNotPresent
+            envFrom:
+            - configMapRef:
+               name: profisee-settings
+            env:
+            - name: ProfiseeSqlUserName
+              valueFrom:
+                secretKeyRef:
+                    name: profisee-sql-username
+                    key: ProfiseeSqlUserName
+            - name: ProfiseeSqlPassword
+              valueFrom:
+                secretKeyRef:
+                    name: profisee-sql-password
+                    key: ProfiseeSqlPassword
+            command: ["powershell"]
+            - $sqlScriptPath='C:\sqlMaintenance.sql';
+            - Invoke-WebRequest -outfile $sqlScriptPath -usebasicparsing https://raw.githubusercontent.com/ProfiseeAdmin/kubernetes/master/Azure-ARM/sqlmaintenance.sql
+            - $sqlText = Get-Content $sqlScriptPath -Raw
+            - $SqlConnection = New-Object System.Data.SqlClient.SqlConnection;
+            - $SqlConnection.ConnectionString = 'Data Source={0};database={1};User ID={2};Password={3}' -f $env:ProfiseeSqlServer,$env:ProfiseeSqlDatabase,$env:ProfiseeSqlUserName,$env:ProfiseeSqlPassword; - $SqlConnection.Open();
+            - $SqlCmd = New-Object System.Data.SqlClient.SqlCommand;
+            - $SqlCmd.CommandText = $sqlText;
+            - $SqlCmd.Connection = $SqlConnection;
+            - $SqlCmd.ExecuteNonQuery();
+            - $sqlquery="exec [dbo].[AzureSQLMaintenance] @Operation='all' ,@LogToTable=1"
+            - $SqlCmd.CommandText = $sqlquery;
+            - $SqlCmd.ExecuteNonQuery();
+            - $SqlConnection.Close();
+          restartPolicy: Never
+    selector:
+      app: profisee
+  backoffLimit: 0
+{{- end }}  
