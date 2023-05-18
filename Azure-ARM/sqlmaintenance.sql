@@ -1,4 +1,4 @@
-ALTER PROCEDURE [AzureSQLMaintenance]
+CREATE OR ALTER PROCEDURE [AzureSQLMaintenance]
 	(
 		@operation nvarchar(10) = null,
 		@mode nvarchar(10) = 'smart',
