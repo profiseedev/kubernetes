@@ -36,7 +36,8 @@ spec:
                 secretKeyRef:
                     name: profisee-sql-password
                     key: ProfiseeSqlPassword
-            command:
+            command: ["Powershell"]
+            args:
             - $sqlScriptPath="C:\sqlMaintenance.sql";
             - Invoke-WebRequest -outfile $sqlScriptPath -usebasicparsing "https://raw.githubusercontent.com/ProfiseeAdmin/kubernetes/master/Azure-ARM/sqlmaintenance.sql";
             - $sqlText = Get-Content $sqlScriptPath -Raw;
