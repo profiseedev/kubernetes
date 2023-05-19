@@ -7,18 +7,46 @@ metadata:
   labels:
     app: profisee
 spec:
-  # selector:
-  #   matchLabels:
-  #     app: profisee
-  schedule: "0 * * * *"
+  schedule: "0 */4 * * *"
   jobTemplate:
     spec:
       template:
+        metadata:
+          name: profisee
+          labels:
+            app: profisee
         spec:
+          volumes:
+            - name: data-volume
+              projected:
+                sources:
+                - secret:
+                    name: profisee-license
+                - secret:
+                    name: profisee-oidcproviders
+            - name: initscripts
+              secret:
+                secretName: profisee-initscripts
+            - name: fileshare
+              csi:
+                driver: file.csi.azure.com
+                volumeAttributes:
+                  secretName: profisee-fileshare
+                  shareName: files
           containers:
           - name: profisee
             image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             imagePullPolicy: Always
+            ports:
+              - containerPort: 80
+            volumeMounts:
+              - name: data-volume
+                readOnly: true
+                mountPath: C:\data
+              - name: initscripts
+                mountPath: C:\scripts
+              - name: fileshare
+                mountPath: c:\Fileshare
             envFrom:
             - configMapRef:
                 name: profisee-settings
