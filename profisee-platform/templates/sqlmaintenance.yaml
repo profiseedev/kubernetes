@@ -7,7 +7,7 @@ metadata:
   labels:
     app: profisee
 spec:
-  schedule: "0 */4 * * *"
+  schedule: "3 * * * *"
   jobTemplate:
     spec:
       template:
@@ -16,37 +16,12 @@ spec:
           labels:
             app: profisee
         spec:
-          volumes:
-            - name: data-volume
-              projected:
-                sources:
-                - secret:
-                    name: profisee-license
-                - secret:
-                    name: profisee-oidcproviders
-            - name: initscripts
-              secret:
-                secretName: profisee-initscripts
-            - name: fileshare
-              csi:
-                driver: file.csi.azure.com
-                volumeAttributes:
-                  secretName: profisee-fileshare
-                  shareName: files
           containers:
           - name: profisee
             image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             imagePullPolicy: Always
             ports:
               - containerPort: 80
-            volumeMounts:
-              - name: data-volume
-                readOnly: true
-                mountPath: C:\data
-              - name: initscripts
-                mountPath: C:\scripts
-              - name: fileshare
-                mountPath: c:\Fileshare
             envFrom:
             - configMapRef:
                 name: profisee-settings
@@ -61,28 +36,23 @@ spec:
                 secretKeyRef:
                     name: profisee-sql-password
                     key: ProfiseeSqlPassword
-            resources:
-              limits:
-                cpu: {{.Values.clusterNode.limits.cpu}}
-                memory: {{.Values.clusterNode.limits.memory}}
-              requests:
-                cpu: {{.Values.clusterNode.requests.cpu}}
-                memory: {{.Values.clusterNode.requests.memory}}
             command:
-            - $sqlScriptPath='C:\sqlMaintenance.sql';
-            - Invoke-WebRequest -outfile $sqlScriptPath -usebasicparsing https://raw.githubusercontent.com/ProfiseeAdmin/kubernetes/master/Azure-ARM/sqlmaintenance.sql
-            - $sqlText = Get-Content $sqlScriptPath -Raw
+            - $sqlScriptPath="C:\sqlMaintenance.sql";
+            - Invoke-WebRequest -outfile $sqlScriptPath -usebasicparsing "https://raw.githubusercontent.com/ProfiseeAdmin/kubernetes/master/Azure-ARM/sqlmaintenance.sql";
+            - $sqlText = Get-Content $sqlScriptPath -Raw;
             - $SqlConnection = New-Object System.Data.SqlClient.SqlConnection;
-            - $SqlConnection.ConnectionString = 'Data Source={0};database={1};User ID={2};Password={3}' -f $env:ProfiseeSqlServer,$env:ProfiseeSqlDatabase,$env:ProfiseeSqlUserName,$env:ProfiseeSqlPassword; - $SqlConnection.Open();
+            - $SqlConnection.ConnectionString = 'Data Source={0};database={1};User ID={2};Password={3}' -f $env:ProfiseeSqlServer,$env:ProfiseeSqlDatabase,$env:ProfiseeSqlUserName,$env:ProfiseeSqlPassword;
+            - $SqlConnection.Open();
             - $SqlCmd = New-Object System.Data.SqlClient.SqlCommand;
             - $SqlCmd.CommandText = $sqlText;
             - $SqlCmd.Connection = $SqlConnection;
             - $SqlCmd.ExecuteNonQuery();
-            - $sqlquery="exec [dbo].[AzureSQLMaintenance] @Operation='all' ,@LogToTable=1"
+            - $sqlquery="exec [dbo].[AzureSQLMaintenance] @Operation='all' ,@LogToTable=1";
             - $SqlCmd.CommandText = $sqlquery;
             - $SqlCmd.ExecuteNonQuery();
             - $SqlConnection.Close();
           restartPolicy: Never
           imagePullSecrets:
             - name: profisee-containerregistry
+      backoffLimit: 0
 {{- end }}
