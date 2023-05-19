@@ -55,7 +55,6 @@ spec:
             - $SqlCmd.ExecuteNonQuery();
             - $SqlConnection.Close();
           restartPolicy: Never
-  #   selector:
-  #     app: profisee
-  # backoffLimit: 0
+          imagePullSecrets:
+            - name: profisee-containerregistry
 {{- end }}
