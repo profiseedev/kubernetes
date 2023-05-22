@@ -368,7 +368,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	else
 	    echo "Update of the application registration's token configuration started."
 	    #Add a groups claim token for idTokens
-	    az ad app update --id $CLIENTID --set groupMembershipClaims=SecurityGroup --optional-claims '{"idToken":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}],"accessToken":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}],"saml2Token":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}]}'
+	    az ad app update --id $CLIENTID --set groupMembershipClaims=ApplicationGroup --optional-claims '{"idToken":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}],"accessToken":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}],"saml2Token":[{"additionalProperties":[],"essential":false,"name":"groups","source":null}]}'
 		appregidtokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].idToken[].name" -o tsv)
 		appregaccesstokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].accessToken[].name" -o tsv)
 		appregsaml2tokengroupsclaimpresent=$(az ad app list --app-id $CLIENTID --query "[].optionalClaims[].saml2Token[].name" -o tsv)
@@ -529,7 +529,32 @@ if [ "$profiseepresent" = "profiseeplatform" ]; then
 	sleep 30;
 fi
 	echo "Profisee is not installed, proceeding to install it."
+	#Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly.
+	#echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected."
+	#findwinnodename=$(kubectl get nodes -l kubernetes.io/os=windows -o 'jsonpath={.items[*].metadata.name}')
+	#findallocatablecpu=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.cpu}')
+	#findallocatablememory=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.memory}')
+	#Math around safe vCPU values
+	#vcpubarevalue=${findallocatablecpu::-1}
+	#safecpuvalue=$(($vcpubarevalue-800))
+	#safecpuvalueinmilicores="${safecpuvalue}m"
+	#echo $"The safe vCPU value to assign to Profisee pod is $safecpuvalueinmilicores."
+	#Math around safe RAM values
+	#vrambarevalue=${findallocatablememory::-2}
+	#saferamvalue=$(($vrambarevalue-2253125))
+	#saferamvalueinkibibytes="${saferamvalue}Ki"
+	#echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes."
+
+	#Apply values to Settings.yaml prior to deployment.
+	#sed -i -e '35s/1000/'"$safecpuvalueinmilicores"'/g' Settings.yaml
+	#sed -i -e '36s/10T/'"$saferamvalueinkibibytes"'/g' Settings.yaml
+
 	helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml
+	#Patch stateful set for safe vCPU and RAM values
+	#kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/cpu", "value":'"$safecpuvalueinmilicores"'}]'
+	#echo $"Profisee's stateful set has been patched to use $safecpuvalueinmilicores for CPU."
+	#kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]'
+	#echo $"Profisee's stateful set has been patched to use $saferamvalueinkibibytes for RAM."
 
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
