@@ -7,9 +7,10 @@ metadata:
   labels:
     app: profisee
 spec:
-  schedule: "3 * * * *"
+  schedule: "0 19 * * *"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 100
       template:
         metadata:
           name: profisee
