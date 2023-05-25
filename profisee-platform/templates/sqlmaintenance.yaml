@@ -10,7 +10,7 @@ spec:
   schedule: "0 19 * * *"
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: 100
+      ttlSecondsAfterFinished: 400
       template:
         metadata:
           name: profisee
@@ -49,7 +49,7 @@ spec:
             - $SqlCmd.CommandText = $sqlText;
             - $SqlCmd.Connection = $SqlConnection;
             - $SqlCmd.ExecuteNonQuery();
-            - $sqlquery="exec [dbo].[AzureSQLMaintenance] @Operation='all' ,@LogToTable=1";
+            - $sqlquery="exec [dbo].[AzureSQLMaintenance] @Operation='all' ,@debug = 'off',@RebuildHeaps = 0,@mode = 'smart',@ResumableIndexRebuild = 0,@LogToTable=1";
             - $SqlCmd.CommandText = $sqlquery;
             - $SqlCmd.ExecuteNonQuery();
             - $SqlConnection.Close();
