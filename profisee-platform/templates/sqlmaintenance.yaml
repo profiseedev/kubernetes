@@ -4,13 +4,11 @@ kind: CronJob
 metadata:
   name: sqlmaintenance
   namespace: {{.Release.Namespace}}
-  labels:
-    app: profisee
 spec:
-  schedule: "0 22 * * *"
+  schedule: "0 16 * * *"
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: 400
+      ttlSecondsAfterFinished: 50
       template:
         metadata:
           name: profisee
