@@ -5,16 +5,14 @@ metadata:
   name: sqlmaintenance
   namespace: {{.Release.Namespace}}
 spec:
-  schedule: "0 16 * * *"
+  schedule: "0 3 * * 6"
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 50
       template:
-        metadata:
-          name: profisee
-          labels:
-            app: profisee
         spec:
+          nodeSelector:
+            maintenance: sqlcronjob
           containers:
           - name: profisee
             image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
