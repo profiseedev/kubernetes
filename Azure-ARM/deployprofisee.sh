@@ -195,7 +195,8 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 
     #Check if Key Vault is RBAC or policy based.
     echo $"Checking if Key Vauls is RBAC based or policy based"
-    rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
+    az login --tenant $TENANTID
+	rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
 
     #If Key Vault is RBAC based, assign Key Vault Secrets User role to the Key Vault Specific Managed Identity, otherwise assign Get policies for Keys, Secrets and Certificates.
     if [ "$rbacEnabled" = true ]; then
