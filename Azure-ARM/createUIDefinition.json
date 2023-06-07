@@ -123,6 +123,10 @@
                   "value": "profiseeplatform:2021r3-131373"
                 },
                 {
+                  "label": "2021r3.0-131373",
+                  "value": "profiseeplatform:2021r3.0-131373"
+                },                
+                {
                   "label": "2022R1.0",
                   "value": "profiseeplatform:2022r1.0"
                 },

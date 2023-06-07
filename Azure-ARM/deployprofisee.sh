@@ -469,6 +469,7 @@ sed -i -e 's/$PURVIEWCLIENTSECRET/'"$PURVIEWCLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$WEBAPPNAME/'"$WEBAPPNAME"'/g' Settings.yaml
 sed -i -e 's/$CPULIMITSVALUE/'"$safecpuvalueinmilicores"'/g' Settings.yaml
 sed -i -e 's/$MEMORYLIMITSVALUE/'"$saferamvalueinkibibytes"'/g' Settings.yaml
+sed -i -e 's/$Nodename/'"$findwinnodename"'/g' Settings.yaml
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$USEKEYVAULT/'true'/g' Settings.yaml
 
