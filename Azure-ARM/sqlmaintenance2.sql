@@ -20,3 +20,4 @@
 	END
 	CLOSE TableCursorPK
 DEALLOCATE TableCursorPK
+exec sp_updatestats
