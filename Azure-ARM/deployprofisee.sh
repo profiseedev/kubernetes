@@ -38,7 +38,10 @@ az extension update --name aks-preview
 az feature register --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
 az feature show --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
 az provider register --namespace Microsoft.ContainerService
-az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --disable-file-driver --disable-disk-driver --yes
+
+#Disable built-in AKS file driver, will install further down.
+az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --disable-file-driver --yes
+
 #Install dotnet core.
 echo $"Installation of dotnet core started.";
 curl -fsSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
@@ -225,11 +228,13 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 
 fi
 
-#Installation of CSI Driver
-echo $"Installation of CSI Driver started.";
-echo $"Adding CSI File-share repo."
+#Installation of Azure File CSI Driver
+echo $"Installation of Azure File CSI Driver started.";
+echo $"Adding Azure File CSI Driver repo."
 helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/charts
 helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --namespace kube-system --version v1.28.0 --set controller.replicas=1
+echo $"Azure File CSI Driver installation finished."
+
 #Installation of nginx
 echo $"Installation of nginx ingress started.";
 echo $"Adding ingress-nginx repo."
