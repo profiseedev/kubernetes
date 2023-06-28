@@ -95,6 +95,9 @@
       "defaultValue": "",
       "type": "string"
     },
+    "AuthenticationType":{
+      "type": "string"
+    },
     "SQLServerCreateNew": {
       "type": "String"
     },
@@ -167,7 +170,7 @@
       "type": "String"
     }
   },
-  "variables": 
+  "variables":
   {
     "ScriptURL":"https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/deployprofisee.sh",
     "PreReqCheckScriptURL":"https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/prereqcheck.sh",
@@ -192,6 +195,7 @@
     "KubernetesDockerBridgeCidr": "[parameters('KubernetesDockerBridgeCidr')]",
     "KubernetesLinuxNodeCount": "[int(parameters('KubernetesLinuxNodeCount'))]",
     "KubernetesLinuxNodeSize": "[parameters('KubernetesLinuxNodeSize')]",
+    "AuthenticationType": "[parameters('AuthenticationType')]",
     "KubernetesWindowsNodeCount": "[int(parameters('KubernetesWindowsNodeCount'))]",
     "KubernetesWindowsNodeSize": "[parameters('KubernetesWindowsNodeSize')]",
 
@@ -235,7 +239,7 @@
     "PurviewClientSecret":"[parameters('PurviewClientSecret')]",
     "PurviewAccountResourceGroup":"[parameters('PurviewAccountResourceGroup')]"
   },
-    "resources": 
+    "resources":
     [
         {
             "type": "Microsoft.Resources/deploymentScripts",
@@ -308,7 +312,7 @@
                         "name": "PURVIEWCLIENTSECRET",
                         "value": "[variables('PurviewClientSecret')]"
                     }
-                ]           
+                ]
             }
         },
         {
@@ -319,11 +323,11 @@
             "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "properties": {
                 "mode": "Incremental",
-                "expressionEvaluationOptions": 
+                "expressionEvaluationOptions":
                 {
                 "scope": "inner"
                 },
-                "template": 
+                "template":
                     {
                     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
@@ -362,11 +366,11 @@
             "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "properties": {
                 "mode": "Incremental",
-                "expressionEvaluationOptions": 
+                "expressionEvaluationOptions":
                 {
                 "scope": "inner"
                 },
-                "template": 
+                "template":
                     {
                     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
@@ -475,9 +479,9 @@
                         "secretName": "[parameters('SQLServerPassword')]"
                         }
                     }
-                }      
+                }
             }
-        },   
+        },
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2020-07-01",
@@ -519,7 +523,7 @@
                         "osType": "Windows",
                         "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     }
-                ],                
+                ],
                 "nodeResourceGroup": "[variables('KubenetesInfrastructureResourceGroupName')]",
                 "enableRBAC": true,
                 "networkProfile": {
@@ -600,7 +604,7 @@
                 "[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]",
                 "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('StorageAccountName')))]"
             ]
-        },          
+        },
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2020-10-01",
@@ -678,7 +682,7 @@
                     {
                         "name": "EXTERNALDNSURL",
                         "value": "[variables('ExternalDNSURL')]"
-                    },                
+                    },
                     {
                         "name": "OIDCURL",
                         "value": "[variables('OIDCURL')]"
@@ -790,11 +794,15 @@
                       "value": "[variables('PurviewAccountResourceGroup')]"
                     },
                     {
+                      "name": "AUTHENTICATIONTYPE",
+                      "value": "[variables('AuthenticationType')]"
+                    },
+                    {
                       "name": "WEBAPPNAME",
                       "value": "[variables('WEBAPPNAME')]"
                     }
                 ],
-                "primaryScriptUri": "[variables('ScriptURL')]"         
+                "primaryScriptUri": "[variables('ScriptURL')]"
             }
         },
         {
@@ -812,8 +820,8 @@
             }
         }
     ],
-    "outputs": 
-    {    
+    "outputs":
+    {
     "PreReqChecks": {
       "value": "[reference('PreReqChecks').outputs]",
       "type": "object"

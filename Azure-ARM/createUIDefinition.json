@@ -117,14 +117,10 @@
                 {
                   "label": "2021R3.0",
                   "value": "profiseeplatform:2021r3.0"
-                },
+                },               
                 {
                   "label": "2022R1.0",
                   "value": "profiseeplatform:2022r1.0"
-                },
-                {
-                  "label": "2022R1-126062",
-                  "value": "profiseeplatform:2022r1-126062"
                 },
                 {
                   "label": "2022R2.0",
@@ -258,7 +254,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1-126062'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'))]"
+            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'))]"
           },
           {
             "name": "PurviewAccountName",
@@ -366,6 +362,27 @@
               "required": false,
               "regex": "",
               "validationMessage": ""
+            },
+            "visible": true
+          },
+          {
+            "name": "AuthenticationType",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Authentication and Authorization",
+            "defaultValue": "Local Accounts with Kubernetes RBAC",
+            "toolTip": "Choose among native Kubernetes RBAC managed locally or leverage Azure AD to manage identities for your Kubernetes RBAC needs. Azure RBAC for AKS is a fully managed RBAC solution providing both authentication and authorization through Azure IAM.",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "Local Accounts with Kubernetes RBAC",
+                  "value": "LocalAccounts"
+                },
+                {
+                  "label": "Azure AD authentication with Azure RBAC",
+                  "value": "AzureRBAC"
+                }
+              ],
+              "required": true
             },
             "visible": true
           },
@@ -960,6 +977,7 @@
       "KubernetesLinuxNodeCount": "[steps('kubernetes').KubernetesLinuxNodeCount]",
       "KubernetesWindowsNodeSize": "[steps('kubernetes').KubernetesWindowsNodeSizeSection.KubernetesWindowsNodeSize]",
       "KubernetesWindowsNodeCount": "[steps('kubernetes').KubernetesWindowsNodeCount]",
+      "AuthenticationType": "[steps('kubernetes').AuthenticationType]",
       "KubernetesVnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.name]",
       "KubernetesVnetResourceGroup": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.resourceGroup]",
       "KubernetesSubnetName": "[steps('kubernetes').KubernetesAdvanced.KubernetesVnetName.subnets.subnet1.name]",

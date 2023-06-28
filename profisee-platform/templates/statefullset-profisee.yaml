@@ -20,6 +20,8 @@ spec:
         {{- end}}
     spec:
       terminationGracePeriodSeconds: 60
+      serviceAccountName: profiseeserviceaccount
+      automountServiceAccountToken: false
       nodeSelector:
         "kubernetes.io/os": windows
       volumes:

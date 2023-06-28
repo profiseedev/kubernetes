@@ -33,9 +33,14 @@ printenv;
 
 #Get AKS credentials, this allows us to use kubectl commands, if needed.
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
+az extension add --name aks-preview
+az extension update --name aks-preview
+az feature register --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
+az feature show --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
+az provider register --namespace Microsoft.ContainerService
 
 #Disable built-in AKS file driver, will install further down.
-az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --disable-file-driver --yes 
+az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --disable-file-driver --yes
 
 #Install dotnet core.
 echo $"Installation of dotnet core started.";
@@ -147,22 +152,13 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	helm install -n kube-system csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --set secrets-store-csi-driver.syncSecret.enabled=true
 	echo $"Installation of Key Vault Container Storage Interface (CSI) driver finished."
 
+	#Install Azure Workload Identity driver.
+	echo $"Installation of Key Vault Azure Active Directory Workload Identity driver started."
+    az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-oidc-issuer --enable-workload-identity
+	OIDC_ISSUER="$(az aks show -n $CLUSTERNAME -g $RESOURCEGROUPNAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
+	echo $"Installation of Key Vault Azure Active Directory Workload Identity driver finished."
 
-	#Install AAD pod identity into AKS.
-	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver started. If present, we uninstall and reinstall it."
-	#If AAD Pod Identity is present, uninstall it.
-        aadpodpresent=$(helm list -n profisee -f pod-identity -o table --short)
-        if [ "$aadpodpresent" = "pod-identity" ]; then
-	        helm uninstall -n profisee pod-identity;
-	        echo $"Will sleep for 30 seconds to allow clean uninstall of AAD Pod Identity."
-	        sleep 30;
-        fi
-
-	helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
-	helm install -n profisee pod-identity aad-pod-identity/aad-pod-identity
-	echo $"Installation of Key Vault Azure Active Directory Pod Identity driver finished."
-
-	#Assign AAD roles to the AKS AgentPool Managed Identity. The Pod identity communicates with the AgentPool MI, which in turn communicates with the Key Vault specific Managed Identity.
+	#Assign AAD roles to the AKS AgentPool Managed Identity.
 	echo $"AKS Managed Identity configuration for Key Vault access started."
 
 	echo $"AKS AgentPool Managed Identity configuration for Key Vault access step 1 started."
@@ -178,6 +174,9 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"Key Vault Specific Managed Identity configuration for Key Vault access step 2 started."
 	identityName="AKSKeyVaultUser"
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
+	
+	#Create Federated Credential and assign it to the Profisee Service Account
+	az identity federated-credential create --name ProfiseefederatedId --identity-name $identityName  --resource-group $AKSINFRARESOURCEGROUPNAME --issuer $OIDC_ISSUER --subject system:serviceaccount:profisee:profiseeserviceaccount --audience api://AzureADTokenExchange
 	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
 	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId' -o tsv)
 	echo $"Key VAult Specific Managed Identity configuration for Key Vault access step 2 finished."
@@ -197,7 +196,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 
     #Check if Key Vault is RBAC or policy based.
     echo $"Checking if Key Vauls is RBAC based or policy based"
-    rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
+	rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
 
     #If Key Vault is RBAC based, assign Key Vault Secrets User role to the Key Vault Specific Managed Identity, otherwise assign Get policies for Keys, Secrets and Certificates.
     if [ "$rbacEnabled" = true ]; then
@@ -447,6 +446,27 @@ IFS=':' read -r -a repostring <<< "$PROFISEEVERSION"
 ACRREPONAME="${repostring[0],,}";
 ACRREPOLABEL="${repostring[1],,}"
 
+#Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly. 
+echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected." 
+findwinnodename=$(kubectl get nodes -l kubernetes.io/os=windows -o 'jsonpath={.items[0].metadata.name}') 
+findallocatablecpu=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.cpu}') 
+findallocatablememory=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.memory}')
+vcpubarevalue=${findallocatablecpu::-1}
+safecpuvalue=$(($vcpubarevalue-800)) 
+safecpuvalueinmilicores="${safecpuvalue}m" 
+echo $"The safe vCPU value to assign to Profisee pod is $safecpuvalueinmilicores." 
+#Math around safe RAM values 
+vrambarevalue=${findallocatablememory::-2}
+saferamvalue=$(($vrambarevalue-2253125))
+saferamvalueinkibibytes="${saferamvalue}Ki" 
+echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes." 
+# helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml 
+# #Patch stateful set for safe vCPU and RAM values 
+# kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/cpu", "value":'"$safecpuvalueinmilicores"'}]' 
+# echo $"Profisee's stateful set has been patched to use $safecpuvalueinmilicores for CPU." 
+# kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]' 
+# echo $"Profisee's stateful set has been patched to use $saferamvalueinkibibytes for RAM."
+
 #Setting values in the Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
 sed -i -e 's/$SQLDBNAME/'"$SQLDBNAME"'/g' Settings.yaml
@@ -472,6 +492,8 @@ sed -i -e 's/$PURVIEWCOLLECTIONID/'"$COLLECTIONTRUEID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTID/'"$PURVIEWCLIENTID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTSECRET/'"$PURVIEWCLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$WEBAPPNAME/'"$WEBAPPNAME"'/g' Settings.yaml
+sed -i -e 's/$CPULIMITSVALUE/'"$safecpuvalueinmilicores"'/g' Settings.yaml
+sed -i -e 's/$MEMORYLIMITSVALUE/'"$saferamvalueinkibibytes"'/g' Settings.yaml
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$USEKEYVAULT/'true'/g' Settings.yaml
 
@@ -539,32 +561,7 @@ if [ "$profiseepresent" = "profiseeplatform" ]; then
 	sleep 30;
 fi
 	echo "Profisee is not installed, proceeding to install it."
-	#Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly.
-	#echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected."
-	#findwinnodename=$(kubectl get nodes -l kubernetes.io/os=windows -o 'jsonpath={.items[*].metadata.name}')
-	#findallocatablecpu=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.cpu}')
-	#findallocatablememory=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.memory}')
-	#Math around safe vCPU values
-	#vcpubarevalue=${findallocatablecpu::-1}
-	#safecpuvalue=$(($vcpubarevalue-800))
-	#safecpuvalueinmilicores="${safecpuvalue}m"
-	#echo $"The safe vCPU value to assign to Profisee pod is $safecpuvalueinmilicores."
-	#Math around safe RAM values
-	#vrambarevalue=${findallocatablememory::-2}
-	#saferamvalue=$(($vrambarevalue-2253125))
-	#saferamvalueinkibibytes="${saferamvalue}Ki"
-	#echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes."
-
-	#Apply values to Settings.yaml prior to deployment.
-	#sed -i -e '35s/1000/'"$safecpuvalueinmilicores"'/g' Settings.yaml
-	#sed -i -e '36s/10T/'"$saferamvalueinkibibytes"'/g' Settings.yaml
-
 	helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml
-	#Patch stateful set for safe vCPU and RAM values
-	#kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/cpu", "value":'"$safecpuvalueinmilicores"'}]'
-	#echo $"Profisee's stateful set has been patched to use $safecpuvalueinmilicores for CPU."
-	#kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]'
-	#echo $"Profisee's stateful set has been patched to use $saferamvalueinkibibytes for RAM."
 
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
@@ -600,8 +597,20 @@ result="{\"Result\":[\
 ]}"
 
 echo $result
-
 kubectl delete secret profisee-deploymentlog -n profisee --ignore-not-found
 kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$logfile
 
+#Change Authentication context: disable local accounts, Enabled Azure AD with Azure RBAC and assign the Azure Kubernetes Service RBAC Cluster Admin role to the Profisee Super Admin account.
+echo $"AuthenticationType is $AUTHENTICATIONTYPE";
+echo $"Resourcegroup is $RESOURCEGROUPNAME";
+echo $"clustername is $CLUSTERNAME";
+if [ "$AUTHENTICATIONTYPE" = "AzureRBAC" ]; then
+	az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-aad --enable-azure-rbac --disable-local-accounts
+	ObjectId="$(az ad user show --id $ADMINACCOUNTNAME --query id -o tsv)"
+	echo $"ObjectId of ADMIN is $ObjectId";
+	az role assignment create --role "Azure Kubernetes Service RBAC Cluster Admin" --assignee-object-id $ObjectId --assignee-principal-type User --scope /subscriptions/$SUBSCRIPTIONID/resourcegroups/$RESOURCEGROUPNAME
+fi;
+
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
+
+
