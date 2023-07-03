@@ -507,7 +507,7 @@
                         "enableNodePublicIP": false,
                         "nodeLabels": {},
                         "mode": "System",
-                        "osSKU": "Ubuntu",
+                        "osSKU": "AzureLinux",
                         "osType": "Linux",
                         "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     },
