@@ -507,6 +507,7 @@
                         "enableNodePublicIP": false,
                         "nodeLabels": {},
                         "mode": "System",
+                        "osSKU": "Ubuntu",
                         "osType": "Linux",
                         "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     },
@@ -520,8 +521,8 @@
                         "orchestratorVersion": "[variables('KubernetesVersion')]",
                         "enableNodePublicIP": false,
                         "mode": "User",
-                        "osType": "Windows",
                         "osSKU": "Windows2019",
+                        "osType": "Windows",
                         "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     }
                 ],
