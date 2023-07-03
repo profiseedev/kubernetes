@@ -521,6 +521,7 @@
                         "enableNodePublicIP": false,
                         "mode": "User",
                         "osType": "Windows",
+                        "osSKU": "Windows2019",
                         "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     }
                 ],
