@@ -489,7 +489,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "sku": {
-                "name": "Basic",
+                "name": "Base",
                 "tier": "Free"
             },
             "properties": {
