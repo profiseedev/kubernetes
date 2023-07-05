@@ -484,7 +484,7 @@
         },
         {
             "type": "Microsoft.ContainerService/managedClusters",
-            "apiVersion": "2020-07-01",
+            "apiVersion": "2023-05-02-preview",
             "name": "[variables('KubernetesClusterName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
@@ -507,7 +507,7 @@
                         "enableNodePublicIP": false,
                         "nodeLabels": {},
                         "mode": "System",
-                        "osSKU": "AzureLinux",
+                        "osSKU": "Ubuntu",
                         "osType": "Linux",
                         "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     },
@@ -533,8 +533,7 @@
                     "loadBalancerSku": "Standard",
                     "outboundType": "loadBalancer",
                     "serviceCidr": "[variables('KubernetesServiceCidr')]",
-                    "dnsServiceIP": "[variables('KubernetesDNSServiceIP')]",
-                    "dockerBridgeCidr": "[variables('KubernetesDockerBridgeCidr')]"
+                    "dnsServiceIP": "[variables('KubernetesDNSServiceIP')]"
                 }
             },
             "identity": {
