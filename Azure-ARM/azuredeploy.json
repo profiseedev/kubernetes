@@ -316,7 +316,7 @@
             }
         },
         {
-            "apiVersion": "2015-01-01",
+            "apiVersion": "2022-09-01",
             "name": "License",
             "type": "Microsoft.Resources/deployments",
             "condition": "[equals(tolower(parameters('UseKeyVault')),tolower('Yes'))]",
@@ -359,7 +359,7 @@
         },
 
         {
-            "apiVersion": "2015-01-01",
+            "apiVersion": "2022-09-01",
             "name": "Sql",
             "type": "Microsoft.Resources/deployments",
             "condition": "[equals(tolower(parameters('UseKeyVault')),tolower('Yes'))]",
@@ -380,7 +380,7 @@
                         "name": "[tolower(parameters('SQLServerName'))]",
                         "type": "Microsoft.Sql/servers",
                         "location": "[resourceGroup().location]",
-                        "apiVersion": "2019-06-01-preview",
+                        "apiVersion": "2022-05-01-preview",
                         "dependsOn": [],
                         "tags": {
                             "displayName": "SQLServer"
@@ -395,7 +395,7 @@
                                 "name": "AllowAllWindowsAzureIps",
                                 "type": "firewallrules",
                                 "location": "[resourceGroup().location]",
-                                "apiVersion": "2015-05-01-preview",
+                                "apiVersion": "2022-05-01-preview",
                                 "dependsOn": [
                                     "[concat('Microsoft.Sql/servers/', tolower(parameters('SQLServerName')))]"
                                 ],
@@ -407,7 +407,7 @@
                             {
                             "condition": "[equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes'))]",
                             "type": "databases",
-                            "apiVersion": "2020-08-01-preview",
+                            "apiVersion": "2022-05-01-preview",
                             "name": "[parameters('SQLServerDatabaseName')]",
                             "location": "[resourceGroup().location]",
                             "dependsOn": [
@@ -545,7 +545,7 @@
             "name": "[tolower(parameters('SQLServerName'))]",
             "type": "Microsoft.Sql/servers",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2019-06-01-preview",
+            "apiVersion": "2022-05-01-preview",
             "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "tags": {
                 "displayName": "SQLServer"
@@ -560,7 +560,7 @@
                     "name": "AllowAllWindowsAzureIps",
                     "type": "firewallrules",
                     "location": "[resourceGroup().location]",
-                    "apiVersion": "2015-05-01-preview",
+                    "apiVersion": "2022-05-01-preview",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', tolower(parameters('SQLServerName')))]"
                     ],
@@ -572,7 +572,7 @@
                 {
                 "condition": "[and(equals(tolower(parameters('SQLServerCreateNew')),tolower('Yes')),equals(tolower(parameters('UseKeyVault')),tolower('No')))]",
                 "type": "databases",
-                "apiVersion": "2020-08-01-preview",
+                "apiVersion": "2022-05-01-preview",
                 "name": "[parameters('SQLServerDatabaseName')]",
                 "location": "[resourceGroup().location]",
                 "dependsOn": [
@@ -586,7 +586,7 @@
             "name": "[tolower(variables('StorageAccountName'))]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2019-06-01",
+            "apiVersion": "2022-09-01",
             "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "tags": {
                 "displayName": "[variables('StorageAccountName')]"
@@ -599,7 +599,7 @@
         {
             "condition": "[equals(tolower(variables('StorageAccountCreateNew')),tolower('Yes'))]",
             "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-            "apiVersion": "2019-06-01",
+            "apiVersion": "2022-09-01",
             "name": "[concat(tolower(variables('StorageAccountName')), '/default/', tolower(variables('StorageAccountFileShareName')))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]",
@@ -807,7 +807,7 @@
             }
         },
         {
-            "apiVersion": "2018-02-01",
+            "apiVersion": "2022-09-01",
             "name": "pid-498552cf-87f5-55b7-a69b-5364df5c1994",
             "type": "Microsoft.Resources/deployments",
             "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
