@@ -129,7 +129,11 @@
                 {
                   "label": "2023R1.0",
                   "value": "profiseeplatform:2023r1.0"
-                }
+                },
+                {
+                  "label": "2023r1-131091",
+                  "value": "profiseeplatform:2023r1-131091"
+                }                
               ]
             },
             "visible": true
