@@ -131,7 +131,7 @@
                   "value": "profiseeplatform:2023r1.0"
                 },
                 {
-                  "label": "2023r1-131091",
+                  "label": "2023R1.0-131091",
                   "value": "profiseeplatform:2023r1-131091"
                 }                
               ]
@@ -258,7 +258,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'))]"
+            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1-131091'))]"
           },
           {
             "name": "PurviewAccountName",
@@ -294,7 +294,7 @@
               "regex": "",
               "validationMessage": ""
             },
-            "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0')))]"
+            "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1-131091')))]"
           },
           {
             "name": "PurviewClientID",
