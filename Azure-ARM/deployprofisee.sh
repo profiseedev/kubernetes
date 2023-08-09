@@ -386,6 +386,22 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 		echo $"saml2Token claim is now '$appregsaml2tokengroupsclaimpresent'"
 	    echo "Update of the application registration's token configuration finished."
 	fi
+	#Create application Registration secret to be used for Authentication.
+	echo $"Let's check to see if an application registration secret has been created for Profisee, we'll recreate it if it is present as it can only be acquired during creation."
+    appregsecretpresent=$(az ad app list --app-id $CLIENTID --query "[].passwordCredentials[].displayName" -o tsv)
+	if [ "$appregsecretpresent" = "Profisee env in cluster $CLUSTERNAME" ]; then
+	    echo $"Application registration secret for 'Profisee in cluster $CLUSTERNAME' is already present, but need to recreate it. Acquiring secret ID so it can be deleted."
+		appregsecretid=$(az ad app list --app-id $CLIENTID --query "[].passwordCredentials[?displayName=='Profisee env in cluster $CLUSTERNAME'].keyId | [0]" -o tsv)
+		echo $"Application registration secret ID is $appregsecretid, deleting it."
+		az ad app credential delete --id $CLIENTID --key-id $appregsecretid
+		echo $"Application registration secret ID $appregsecretid has been deleted."
+		echo "Creating new application registration secret now."
+		OIDCCLIENTSECRET=$(az ad app credential reset --id $CLIENTID --append --display-name "Profisee env in cluster $CLUSTERNAME" --years 2 --query "password" -o tsv)
+	else
+	    echo "Secret for cluster $CLUSTERNAME does not exist, creating it."
+	    echo "Creating new application registration secret now."
+		OIDCCLIENTSECRET=$(az ad app credential reset --id $CLIENTID --append --display-name "Profisee env in cluster $CLUSTERNAME" --years 2 --query "password" -o tsv)
+	fi
 fi
 
 #If not supplied, acquire storage account credentials.

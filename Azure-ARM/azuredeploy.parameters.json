@@ -20,6 +20,9 @@
         "ActiveDirectoryClientId": {
             "value": ""
         },
+        "ActiveDirectoryClientSecret": {
+            "value": ""
+        },
         "PurviewUrl": {
             "value": ""
         },

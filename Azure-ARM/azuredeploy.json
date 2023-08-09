@@ -21,6 +21,10 @@
       "defaultValue": "",
       "type": "String"
     },
+    "ActiveDirectoryClientSecret": {
+      "defaultValue": "",
+      "type": "String"
+    },
     "UsePurview": {
       "defaultValue": "",
       "type": "String"
@@ -185,6 +189,7 @@
 
     "UPDATEAAD":"[parameters('ActiveDirectoryCreateApp')]",
     "CLIENTID":"[parameters('ActiveDirectoryClientId')]",
+    "CLIENTSECRET":"[parameters('ActiveDirectoryClientSecret')]",
     "OIDCURL":"[concat('https://login.microsoftonline.com/',subscription().tenantId)]",
 
     "KubernetesVersion":"[parameters('KubernetesVersion')]",
@@ -723,6 +728,10 @@
                     {
                         "name": "CLIENTID",
                         "value": "[variables('CLIENTID')]"
+                    },
+                    {
+                        "name": "CLIENTSECRET",
+                        "value": "[variables('CLIENTSECRET')]"
                     },
                     {
                         "name": "CONFIGUREHTTPS",

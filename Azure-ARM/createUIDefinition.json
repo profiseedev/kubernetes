@@ -131,13 +131,17 @@
                   "value": "profiseeplatform:2023r1.0"
                 },
                 {
-                  "label": "2023R1.0-131091",
-                  "value": "profiseeplatform:2023r1-131091"
+                  "label": "2023R2.preview",
+                  "value": "profiseeplatform:2023r2.preview"
                 },
-		{
-		  "label": "2023R2.preview-win22",
-		  "value": "profiseeplatform:2023r2.preview-win22"
-		}                
+                {
+                  "label": "2023R2.preview-win19",
+                  "value": "profiseeplatform:2023r2.preview-win19"
+                },
+                {
+                  "label": "2023R2.preview-win22",
+                  "value": "profiseeplatform:2023r2.preview-win22"
+                }
               ]
             },
             "visible": true
@@ -223,7 +227,7 @@
             "visible": true
           },
           {
-            "name": "UserSuppliedClientyId",
+            "name": "UserSuppliedClientId",
             "type": "Microsoft.Common.Section",
             "label": "",
             "elements": [
@@ -235,6 +239,27 @@
                 "toolTip": "Please provide the client ID of the Azure AD application to be used by Profisee for authentication.",
                 "constraints": {
                   "required": "[equals(steps('profisee').ActiveDirectoryCreateApp,'No')]",
+                  "regex": "",
+                  "validationMessage": ""
+                },
+                "visible": true
+              }
+            ],
+            "visible": "[equals(steps('profisee').ActiveDirectoryCreateApp,'No')]"
+          },
+          {
+            "name": "UserSuppliedClientSecret",
+            "type": "Microsoft.Common.Section",
+            "label": "",
+            "elements": [
+              {
+                "name": "ActiveDirectoryClientSecret",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Application Registration Client Secret",
+                "defaultValue": "",
+                "toolTip": "Please provide the client secret of the Azure AD application to be used by Profisee for authentication.",
+                "constraints": {
+                  "required": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22'))]",
                   "regex": "",
                   "validationMessage": ""
                 },
@@ -262,7 +287,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1-131091'))]"
+            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22'))]"
           },
           {
             "name": "PurviewAccountName",
@@ -298,7 +323,7 @@
               "regex": "",
               "validationMessage": ""
             },
-            "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1-131091')))]"
+            "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22')))]"
           },
           {
             "name": "PurviewClientID",
@@ -388,6 +413,27 @@
                 {
                   "label": "Azure AD authentication with Azure RBAC",
                   "value": "AzureRBAC"
+                }
+              ],
+              "required": true
+            },
+            "visible": true
+          },
+          {
+            "name": "EnableDefenderProfile",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Enable Defender Profile",
+            "defaultValue": "Local Accounts with Kubernetes RBAC",
+            "toolTip": "Enable Microsoft Defender security profile.",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "No",
+                  "value": "false"
+                },
+                {
+                  "label": "Yes",
+                  "value": "True"
                 }
               ],
               "required": true
@@ -977,7 +1023,8 @@
       "ProfiseeAdminUserAccount": "[steps('profisee').ProfiseeAdminUserAccount]",
       "ProfiseeLicense": "[if(equals(steps('profisee').UseKeyVault, 'Yes'), steps('profisee').ProfiseeLicenseSecret, steps('profisee').ProfiseeLicense)]",
       "ActiveDirectoryCreateApp": "[steps('profisee').ActiveDirectoryCreateApp]",
-      "ActiveDirectoryClientId": "[steps('profisee').UserSuppliedClientyId.ActiveDirectoryClientId]",
+      "ActiveDirectoryClientId": "[steps('profisee').UserSuppliedClientId.ActiveDirectoryClientId]",
+      "ActiveDirectoryClientSecret": "[steps('profisee').UserSuppliedClientId.ActiveDirectoryClientSecret]",
       "KubernetesClusterName": "[steps('kubernetes').KubernetesClusterName]",
       "KubernetesVersion": "[steps('kubernetes').KubernetesVersion]",
       "KubenetesInfrastructureResourceGroupName": "[steps('kubernetes').KubenetesInfrastructureResourceGroupName]",
