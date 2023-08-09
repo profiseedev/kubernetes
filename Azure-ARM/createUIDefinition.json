@@ -420,27 +420,6 @@
             "visible": true
           },
           {
-            "name": "EnableDefenderProfile",
-            "type": "Microsoft.Common.OptionsGroup",
-            "label": "Enable Defender Profile",
-            "defaultValue": "Local Accounts with Kubernetes RBAC",
-            "toolTip": "Enable Microsoft Defender security profile.",
-            "constraints": {
-              "allowedValues": [
-                {
-                  "label": "No",
-                  "value": "false"
-                },
-                {
-                  "label": "Yes",
-                  "value": "True"
-                }
-              ],
-              "required": true
-            },
-            "visible": true
-          },
-          {
             "name": "KubernetesLinuxNodeSizeSection",
             "type": "Microsoft.Common.Section",
             "label": "Linux Nodepool",
