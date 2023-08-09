@@ -1003,7 +1003,7 @@
       "ProfiseeLicense": "[if(equals(steps('profisee').UseKeyVault, 'Yes'), steps('profisee').ProfiseeLicenseSecret, steps('profisee').ProfiseeLicense)]",
       "ActiveDirectoryCreateApp": "[steps('profisee').ActiveDirectoryCreateApp]",
       "ActiveDirectoryClientId": "[steps('profisee').UserSuppliedClientId.ActiveDirectoryClientId]",
-      "ActiveDirectoryClientSecret": "[steps('profisee').UserSuppliedClientId.ActiveDirectoryClientSecret]",
+      "ActiveDirectoryClientSecret": "[steps('profisee').UserSuppliedClientSecret.ActiveDirectoryClientSecret]",
       "KubernetesClusterName": "[steps('kubernetes').KubernetesClusterName]",
       "KubernetesVersion": "[steps('kubernetes').KubernetesVersion]",
       "KubenetesInfrastructureResourceGroupName": "[steps('kubernetes').KubenetesInfrastructureResourceGroupName]",
