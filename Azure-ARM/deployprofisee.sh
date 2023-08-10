@@ -388,7 +388,7 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 	fi
 	#Create application Registration secret to be used for Authentication.
 	echo $"Let's check to see if an application registration secret has been created for Profisee, we'll recreate it if it is present as it can only be acquired during creation."
-    appregsecretpresent=$(az ad app list --app-id $CLIENTID --query "[].passwordCredentials[].displayName" -o tsv)
+    appregsecretpresent=$(az ad app list --app-id $CLIENTID --query "[].passwordCredentials[?displayName=='Profisee env in cluster $CLUSTERNAME'].displayName | [0]" -o tsv)
 	if [ "$appregsecretpresent" = "Profisee env in cluster $CLUSTERNAME" ]; then
 	    echo $"Application registration secret for 'Profisee in cluster $CLUSTERNAME' is already present, but need to recreate it. Acquiring secret ID so it can be deleted."
 		appregsecretid=$(az ad app list --app-id $CLIENTID --query "[].passwordCredentials[?displayName=='Profisee env in cluster $CLUSTERNAME'].keyId | [0]" -o tsv)
@@ -396,11 +396,11 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 		az ad app credential delete --id $CLIENTID --key-id $appregsecretid
 		echo $"Application registration secret ID $appregsecretid has been deleted."
 		echo "Creating new application registration secret now."
-		OIDCCLIENTSECRET=$(az ad app credential reset --id $CLIENTID --append --display-name "Profisee env in cluster $CLUSTERNAME" --years 2 --query "password" -o tsv)
+		CLIENTSECRET=$(az ad app credential reset --id $CLIENTID --append --display-name "Profisee env in cluster $CLUSTERNAME" --years 2 --query "password" -o tsv)
 	else
 	    echo "Secret for cluster $CLUSTERNAME does not exist, creating it."
 	    echo "Creating new application registration secret now."
-		OIDCCLIENTSECRET=$(az ad app credential reset --id $CLIENTID --append --display-name "Profisee env in cluster $CLUSTERNAME" --years 2 --query "password" -o tsv)
+		CLIENTSECRET=$(az ad app credential reset --id $CLIENTID --append --display-name "Profisee env in cluster $CLUSTERNAME" --years 2 --query "password" -o tsv)
 	fi
 fi
 
@@ -495,7 +495,7 @@ sed -i -e 's/$FILEREPOURL/'"$FILEREPOURL"'/g' Settings.yaml
 sed -i -e 's/$FILEREPOSHARENAME/'"$STORAGEACCOUNTFILESHARENAME"'/g' Settings.yaml
 sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
-sed -i -e 's/$OIDCCLIENTSECRET/'"$OIDCCLIENTSECRET"'/g' Settings.yaml
+sed -i -e 's/$OIDCCLIENTSECRET/'"$CLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$ADMINACCOUNTNAME/'"$ADMINACCOUNTNAME"'/g' Settings.yaml
 sed -i -e 's~$EXTERNALDNSURL~'"$EXTERNALDNSURL"'~g' Settings.yaml
 sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
