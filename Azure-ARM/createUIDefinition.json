@@ -103,22 +103,6 @@
               "required": true,
               "allowedValues": [
                 {
-                  "label": "2021R1.0",
-                  "value": "profiseeplatform:2021r1.0"
-                },
-                {
-                  "label": "2021R2.0",
-                  "value": "profiseeplatform:2021r2.0"
-                },
-                {
-                  "label": "2021R2.1",
-                  "value": "profiseeplatform:2021r2.1"
-                },
-                {
-                  "label": "2021R3.0",
-                  "value": "profiseeplatform:2021r3.0"
-                },
-                {
                   "label": "2022R1.0",
                   "value": "profiseeplatform:2022r1.0"
                 },
@@ -287,7 +271,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r2.1'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2021r3.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22'))]"
+            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22'))]"
           },
           {
             "name": "PurviewAccountName",
