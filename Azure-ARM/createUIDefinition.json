@@ -243,7 +243,7 @@
                 "defaultValue": "",
                 "toolTip": "Please provide the client secret of the Azure AD application to be used by Profisee for authentication.",
                 "constraints": {
-                  "required": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22'))]",
+                  "required": "[equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22')]",
                   "regex": "",
                   "validationMessage": ""
                 },
@@ -271,7 +271,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22'))]"
+            "visible": "[equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22')]"
           },
           {
             "name": "PurviewAccountName",
