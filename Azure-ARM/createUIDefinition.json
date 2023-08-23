@@ -125,6 +125,10 @@
                 {
                   "label": "2023R2.preview-win22",
                   "value": "profiseeplatformdev:2023r2.preview-win22"
+                },
+                {
+                  "label": "win19sa.preview",
+                  "value": "profiseeplatformdev:win19sa.preview-win19"
                 }
               ]
             },
