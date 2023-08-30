@@ -56,6 +56,9 @@
       "defaultValue": "",
       "type": "String"
     },
+    "WindowsNodeVersion":{
+      "type": "string"
+    },
     "KubernetesClusterName": {
       "type": "String"
     },
@@ -187,6 +190,7 @@
     "ACRUSER":"",
     "ACRUSERPASSWORD":"",
 
+
     "UPDATEAAD":"[parameters('ActiveDirectoryCreateApp')]",
     "CLIENTID":"[parameters('ActiveDirectoryClientId')]",
     "CLIENTSECRET":"[parameters('ActiveDirectoryClientSecret')]",
@@ -203,7 +207,7 @@
     "AuthenticationType": "[parameters('AuthenticationType')]",
     "KubernetesWindowsNodeCount": "[int(parameters('KubernetesWindowsNodeCount'))]",
     "KubernetesWindowsNodeSize": "[parameters('KubernetesWindowsNodeSize')]",
-
+    "WindowsNodeVersion": "[parameters('WindowsNodeVersion')]",
     "ManagedIdentity": "[parameters('ManagedIdentityName')]",
 
     "DNSHostName": "[parameters('DNSHostName')]",
@@ -526,7 +530,7 @@
                         "orchestratorVersion": "[variables('KubernetesVersion')]",
                         "enableNodePublicIP": false,
                         "mode": "User",
-                        "osSKU": "Windows2019",
+                        "osSKU": "[variables('WindowsNodeVersion')]",
                         "osType": "Windows",
                         "vnetSubnetID": "[if(not(empty(variables('KubernetesVnetResourceGroup'))),variables('vnetId'),json('null'))]"
                     }

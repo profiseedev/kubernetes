@@ -138,6 +138,9 @@
         "KubenetesInfrastructureResourceGroupName": {
             "value": ""
         },
+        "WindowsNodeVersion":{
+            "value": ""
+        },    
         "AuthenticationType":{
             "value": ""
         }
