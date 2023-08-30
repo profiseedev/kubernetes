@@ -174,7 +174,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"Key Vault Specific Managed Identity configuration for Key Vault access step 2 started."
 	identityName="AKSKeyVaultUser"
 	akskvidentityClientId=$(az identity create -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'clientId' -o tsv);
-	
+
 	#Create Federated Credential and assign it to the Profisee Service Account
 	az identity federated-credential create --name ProfiseefederatedId --identity-name $identityName  --resource-group $AKSINFRARESOURCEGROUPNAME --issuer $OIDC_ISSUER --subject system:serviceaccount:profisee:profiseeserviceaccount --audience api://AzureADTokenExchange
 	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
@@ -459,7 +459,7 @@ ACRREPOLABEL="${repostring[1],,}"
 #Installation of Azure File CSI Driver
 if [ "$ACRREPOLABEL" = "2023r2.preview-win22" ]; then
 	az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --enable-file-driver --yes
-else			
+else
 	echo $"Installation of Azure File CSI Driver started.";
 	echo $"Adding Azure File CSI Driver repo."
 	helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/charts
@@ -468,25 +468,25 @@ else
 fi
 
 
-#Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly. 
-echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected." 
-findwinnodename=$(kubectl get nodes -l kubernetes.io/os=windows -o 'jsonpath={.items[0].metadata.name}') 
-findallocatablecpu=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.cpu}') 
+#Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly.
+echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected."
+findwinnodename=$(kubectl get nodes -l kubernetes.io/os=windows -o 'jsonpath={.items[0].metadata.name}')
+findallocatablecpu=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.cpu}')
 findallocatablememory=$(kubectl get nodes $findwinnodename -o 'jsonpath={.status.allocatable.memory}')
 vcpubarevalue=${findallocatablecpu::-1}
-safecpuvalue=$(($vcpubarevalue-800)) 
-safecpuvalueinmilicores="${safecpuvalue}m" 
-echo $"The safe vCPU value to assign to Profisee pod is $safecpuvalueinmilicores." 
-#Math around safe RAM values 
+safecpuvalue=$(($vcpubarevalue-800))
+safecpuvalueinmilicores="${safecpuvalue}m"
+echo $"The safe vCPU value to assign to Profisee pod is $safecpuvalueinmilicores."
+#Math around safe RAM values
 vrambarevalue=${findallocatablememory::-2}
 saferamvalue=$(($vrambarevalue-2253125))
-saferamvalueinkibibytes="${saferamvalue}Ki" 
-echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes." 
-# helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml 
-# #Patch stateful set for safe vCPU and RAM values 
-# kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/cpu", "value":'"$safecpuvalueinmilicores"'}]' 
-# echo $"Profisee's stateful set has been patched to use $safecpuvalueinmilicores for CPU." 
-# kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]' 
+saferamvalueinkibibytes="${saferamvalue}Ki"
+echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes."
+# helm -n profisee install profiseeplatform profisee/profisee-platform --values Settings.yaml
+# #Patch stateful set for safe vCPU and RAM values
+# kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/cpu", "value":'"$safecpuvalueinmilicores"'}]'
+# echo $"Profisee's stateful set has been patched to use $safecpuvalueinmilicores for CPU."
+# kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]'
 # echo $"Profisee's stateful set has been patched to use $saferamvalueinkibibytes for RAM."
 
 #Setting values in the Settings.yaml
