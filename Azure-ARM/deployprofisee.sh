@@ -456,6 +456,18 @@ IFS=':' read -r -a repostring <<< "$PROFISEEVERSION"
 ACRREPONAME="${repostring[0],,}";
 ACRREPOLABEL="${repostring[1],,}"
 
+#Installation of Azure File CSI Driver
+if [ "$ACRREPOLABEL" = "2023r2.preview-win22"]; then
+	az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --enable-file-driver --yes
+else			
+	echo $"Installation of Azure File CSI Driver started.";
+	echo $"Adding Azure File CSI Driver repo."
+	helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/charts
+	helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --namespace kube-system --set controller.replicas=1
+	echo $"Azure File CSI Driver installation finished."
+fi
+
+
 #Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly. 
 echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected." 
 findwinnodename=$(kubectl get nodes -l kubernetes.io/os=windows -o 'jsonpath={.items[0].metadata.name}') 
@@ -557,16 +569,7 @@ fi
 kubectl delete secret profisee-settings -n profisee --ignore-not-found
 kubectl create secret generic profisee-settings -n profisee --from-file=Settings.yaml
 
-#Installation of Azure File CSI Driver
-if [ "$ACRREPOLABEL" = "2023r2.preview-win22"]; then
-	az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --enable-file-driver --yes
-else			
-	echo $"Installation of Azure File CSI Driver started.";
-	echo $"Adding Azure File CSI Driver repo."
-	helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/charts
-	helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --namespace kube-system --set controller.replicas=1
-	echo $"Azure File CSI Driver installation finished."
-fi
+
 
 #################################Install Profisee Start #######################################
 echo "Installation of Profisee platform started $(date +"%Y-%m-%d %T")";
@@ -624,6 +627,7 @@ kubectl create secret generic profisee-deploymentlog -n profisee --from-file=$lo
 #Change Authentication context: disable local accounts, Enabled Azure AD with Azure RBAC and assign the Azure Kubernetes Service RBAC Cluster Admin role to the Profisee Super Admin account.
 echo $"AuthenticationType is $AUTHENTICATIONTYPE";
 echo $"Resourcegroup is $RESOURCEGROUPNAME";
+echo $"WindowsNodeVersion is $WINDOWSNODEVERSION";
 echo $"clustername is $CLUSTERNAME";
 if [ "$AUTHENTICATIONTYPE" = "AzureRBAC" ]; then
 	az aks update -g $RESOURCEGROUPNAME -n $CLUSTERNAME --enable-aad --enable-azure-rbac --disable-local-accounts

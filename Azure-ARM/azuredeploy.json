@@ -812,6 +812,10 @@
                       "value": "[variables('AuthenticationType')]"
                     },
                     {
+                      "name": "WINDOWSNODEVERSION",
+                      "value": "[variables('WindowsNodeVersion')]"
+                    },
+                    {
                       "name": "WEBAPPNAME",
                       "value": "[variables('WEBAPPNAME')]"
                     }
