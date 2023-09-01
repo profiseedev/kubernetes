@@ -157,7 +157,7 @@
                 }
               ]
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatformdev:2023r2.preview-win19') , equals(steps('profisee').ProfiseeVersion, 'profiseeplatformdev:2023r2.preview-win22'))]"
+            "visible": true
           },          
           {
             "name": "ProfiseeAdminUserAccount",
