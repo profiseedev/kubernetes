@@ -457,7 +457,8 @@ ACRREPONAME="${repostring[0],,}";
 ACRREPOLABEL="${repostring[1],,}"
 
 #Installation of Azure File CSI Driver
-if [ "$ACRREPOLABEL" = "2023r2.preview-win22" ]; then
+WINDOWS_NODE_VERSION="$(az aks show -n $CLUSTERNAME -g $RESOURCEGROUPNAME --query "agentPoolProfiles[1].osSku" -o tsv)"
+if [ "$WINDOWS_NODE_VERSION" = "Windows2022" ]; then
 	az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --enable-file-driver --yes
 else
 	echo $"Installation of Azure File CSI Driver started.";
