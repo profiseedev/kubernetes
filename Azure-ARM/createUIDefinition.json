@@ -142,7 +142,7 @@
             "name": "WindowsNodeVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Profisee windows node version",
-            "defaultValue": "",
+            "defaultValue": "windows 2019",
             "toolTip": "windows node version to use",
             "constraints": {
               "required": true,
