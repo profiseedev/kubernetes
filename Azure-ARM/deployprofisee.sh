@@ -39,9 +39,6 @@ az feature register --namespace "Microsoft.ContainerService" --name "EnableWorkl
 az feature show --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
 az provider register --namespace Microsoft.ContainerService
 
-#Disable built-in AKS file driver, will install further down.
-az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --disable-file-driver --yes
-
 #Install dotnet core.
 echo $"Installation of dotnet core started.";
 curl -fsSL -o dotnet-install.sh https://dot.net/v1/dotnet-install.sh
@@ -458,12 +455,14 @@ ACRREPOLABEL="${repostring[1],,}"
 
 #Installation of Azure File CSI Driver
 WINDOWS_NODE_VERSION="$(az aks show -n $CLUSTERNAME -g $RESOURCEGROUPNAME --query "agentPoolProfiles[1].osSku" -o tsv)"
-if [ "$WINDOWS_NODE_VERSION" = "Windows2022" ]; then
-	az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --enable-file-driver --yes
-else
+if [ "$WINDOWS_NODE_VERSION" = "Windows2019" ]; then
+	#Disable built-in AKS file driver, will install further down.
+	echo $"Disabling AKS Built-in CSI Driver to install Azure File CSI."
+	az aks update -n $CLUSTERNAME -g $RESOURCEGROUPNAME --disable-file-driver --yes
 	echo $"Installation of Azure File CSI Driver started.";
 	echo $"Adding Azure File CSI Driver repo."
 	helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/charts
+	helm repo update azurefile-csi-driver
 	helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --namespace kube-system --set controller.replicas=1
 	echo $"Azure File CSI Driver installation finished."
 fi
