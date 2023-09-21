@@ -157,7 +157,7 @@
                 }
               ]
             },
-            "visible": true
+            "visible": false
           },          
           {
             "name": "ProfiseeAdminUserAccount",
