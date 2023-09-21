@@ -145,7 +145,7 @@
             "defaultValue": "[if(contains(steps('profisee').ProfiseeVersion, '-win22'), 'Windows 2022', 'Windows 2019')]",
             "toolTip": "As of Profisee Version 2023r2.0 Profisee can run on Server 2022 nodes.",
             "constraints": {
-              "required": true,
+              "required": false,
               "allowedValues": [
                 {
                   "label": "Windows 2019",
