@@ -50,7 +50,7 @@
         "options": {
           "icon": "Info",
           "text": "Click here to learn how Profisee uses Managed Identities.",
-          "uri": "https://support.profisee.com/wikis/2023_r1_support/planning_your_managed_identity_configuration"
+          "uri": "https://support.profisee.com/wikis/profiseeplatform/planning_your_managed_identity_configuration"
         }
       }
     ],
@@ -97,7 +97,7 @@
             "name": "ProfiseeVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Profisee version",
-            "defaultValue": "2023R1.0",
+            "defaultValue": "2023R2.0-win22",
             "toolTip": "Which release of the Profisee Platform to deploy.",
             "constraints": {
               "required": true,
@@ -115,24 +115,20 @@
                   "value": "profiseeplatform:2023r1.0"
                 },
                 {
-                  "label": "2023R2.preview",
-                  "value": "profiseeplatform:2023r2.preview"
+                  "label": "2023R2.0-win19",
+                  "value": "profiseeplatform:2023r2.0-win19"
                 },
                 {
-                  "label": "2023R2.preview-win19",
-                  "value": "profiseeplatformdev:2023r2.preview-win19"
+                  "label": "2023R2.0-win22",
+                  "value": "profiseeplatform:2023r2.0-win22"
                 },
                 {
-                  "label": "2023R2.preview-win22",
-                  "value": "profiseeplatformdev:2023r2.preview-win22"
+                  "label": "2023R3.preview-win19",
+                  "value": "profiseeplatform:2023r3.preview-win19"
                 },
                 {
-                  "label": "win19sa.preview",
-                  "value": "profiseeplatformdev:win19sa.preview-win19"
-                },
-                {
-                  "label": "2023R2.preview-matching",
-                  "value": "profiseeplatformdev:2023r2.preview-matching"
+                  "label": "2023R3.preview-win22",
+                  "value": "profiseeplatform:2023r3.preview-win22"
                 }
               ]
             },
@@ -202,7 +198,7 @@
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Create a new Azure AD application registration for you?",
             "defaultValue": "Yes, create and configure it for me.",
-            "toolTip": "An Azure AD application registration will be used for authentication via ID tokens. For more information please visit https://support.profisee.com/wikis/2023_r1_support/deploying_the_AKS_cluster_with_the_arm_template.",
+            "toolTip": "An Azure AD application registration will be used for authentication via ID tokens. For more information please visit https://support.profisee.com/wikis/profiseeplatform/deploying_the_AKS_cluster_with_the_arm_template.",
             "constraints": {
               "allowedValues": [
                 {
@@ -251,7 +247,7 @@
                 "defaultValue": "",
                 "toolTip": "Please provide the client secret of the Azure AD application to be used by Profisee for authentication.",
                 "constraints": {
-                  "required": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatformdev:2023r2.preview-win22'))]",
+                  "required": "[or(contains(steps('profisee').ProfiseeVersion, '-win19'), contains(steps('profisee').ProfiseeVersion, '-win22'))]",
                   "regex": "",
                   "validationMessage": ""
                 },
@@ -279,7 +275,7 @@
               ],
               "required": true
             },
-            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22'))]"
+            "visible": "[or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.0-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.0-win22'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r3.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r3.preview-win22'))]"
           },
           {
             "name": "PurviewAccountName",
@@ -315,7 +311,7 @@
               "regex": "",
               "validationMessage": ""
             },
-            "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.preview-win22')))]"
+            "visible": "[and(equals(steps('profisee').UsePurview,'Yes'), or(equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2022r2.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r1.0'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.0-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r2.0-win22'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r3.preview-win19'), equals(steps('profisee').ProfiseeVersion, 'profiseeplatform:2023r3.preview-win22')))]"
           },
           {
             "name": "PurviewClientID",
@@ -420,9 +416,9 @@
                 "name": "KubernetesLinuxNodeSize",
                 "type": "Microsoft.Compute.SizeSelector",
                 "label": "VM Size",
-                "toolTip": "Pick VM size for the instances in the Linux nodepool. An 's' in the size will result in use of a Premium SSD. Ex. Standard_D2s_v5 will use Premium SSD, Standard_D2_v5 will use HDD.",
+                "toolTip": "Pick VM size for the instances in the Linux nodepool. An 's' in the size will result in use of a Premium SSD. Ex. Standard_D4s_v5 will use Premium SSD, Standard_D4_v5 will use HDD.",
                 "recommendedSizes": [
-                  "Standard_D4_v5"
+                  "Standard_B4ms"
                 ],
                 "constraints": {
                   "allowedSizes": []
@@ -461,9 +457,9 @@
                 "name": "KubernetesWindowsNodeSize",
                 "type": "Microsoft.Compute.SizeSelector",
                 "label": "VM Size",
-                "toolTip": "Pick VM size for the instances in the Windows nodepool. An 's' in the size will result in use of a Premium SSD. Ex. Standard_D2s_v5 will use Premium SSD, Standard_D2_v5 will use HDD.",
+                "toolTip": "Pick VM size for the instances in the Windows nodepool. An 's' in the size will result in use of a Premium SSD. Ex. Standard_D8s_v5 will use Premium SSD, Standard_D8_v5 will use HDD.",
                 "recommendedSizes": [
-                  "Standard_D4_v5"
+                  "Standard_B4ms"
                 ],
                 "constraints": {
                   "allowedSizes": []
