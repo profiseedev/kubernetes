@@ -155,6 +155,20 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	OIDC_ISSUER="$(az aks show -n $CLUSTERNAME -g $RESOURCEGROUPNAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 	echo $"Installation of Key Vault Azure Active Directory Workload Identity driver finished."
 
+	#Uninstall AAD pod identity from AKS.
+	echo $"Uninstallation of Key Vault Azure Active Directory Pod Identity driver started. If present, we uninstall it."
+	#If AAD Pod Identity is present, uninstall it.
+        aadpodpresent=$(helm list -n profisee -f pod-identity -o table --short)
+        if [ "$aadpodpresent" = "pod-identity" ]; then
+	        helm uninstall -n profisee pod-identity;
+	        echo $"Will sleep for 30 seconds to allow clean uninstall of AAD Pod Identity."
+	        sleep 30;
+        fi
+	#AAD Pod identity is no longed required, replaced by Workload Identity.
+	#helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
+	#helm install -n profisee pod-identity aad-pod-identity/aad-pod-identity
+	#echo $"Installation of Key Vault Azure Active Directory Pod Identity driver finished."
+
 	#Assign AAD roles to the AKS AgentPool Managed Identity.
 	echo $"AKS Managed Identity configuration for Key Vault access started."
 
@@ -386,6 +400,8 @@ if [ "$UPDATEAAD" = "Yes" ]; then
 		echo $"Application registration secret ID is $appregsecretid, deleting it."
 		az ad app credential delete --id $CLIENTID --key-id $appregsecretid
 		echo $"Application registration secret ID $appregsecretid has been deleted."
+		echo "Will sleep for 10 seconds to avoid request concurrency errors."
+		sleep 10
 		echo "Creating new application registration secret now."
 		CLIENTSECRET=$(az ad app credential reset --id $CLIENTID --append --display-name "Profisee env in cluster $CLUSTERNAME" --years 2 --query "password" -o tsv)
 	else
@@ -637,5 +653,3 @@ if [ "$AUTHENTICATIONTYPE" = "AzureRBAC" ]; then
 fi;
 
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
-
-
