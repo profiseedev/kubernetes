@@ -485,7 +485,7 @@ if [ "$WINDOWS_NODE_VERSION" = "Windows2019" ]; then
 	echo $"Adding Azure File CSI Driver repo."
 	helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/charts
 	helm repo update azurefile-csi-driver
-	#Controller Replicas MUST be 2 in Prod (i.e. do NOT add controller.replica=1 in Prod), okay to be 1 in Dev. This is dependent on number of available Linux nodes in the nodepool. In Prod, it is minimum of 2, Dev is one.
+	#Controller Replicas MUST be 2 in Prod, okay to be 1 in Dev (i.e. do NOT add --set controller.replica=1 in Prod). This is dependent on number of available Linux nodes in the nodepool. In Prod, it is minimum of 2, Dev is 1.
 	helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --namespace kube-system --set controller.replicas=1 
 	echo $"Azure File CSI Driver installation finished."
 fi
