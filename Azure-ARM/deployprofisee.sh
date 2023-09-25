@@ -190,7 +190,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	az identity federated-credential create --name ProfiseefederatedId --identity-name $identityName  --resource-group $AKSINFRARESOURCEGROUPNAME --issuer $OIDC_ISSUER --subject system:serviceaccount:profisee:profiseeserviceaccount --audience api://AzureADTokenExchange
 	akskvidentityClientResourceId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'id' -o tsv)
 	principalId=$(az identity show -g $AKSINFRARESOURCEGROUPNAME -n $identityName --query 'principalId' -o tsv)
-	echo $"Key VAult Specific Managed Identity configuration for Key Vault access step 2 finished."
+	echo $"Key Vault Specific Managed Identity configuration for Key Vault access step 2 finished."
 
 	echo $"Key Vault Specific Managed Identity configuration for KV access step 3 started."
 	echo "Sleeping for 60 seconds to wait for MI to be ready"
