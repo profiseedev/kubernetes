@@ -592,6 +592,10 @@ fi
 kubectl delete secret profisee-settings -n profisee --ignore-not-found
 kubectl create secret generic profisee-settings -n profisee --from-file=Settings.yaml
 
+#Adding this only in dev environment so SuperAdmin can edit the app registration values. Please do not implement this in Prod
+ObjectId="$(az ad user show --id $ADMINACCOUNTNAME --query id -o tsv)"
+echo $"ObjectId of ADMIN is $ObjectId";
+az ad app owner add --id $CLIENTID --owner-object-id $ObjectId
 
 
 #################################Install Profisee Start #######################################
