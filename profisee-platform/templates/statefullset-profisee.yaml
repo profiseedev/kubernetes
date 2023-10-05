@@ -71,11 +71,26 @@ spec:
             command:
               - powershell
               - >-
-                if((Get-Service profisee).Status -ne 'Stopped'){return
-                0}else{throw 'Profisee service is down'}
+                if(((Get-Service profisee).Status -ne 'Stopped') -and
+                ($(Get-IISAppPool | Where-Object { $_.State -eq "Stopped"
+                }).State -ne 'Stopped')){return 0}else{throw 'Profisee is
+                down'}
           initialDelaySeconds: 600
           timeoutSeconds: 5
           periodSeconds: 60
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - powershell
+                - >-
+                  curl.exe -fsSL -o .\Fileshare\forensics_log_pull.ps1
+                  "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/forensics_log_pull.ps1"
+          preStop:
+            exec:
+              command:
+                - powershell
+                - .\Fileshare\forensics_log_pull.ps1
         volumeMounts:
         - name: data-volume
           mountPath: C:\data
