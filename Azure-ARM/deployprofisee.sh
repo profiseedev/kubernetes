@@ -512,8 +512,8 @@ echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes.
 # kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]'
 # echo $"Profisee's stateful set has been patched to use $saferamvalueinkibibytes for RAM."
 #settings DNSName value to custom coredns-configmap
-curl -fsSL -o coredns-config.yaml "$REPOURL/Azure-ARM/coredns-config.yaml";
-sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' coredns-config.yaml
+curl -fsSL -o coredns-custom.yaml "$REPOURL/Azure-ARM/coredns-config.yaml";
+sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' coredns-custom.yaml
 
 #Setting values in the Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
@@ -596,7 +596,7 @@ kubectl delete secret profisee-settings -n profisee --ignore-not-found
 kubectl create secret generic profisee-settings -n profisee --from-file=Settings.yaml
 
 #Replacing Coredns with custom coredns config map
-kubectl replace -f ./coredns-config.yaml
+kubectl replace -f ./coredns-custom.yaml
 
 #Adding this only in dev environment so SuperAdmin can edit the app registration values. Please do not implement this in Prod
 ObjectId="$(az ad user show --id $ADMINACCOUNTNAME --query id -o tsv)"
