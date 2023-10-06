@@ -486,7 +486,7 @@ if [ "$WINDOWS_NODE_VERSION" = "Windows2019" ]; then
 	helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/charts
 	helm repo update azurefile-csi-driver
 	#Controller Replicas MUST be 2 in Prod, okay to be 1 in Dev (i.e. do NOT add --set controller.replica=1 in Prod). This is dependent on number of available Linux nodes in the nodepool. In Prod, it is minimum of 2, Dev is 1.
-	helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --namespace kube-system --set controller.replicas=1 
+	helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --namespace kube-system --set controller.replicas=1
 	echo $"Azure File CSI Driver installation finished."
 fi
 
@@ -511,6 +511,9 @@ echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes.
 # echo $"Profisee's stateful set has been patched to use $safecpuvalueinmilicores for CPU."
 # kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]'
 # echo $"Profisee's stateful set has been patched to use $saferamvalueinkibibytes for RAM."
+#settings DNSName value to custom coredns-configmap
+curl -fsSL -o coredns-config.yaml "$REPOURL/Azure-ARM/coredns-config.yaml";
+sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' coredns-config.yaml
 
 #Setting values in the Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
@@ -591,6 +594,9 @@ fi
 #Adding Settings.yaml as a secret generated only from the initial deployment of Profisee. Future updates, such as license changes via the profisee-license secret, or SQL credentials updates via the profisee-sql-password secret, will NOT be reflected in this secret. Proceed with caution!
 kubectl delete secret profisee-settings -n profisee --ignore-not-found
 kubectl create secret generic profisee-settings -n profisee --from-file=Settings.yaml
+
+#Replacing Coredns with custom coredns config map
+kubectl replace -f ./coredns-config.yaml
 
 #Adding this only in dev environment so SuperAdmin can edit the app registration values. Please do not implement this in Prod
 ObjectId="$(az ad user show --id $ADMINACCOUNTNAME --query id -o tsv)"
