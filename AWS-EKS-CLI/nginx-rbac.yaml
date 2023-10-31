@@ -22,5 +22,5 @@ roleRef:
   name: nginx-ingress-clusterrole
 subjects:
 - kind: ServiceAccount
-  name: nginx-nginx-ingress
+  name: nginx-ingress-nginx
   namespace: profisee
