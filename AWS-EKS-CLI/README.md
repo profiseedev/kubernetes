@@ -1,141 +1,273 @@
-# Deploy Profisee platform on to AWS Elastic Kubernetes services (EKS)
+# AWS Profisee Deployment
 
-This explains the process to deploy the Profisee platform onto a new AWS EKS cluster
+Deploying the Profisee platform on AWS EKS involves a variety of AWS services and tools. Below is a detailed guide through the process, providing specific AWS CLI, eksctl, kubectl, and helm commands to use at each step.
 
-## Prerequisites
+## Prerequisites:
+1. Ensure the following tools are installed:
+   - AWS CLI: [Installation Guide](https://aws.amazon.com/cli/)
+   - helm: [Installation Guide](https://helm.sh/docs/intro/install/)
+   - eksctl: [Installation Guide](https://eksctl.io/introduction/#installation)
+     - **Important**: Make sure that the version of `eksctl` is compatible with your `kubectl` version. `eksctl` releases are independent of `kubectl` releases, but since they both interact with your Kubernetes cluster, it’s crucial to ensure compatibility to avoid any potential issues.
+       - To upgrade `eksctl`, follow the instructions provided in the [official eksctl documentation](https://eksctl.io/introduction/#installation).
+       - After upgrading, verify the installed version:
+         ```sh
+         eksctl version
+         ```
+   - kubectl (version 1.27 recommended): [Installation Guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+     - **Important**: It is crucial to have the latest stable version of `kubectl` to ensure compatibility and security. The recommended version as of now is 1.27.
+       - If you already have an older version of `kubectl` installed, you can upgrade it using the package manager of your choice. Below are the general steps to upgrade `kubectl`.
+       - **On macOS:**
+         ```sh
+         brew upgrade kubectl
+         ```
+       - **On Linux:**
+         - If you installed using a package manager like apt or yum:
+           ```sh
+           sudo apt-get update && sudo apt-get install -y kubectl
+           # OR
+           sudo yum update && sudo yum install -y kubectl
+           ```
+         - If you installed by downloading the binary, download the latest version from the [official releases page](https://kubernetes.io/releases/download/), and replace the binary in your PATH.
+       - **On Windows:**
+         - If you installed using Chocolatey:
+           ```sh
+           choco upgrade kubernetes-cli
+           ```
+         - If you downloaded the binary, download the latest version from the [official releases page](https://kubernetes.io/releases/download/), and replace the binary in your PATH.
+       - After upgrading, verify the installed version:
+         ```sh
+         kubectl version --client
+         ```
+       - Upgrading `kubectl` does not affect existing Kubernetes clusters, but it is important to ensure that your `kubectl` version is compatible with the version of your cluster. As a rule of thumb, `kubectl` should be within one minor version of your cluster. For example, a 1.18 `kubectl` should work with 1.17, 1.18, and 1.19 clusters.
 
-1.  License
-    - Profisee license associated with the dns for the environment
-    - ACR username, password and token
+     - If you've deployed applications using an older version of `kubectl`, there should be no immediate impact when you upgrade `kubectl`. However, you should check the [official Kubernetes deprecation policy](https://kubernetes.io/docs/reference/using-api/deprecation-policy/) to ensure that any deprecated features you might be using will continue to be supported in the version of the cluster you are using.
 
-2.  Https certificate and the private key
-			
-3.  Choose your AWS region you want to use eg us-east-1
 
-4.  SQL Server
-    - AWS RDS instance - https://aws.amazon.com/getting-started/hands-on/create-microsoft-sql-db/
-    	
-		- Goto https://console.aws.amazon.com/rds
-		- Click create database
-		- Standard Create - Microsoft SQL Server
-		- Edition - Choose what you want
-		- Version - Choose (default should be fine)
-		- Give sql server name as db intance identifier
-		- Credentials
-			- Master username - login name to use
-			- Password - strong password
-		- Size - Choose what you need
-		- Storage - Defaults should be fine, probably no need for autoscaling
-		- Connectivity
-			- Public access yes (simpler to debug) - Change to fit your security needs when ready
-		- Defaults for the rest of the options
-		- Wait for database to be available
-	- CLI sample: aws rds create-db-instance --engine sqlserver-ex --db-instance-class db.t3.small --db-instance-identifier profiseedemo --master-username sqladmin --master-user-password Password123 --allocated-storage 20
-    	
-5.  Create EBS volume - must be created in the same region/zone as the eks cluster
-    - EBS volume - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-creating-volume.html
+## 1. Configure AWS CLI:
+Run the following command and enter your AWS Access Key ID, Secret Access Key, Default region name, and Default output format (json is recommended).
+```sh
+aws configure
+```
 
-	    - https://console.aws.amazon.com/ec2
-		- Click Volumes under Elastic Block Store on left
-		- Click create volume
-		- Choose volume type and size
-		- Choose Availability zone, make sure its in the same zone as the EKS cluster
-		- Click Create Volume
-		- When its finished creating, note the volume id
-	- CLI sample:  aws ec2 create-volume --volume-type gp2 --size 1 --availability-zone us-east-1a --region us-east-1
-    
-6. Configure environment with required tools
-	- Use aws cloudshell 
-	  - https://dev.to/aws-builders/setting-up-a-working-environment-for-amazon-eks-with-aws-cloudshell-1nn7
-	- Use local computer - no cloudshell - https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
-	  - Install aws cli - https://awscli.amazonaws.com/AWSCLIV2.msi
-	  - Install eksctl - https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html
-	  - Install kubectl - https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
-          - Setup IAM - https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds
+## 2. Create an RDS SQL Server Instance:
+Replace the placeholders in the command below with your specific configurations.
+```sh
+aws rds create-db-instance \
+    --engine sqlserver-ex \
+    --db-instance-class db.t3.small \
+    --db-instance-identifier profiseedemo \
+    --master-username sqladmin \
+    --master-user-password YourStrongPassword!123 \
+    --allocated-storage 20 \
+    --publicly-accessible \
+    --region your-region-name
+```
 
-7.  Configure DNS	
-    - Choose a DNS host name that you want to use eg:  profiseemdm.mycompany.com
-    - Register that hostname in your DNS provider with a CNAME that points to xxxxxx.elb.<region>.amazonaws.com (this will be updated later.
-      
+## 3. Create an EBS Volume:
+Replace us-east-1a and us-east-1 with your specific availability zone and region.
+```sh
+aws ec2 create-volume --volume-type gp2 --size 10 --availability-zone us-east-1a --region us-east-1
+```
 
-## Deployment
+## 4. Configure your Environment
+Ensure that aws-cli, eksctl, kubectl, and helm are installed and properly configured in your local environment.
 
-1.  Make cluster.yaml and upload to cloudshell.
-	- Download the cluster.yaml
-            	
-			curl -fsSL -o cluster.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/AWS-EKS-CLI/cluster.yaml;
-		
-	- Change the name, region and availabilityzones
-	- Change the instance type(s) to fit your needs.  https://aws.amazon.com/ec2/pricing/on-demand/
-	- For more complex deployments, including networking vpc and subnet configurations see https://eksctl.io/usage/schema/
-    
-2.  Create the EKS Clusterr
-    
-        eksctl create cluster -f cluster.yaml --install-vpc-controllers --timeout 30m
+## 5. Create the EKS Cluster:
+5.1 Download and modify the cluster.yaml file.
 
-3.  Configure kubectl
-    
-        aws eks --region us-east-1 update-kubeconfig --name MyCluster
+5.2 Run the following command to create the EKS cluster:
+```sh
+eksctl create cluster -f cluster.yaml --install-vpc-controllers --timeout 30m
+```
 
-4.  Update the sql security group to allow the kubernetes nodes ips in
-    - Get the outbound IP's of the cluster.
+## 6. Configure kubectl:
+Replace `YourClusterName` with the name of your EKS cluster.
+```sh
+aws eks --region your-region-name update-kubeconfig --name YourClusterName
+```
 
-		kubectl get nodes  -o jsonpath='{.items[*].status.addresses[?(@.type == "ExternalIP")].address}'
+## 7. Update RDS Security Group:
+7.1  Obtain the node IPs using:
+```sh
+kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type == "ExternalIP")].address}'
+```
+7.2 Add the obtained IPs to your RDS instance's security group inbound rules using AWS CLI.
 
-	- Click on sql instance
-	- Click on VPC security group
-	- Inbound rules
-	- Edit inbound rules
-	- Add MSSQL for outbound IP's of cluster
+7.3 List all RDS instances and their associated security groups:
+```sh
+aws rds describe-db-instances --query "DBInstances[*].[DBInstanceIdentifier, VpcSecurityGroups[*].VpcSecurityGroupId]" --output table
+```
+Note the associated security group ID(s) for your RDS instance.
 
-5.  Install nginx for AWS
+7.4 Add inbound rules to the security group to allow connections from the IP addresses obtained:
+```sh
+aws ec2 authorize-security-group-ingress --group-id sg-xxxxxxxxxxxxxxxxx --protocol tcp --port 3306 --cidr IP_ADDRESS/32
+```
+* Replace sg-xxxxxxxxxxxxxxxxx with your RDS security group ID.
+* Replace 3306 with the port number that your RDS instance is using.
+* Replace IP_ADDRESS with the IP address of your EKS node.
 
-            helm repo add stable https://charts.helm.sh/stable;
-            curl -o nginxSettingsAWS.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/AWS-EKS-CLI/nginxSettingsAWS.yaml;
-            kubectl create namespace profisee
-	    	helm install nginx stable/nginx-ingress --values nginxSettingsAWS.yaml --namespace profisee
-	    
-	- Wait for the load balancer to be provisioned.  goto aws ec2/load balancing console and wait for the state to go from provisioning to active (3ish minutes)
-    
-6.  Get nginx IP
-    
-        kubectl get services nginx-nginx-ingress-controller --namespace profisee
-        #Note the external-ip and update the DNS hostname you created earlier and have it point to it (xxxxxx.elb.<region>.amazonaws.com)
+Ensure that your AWS CLI is configured with the necessary permissions to modify security group rules, and ensure that the security group’s outbound rules allow the response traffic from your RDS instance back to your EKS nodes.
 
-7.  (Optional) - Install cert-manager for Let's Encrypt
+## 8. Install nginx on EKS:
+Before installing NGINX Ingress Controller, you need to set up the necessary RBAC (Role-Based Access Control) roles and bindings.
+### Creating NGINX RBAC Configuration:
+Create a file named `nginx-rbac.yaml` (or download the file from the repository) and add the following content to define the necessary ClusterRole and ClusterRoleBinding for NGINX:
 
-	helm install --namespace profisee cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta\.kubernetes\.io/os"=linux --set webhook.nodeSelector."beta\.kubernetes\.io/os"=linux --set cainjector.nodeSelector."beta\.kubernetes\.io/os"=linux
+```yaml
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRole
+   metadata:
+     name: nginx-ingress-clusterrole
+   rules:
+   - apiGroups:
+     - networking.k8s.io
+     resources:
+     - ingressclasses
+     verbs:
+     - get
+     - list
+     - watch
+   ---
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+     name: nginx-ingress-clusterrolebinding
+   roleRef:
+     apiGroup: rbac.authorization.k8s.io
+     kind: ClusterRole
+     name: nginx-ingress-clusterrole
+   subjects:
+   - kind: ServiceAccount
+     name: nginx-ingress-nginx
+     namespace: profisee
+```
+This configuration sets up the necessary permissions for NGINX to interact with Ingress resources in your cluster. Apply the RBAC configuration:
+```sh
+kubectl apply -f nginx-rbac.yaml
+```
+```sh
+helm repo add stable https://charts.helm.sh/stable
+curl -o nginxSettingsAWS.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/AWS-EKS-CLI/nginxSettingsAWS.yaml
+kubectl create ns profisee
+helm install nginx stable/nginx-ingress --values nginxSettingsAWS.yaml --n profisee
+```
+Wait for the load balancer to be active, then obtain the nginx IP:
+```sh
+kubectl get services nginx-ingress-nginx-controller --n profisee
+```
+Update your DNS to point to this IP.
 
-	update Settings.yaml useLetsEncrypt flag to true
+### 9. Configuring TLS with cert-manager and Let's Encrypt
 
-8.  Configue Authentication provider
-	- Create/configure an auth provider in your auth providr of choice.  eg Azure Active Directory, OKTA
-	- Register redirect url http(s)://profiseemdm.mycompany.com/Profisee/auth/signin-microsoft
-	- Note the clientid, secret and authority url.  The authority url for AAD is https://login.microsoftonline.com/{tenantid}
+To secure our Kubernetes services, we will configure TLS using cert-manager and Let's Encrypt, avoiding the use of wildcard certificates and nip.io domains for better security practices and alignment with enterprise standards.
 
-9.  Create Profisee Settings.yaml
-    - Fetch the Settings.yaml template, download the yaml file so you can edit it locally
-      
-            curl -fsSL -o Settings.yaml https://raw.githubusercontent.com/profiseedev/kubernetes/master/AWS-EKS-CLI/Settings.yaml;
-    - Update the values
-    - Upload to cloudshell    
+#### Step 1: Install cert-manager
 
-10.  Install Profisee
+Install cert-manager in your Kubernetes cluster to manage certificates lifecycle:
 
-            helm repo add profisee https://profiseedev.github.io/kubernetes
-            helm uninstall --namespace profisee profiseeplatform
-            helm install --namespace profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
+```sh
+kubectl create ns cert-manager
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
+```
+Ensure that all the pods are running:
+```sh
+kubectl get pods --n cert-manager
+```
 
-# Verify and finalize:
+#### Step 2: Configure Let's Encrypt Issuer
+Create a Let's Encrypt issuer, replace email@example.com with your email address:
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    email: email@example.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+```
+Apply this configuration:
+```sh
+kubectl apply -f letsencrypt-issuer.yaml
+```
 
-1.  The initial deploy will have to download the container which takes about 10 minutes.  Verify its finished downloading the container:
+#### Step 3: Configure TLS Ingress
+Create an Ingress resource that uses the Let's Encrypt issuer to obtain a TLS certificate. Make sure to replace yourdomain.com and my-service with your actual domain and service name:
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tls-ingress
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - yourdomain.com
+    secretName: yourdomain-tls
+  rules:
+  - host: yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-service
+            port:
+              number: 80
+```
+Apply this configuration:
+```sh
+kubectl apply -f tls-ingress.yaml
+```
 
-	    #check status and wait for "Pulling" to finish
-	    kubectl --namespace profisee describe pod profisee-0
+#### Step 4: Verify Certificate Issuance
+Ensure that the certificate has been successfully issued:
+```sh
+kubectl describe certificate yourdomain-tls
+```
+Look for the ‘Issued’ status in the ‘Events’ section.
 
-2.  View the kubernetes logs and wait for it to finish successfully starting up.  takes longer on the first time as it has to create all the objects in teh database
+#### Step 5: Test Your Configuration
+After the certificate has been issued, access your application via HTTPS to confirm that TLS is properly configured:
+```sh
+curl https://yourdomain.com
+```
+This should return the content served by your application over a secure connection.
 
-		kubectl logs profisee-0 --namespace profisee --follow
-		
-3.  Voila, goto Profisee Platform web portal
-	- http(s)://FQDNThatPointsToClusterIP/Profisee
+## 10. Configure Authentication Provider:
+Register the redirect URL and obtain the client ID, secret, and authority URL.
+
+## 11. Create and Configure Profisee Settings.yaml:
+11.1 Download and modify the settings.yaml file.
+```sh
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/profiseedev/kubernetes/master/AWS-EKS-CLI/Settings.yaml" -OutFile "Settings.yaml"
+```
+11.2 Add the SQL Server connection string, authentication settings, and other necessary configurations.
+
+## 12. Deploy Profisee:
+12.1 Add Profisee Helm Repository:
+```sh
+helm repo add profisee "https://profiseedev.github.io/kubernetes"
+```
+12.2 Install Profisee:
+```sh
+helm install --n profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
+```
+
+## 13: Verify and Finalize:
+Check Pod Status:
+```sh
+kubectl --n profisee describe pod profisee-0
+kubectl logs profisee-0 --n profisee --f
+http(s)://FQDNThatPointsToClusterIP/Profisee
+```

@@ -11,8 +11,6 @@ managedNodeGroups:
     minSize: 1
     volumeSize: 100
     availabilityZones: ["us-east-1a"]
-
-nodeGroups:
   - name: windows-ng
     instanceType: m5.xlarge
     minSize: 1

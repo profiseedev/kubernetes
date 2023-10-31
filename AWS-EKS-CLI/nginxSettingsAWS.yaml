@@ -1,34 +1,37 @@
-controller: 
-  extraArgs: 
-    default-ssl-certificate: default/aks-ingress-tls
-  nodeSelector: 
-    beta.kubernetes.io/os: linux
+controller:
+  extraArgs:
+    default-ssl-certificate: "default/aks-ingress-tls"
+  nodeSelector:
+    kubernetes.io/os: "linux"
   replicaCount: 1
-  config:    
-    real-ip-header: "proxy_protocol"    
-    use-forwarded-headers: "true"  
+  config:
+    real-ip-header: "proxy_protocol"
+    use-forwarded-headers: "true"
     proxy-buffering: "off"
     proxy-buffer-size: "512k"
     proxy-connect-timeout: "5400"
     proxy-send-timeout: "5400"
     proxy-read-timeout: "5400"
     proxy-next-upstream: "off"
-    proxy-request-buffering: "off"    
+    proxy-request-buffering: "off"
     client-header-buffer-size: "512k"
     large-client-header-buffers: "32 512k"
-    client_body_buffer_size: "512k"
-  metrics:    
-    enabled: "true"  
-  service:    
-    targetPorts:      
-      http: http      
-      https: https    
-    annotations:      
-      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"      
-      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"      
-      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"      
-      service.beta.kubernetes.io/aws-load-balancer-type: nlb
-      #service.beta.kubernetes.io/aws-load-balancer-internal: "true"
-defaultBackend: 
-  nodeSelector: 
-    beta.kubernetes.io/os: linux
+    client-body-buffer-size: "512k"
+  metrics:
+    enabled: true
+  service:
+    targetPorts:
+      http: http
+      https: https
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+  admissionWebhooks:
+    patch:
+      nodeSelector:
+        kubernetes.io/os: "linux"
+
+defaultBackend:
+  enabled: false
