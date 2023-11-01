@@ -93,7 +93,7 @@ image:
   repository: "profiseeplatform"
   
   # The tag for your images.
-  tag: "2021r1.0"
+  tag: "2023r2.0-133022-win22"
   
   # Authentication for your image registry.
   auth: |

@@ -23,7 +23,7 @@ Deploying the Profisee platform on AWS EKS involves a variety of AWS services an
        - **On Linux:**
          - If you installed using a package manager like apt or yum:
            ```sh
-           sudo apt-get update && sudo apt-get install -y kubectl
+           sudo apt update && sudo apt install -y kubectl
            # OR
            sudo yum update && sudo yum install -y kubectl
            ```
@@ -50,11 +50,13 @@ aws configure
 ```
 
 ## 2. Create an RDS SQL Server Instance:
-Replace the placeholders in the command below with your specific configurations.
+Before proceeding, it’s crucial to select the appropriate size for your RDS SQL Server Instance to ensure optimal performance. The required size depends on various factors. We recommend referring to our [Sizing Guide](https://support.profisee.com/wikis/profiseeplatform/system_requirements_for_profisee_server) to help you make an informed decision.
+
+Once you have determined the suitable instance size, replace the placeholders in the command below with your specific configurations. The example below demonstrates the creation of an RDS SQL Server Instance with a t4g.xlarge instance class. Adjust the `--db-instance-class` and other parameters according to your needs.
 ```sh
 aws rds create-db-instance \
     --engine sqlserver-ex \
-    --db-instance-class db.t3.small \
+    --db-instance-class t4g.xlarge \
     --db-instance-identifier profiseedemo \
     --master-username sqladmin \
     --master-user-password YourStrongPassword!123 \
@@ -167,8 +169,7 @@ To secure our Kubernetes services, we will configure TLS using cert-manager and 
 Install cert-manager in your Kubernetes cluster to manage certificates lifecycle:
 
 ```sh
-kubectl create ns cert-manager
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
+helm install --n cert-manager cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta.kubernetes.io/os"=linux --set webhook.nodeSelector."beta.kubernetes.io/os"=linux --set cainjector.nodeSelector."beta.kubernetes.io/os"=linux
 ```
 Ensure that all the pods are running:
 ```sh
@@ -221,7 +222,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: my-service
+            name: profisee-service
             port:
               number: 80
 ```
