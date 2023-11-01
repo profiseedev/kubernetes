@@ -13,7 +13,7 @@ Deploying the Profisee platform on AWS EKS involves a variety of AWS services an
          ```sh
          eksctl version
          ```
-   - kubectl (version 1.27 recommended): [Installation Guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+   - kubectl (latest stable version recommended): [Installation Guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
      - **Important**: It is crucial to have the latest stable version of `kubectl` to ensure compatibility and security. The recommended version as of now is 1.27.
        - If you already have an older version of `kubectl` installed, you can upgrade it using the package manager of your choice. Below are the general steps to upgrade `kubectl`.
        - **On macOS:**
@@ -169,7 +169,7 @@ To secure our Kubernetes services, we will configure TLS using cert-manager and 
 Install cert-manager in your Kubernetes cluster to manage certificates lifecycle:
 
 ```sh
-helm install --n cert-manager cert-manager jetstack/cert-manager --namespace default --version v0.16.1 --set installCRDs=true --set nodeSelector."beta.kubernetes.io/os"=linux --set webhook.nodeSelector."beta.kubernetes.io/os"=linux --set cainjector.nodeSelector."beta.kubernetes.io/os"=linux
+helm install --n profisee cert-manager jetstack/cert-manager --namespace default --set installCRDs=true --set nodeSelector."beta.kubernetes.io/os"=linux --set webhook.nodeSelector."beta.kubernetes.io/os"=linux --set cainjector.nodeSelector."beta.kubernetes.io/os"=linux
 ```
 Ensure that all the pods are running:
 ```sh
