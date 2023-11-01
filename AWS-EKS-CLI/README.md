@@ -272,3 +272,32 @@ kubectl --n profisee describe pod profisee-0
 kubectl logs profisee-0 --n profisee --f
 http(s)://FQDNThatPointsToClusterIP/Profisee
 ```
+
+## 14. Switching from a Windows 2019 Node to Windows 2022
+If your EKS cluster is currently running Windows 2019 nodes and you want to switch to Windows 2022 nodes, follow these steps:
+
+#### Step 1: Drain the Windows 2019 Node
+First, you need to drain the node to ensure that no new pods are scheduled on it and that existing pods are gracefully terminated.
+```sh
+kubectl drain <windows-2019-node-name> --ignore-daemonsets --force
+```
+
+#### Step 2: Update the Nodegroup
+Update the nodegroup to use the WindowsServer2022FullContainer AMI family.
+```sh
+eksctl update nodegroup --cluster=<cluster-name> --name=<nodegroup-name> --kubernetes-version auto
+```
+
+#### Step 3: Create a New Nodegroup with Windows 2022
+Create a new nodegroup with the Windows 2022 AMI family and desired instance type.
+```sh
+eksctl create nodegroup --cluster=<cluster name> --node-ami-family=WindowsServer2022FullContainer --nodes-min=1 --nodes-max=1 --node-type=m5.xlarge --node-volume-size=100 --region=us-east-1 --name=<new-nodegroup-name>
+
+```
+
+#### Step 4: Delete the Windows 2019 Nodegroup
+Once all the pods are running on the new Windows 2022 nodegroup, you can delete the old Windows 2019 nodegroup.
+```sh
+eksctl delete nodegroup --cluster=<cluster-name> --name=<windows-2019-nodegroup-name>
+```
+This will gracefully handle the transition from Windows 2019 to Windows 2022 nodes in your EKS cluster.
