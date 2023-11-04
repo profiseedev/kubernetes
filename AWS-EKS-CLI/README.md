@@ -56,7 +56,7 @@ Once you have determined the suitable instance size, replace the placeholders in
 ```sh
 aws rds create-db-instance \
     --engine sqlserver-ex \
-    --db-instance-class t4g.xlarge \
+    --db-instance-class db.m5.large \
     --db-instance-identifier profiseedemo \
     --master-username sqladmin \
     --master-user-password YourStrongPassword!123 \
@@ -91,7 +91,7 @@ aws eks --region your-region-name update-kubeconfig --name YourClusterName
 ## 7. Update RDS Security Group:
 7.1  Obtain the node IPs using:
 ```sh
-kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type == "ExternalIP")].address}'
+kubectl get nodes -o jsonpath="{.items[*].status.addresses[?(@.type=='ExternalIP')].address}"
 ```
 7.2 Add the obtained IPs to your RDS instance's security group inbound rules using AWS CLI.
 
@@ -148,15 +148,26 @@ This configuration sets up the necessary permissions for NGINX to interact with 
 ```sh
 kubectl apply -f nginx-rbac.yaml
 ```
+
+NOTE: Before moving forward, ensure you have created the Amazon EBS CSI driver IAM role. This role is necessary for the EBS CSI driver to interact with AWS services on behalf of your Kubernetes cluster.
+
+To create the Amazon EBS CSI driver IAM role, run the following command, replacing `<CLUSTERNAME>` with the name of your actual EKS cluster and `<AWSACCOUNTID>` with your AWS account ID:
+
+```shell
+aws eks create-addon --cluster-name <CLUSTERNAME> --addon-name aws-ebs-csi-driver \
+  --service-account-role-arn arn:aws:iam::<AWSACCOUNTID>:role/AmazonEKS_EBS_CSI_DriverRole
+```
+
+### Installing NGINX Ingress Controller
 ```sh
 helm repo add stable https://charts.helm.sh/stable
 curl -o nginxSettingsAWS.yaml https://raw.githubusercontent.com/Profisee/kubernetes/master/AWS-EKS-CLI/nginxSettingsAWS.yaml
 kubectl create ns profisee
-helm install nginx stable/nginx-ingress --values nginxSettingsAWS.yaml --n profisee
+helm install nginx ingress-nginx/ingress-nginx --values nginxSettingsAWS.yaml -n profisee
 ```
 Wait for the load balancer to be active, then obtain the nginx IP:
 ```sh
-kubectl get services nginx-ingress-nginx-controller --n profisee
+kubectl get services nginx-ingress-nginx-controller -n profisee
 ```
 Update your DNS to point to this IP.
 
@@ -169,15 +180,15 @@ To secure our Kubernetes services, we will configure TLS using cert-manager and 
 Install cert-manager in your Kubernetes cluster to manage certificates lifecycle:
 
 ```sh
-helm install --n profisee cert-manager jetstack/cert-manager --namespace default --set installCRDs=true --set nodeSelector."beta.kubernetes.io/os"=linux --set webhook.nodeSelector."beta.kubernetes.io/os"=linux --set cainjector.nodeSelector."beta.kubernetes.io/os"=linux
+helm install -n profisee cert-manager jetstack/cert-manager -n default --set installCRDs=true --set nodeSelector."beta.kubernetes.io/os"=linux --set webhook.nodeSelector."beta.kubernetes.io/os"=linux --set cainjector.nodeSelector."beta.kubernetes.io/os"=linux
 ```
 Ensure that all the pods are running:
 ```sh
-kubectl get pods --n cert-manager
+kubectl get pods -n cert-manager
 ```
 
 #### Step 2: Configure Let's Encrypt Issuer
-Create a Let's Encrypt issuer, replace email@example.com with your email address:
+Create a Let's Encrypt issuer (or download the file from the repository), replace email@example.com with your email address:
 ```yaml
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -200,7 +211,7 @@ kubectl apply -f letsencrypt-issuer.yaml
 ```
 
 #### Step 3: Configure TLS Ingress
-Create an Ingress resource that uses the Let's Encrypt issuer to obtain a TLS certificate. Make sure to replace yourdomain.com and my-service with your actual domain and service name:
+Create an Ingress resource that uses the Let's Encrypt issuer to obtain a TLS certificate (or download the file from the repository). Make sure to replace yourdomain.com and my-service with your actual domain and service name:
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -262,14 +273,21 @@ helm repo add profisee "https://profiseedev.github.io/kubernetes"
 ```
 12.2 Install Profisee:
 ```sh
-helm install --n profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
+helm install -n profisee profiseeplatform profisee/profisee-platform --values Settings.yaml
 ```
+### Important Note on Authentication for Profisee
 
-## 13: Verify and Finalize:
+When configuring Profisee for authentication, it is essential to use an OpenID Connect (OIDC) compliant Identity Provider (IdP) such as Azure AD, Okta, or Google Identity. Please ensure that you do not attempt to configure AWS credentials as your IdP for Profisee. The OIDC provider will be responsible for authenticating users and providing the necessary tokens for access control.
+
+For example, if you are integrating with Azure AD, you will need to mount a volume in your container that provides access to a secret store where Azure AD tokens are kept. This token is used by the application hosted within the container to perform authentication redirects to Azure AD, receive tokens, and manage user sessions in compliance with OIDC standards.
+
+Ensure that your identity provider and the necessary secrets are correctly configured before deploying Profisee with the Helm chart.
+
+## 13. Verify and Finalize:
 Check Pod Status:
 ```sh
-kubectl --n profisee describe pod profisee-0
-kubectl logs profisee-0 --n profisee --f
+kubectl -n profisee describe pod profisee-0
+kubectl logs profisee-0 -n profisee --f
 http(s)://FQDNThatPointsToClusterIP/Profisee
 ```
 
