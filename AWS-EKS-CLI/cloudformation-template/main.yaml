@@ -6,25 +6,25 @@ Resources:
   VPC:
     Type: "AWS::EC2::VPC"
     Properties:
-      CidrBlock: "192.168.0.0/16"
+      CidrBlock: "10.0.0.0/23"
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
-  # Public Subnet
+  # Public Subnet for Nginx
   PublicSubnet:
     Type: "AWS::EC2::Subnet"
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: "192.168.32.0/19"
+      CidrBlock: "10.0.0.0/24"
       MapPublicIpOnLaunch: true
       AvailabilityZone: "us-east-1b"
 
-  # Private Subnet
+  # Private Subnet for Other Resources
   PrivateSubnet:
     Type: "AWS::EC2::Subnet"
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: "192.168.64.0/19"
+      CidrBlock: "10.0.1.0/24"
       MapPublicIpOnLaunch: false
       AvailabilityZone: "us-east-1a"
 
@@ -43,7 +43,7 @@ Resources:
       Version: "1.27"
       ResourcesVpcConfig:
         SecurityGroupIds: [ !Ref EKSSecurityGroup ]
-        SubnetIds: [ !Ref PublicSubnet, !Ref PrivateSubnet ]
+        SubnetIds: [ !Ref PrivateSubnet ] # Using only the private subnet
 
   # Linux Node Group
   LinuxNodeGroup:
@@ -52,11 +52,11 @@ Resources:
       ClusterName: !Ref EKSCluster
       NodegroupName: "linux-ng"
       ScalingConfig:
-        MinSize: 1
+        MinSize: 2
         MaxSize: 3
         DesiredSize: 1
       InstanceTypes: ["t2.medium"]
-      Subnets: [ !Ref PublicSubnet, !Ref PrivateSubnet ]
+      Subnets: [ !Ref PrivateSubnet ] # Using only the private subnet
       NodeRole: !GetAtt NodeInstanceRole.Arn
       DiskSize: 100
 
@@ -71,7 +71,7 @@ Resources:
         MaxSize: 3
         DesiredSize: 1
       InstanceTypes: ["m5.xlarge"]
-      Subnets: [ !Ref PublicSubnet, !Ref PrivateSubnet ]
+      Subnets: [ !Ref PrivateSubnet ] # Using only the private subnet
       NodeRole: !GetAtt NodeInstanceRole.Arn
       DiskSize: 100
       AmiType: "WindowsServer2022FullContainer"
@@ -96,7 +96,7 @@ Resources:
   ACMCertificate:
     Type: "AWS::CertificateManager::Certificate"
     Properties:
-      DomainName: "yourdomain.com"  # Update as needed
+      DomainName: "yourdomain.com"
       ValidationMethod: "DNS"
 
   # Ingress Controller Security Group
@@ -122,10 +122,10 @@ Resources:
       Engine: "sqlserver-ex"
       DBInstanceClass: "db.m5.large"
       DBInstanceIdentifier: "profisee"
-      MasterUsername: "sqladmin"  # Update as necessary
-      MasterUserPassword: "YourStrongPassword!123"  # Update as necessary
+      MasterUsername: "sqladmin"
+      MasterUserPassword: "<YOURPASSWORD>"
       AllocatedStorage: 20
-      PubliclyAccessible: true
+      PubliclyAccessible: false # Set to false to make it private
       DBSubnetGroupName: !Ref DBSubnetGroup
       VPCSecurityGroups:
         - !Ref EKSSecurityGroup
@@ -136,8 +136,7 @@ Resources:
     Properties:
       DBSubnetGroupDescription: "Subnet Group for RDS"
       SubnetIds:
-        - !Ref PublicSubnet
-        - !Ref PrivateSubnet
+        - !Ref PrivateSubnet # Using only the private subnet
 
 Outputs:
   EKSClusterArn:
