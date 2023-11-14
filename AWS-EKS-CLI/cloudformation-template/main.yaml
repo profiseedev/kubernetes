@@ -1,0 +1,157 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS CloudFormation Template for EKS Cluster and Associated Resources"
+
+Resources:
+  # VPC
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "192.168.0.0/16"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  # Public Subnet
+  PublicSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "192.168.32.0/19"
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: "us-east-1b"
+
+  # Private Subnet
+  PrivateSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "192.168.64.0/19"
+      MapPublicIpOnLaunch: false
+      AvailabilityZone: "us-east-1a"
+
+  # Security Group for EKS
+  EKSSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Security group for EKS cluster"
+      VpcId: !Ref VPC
+
+  # EKS Cluster
+  EKSCluster:
+    Type: "AWS::EKS::Cluster"
+    Properties:
+      Name: "ProfiseeDemo"
+      Version: "1.27"
+      ResourcesVpcConfig:
+        SecurityGroupIds: [ !Ref EKSSecurityGroup ]
+        SubnetIds: [ !Ref PublicSubnet, !Ref PrivateSubnet ]
+
+  # Linux Node Group
+  LinuxNodeGroup:
+    Type: "AWS::EKS::Nodegroup"
+    Properties:
+      ClusterName: !Ref EKSCluster
+      NodegroupName: "linux-ng"
+      ScalingConfig:
+        MinSize: 1
+        MaxSize: 3
+        DesiredSize: 1
+      InstanceTypes: ["t2.medium"]
+      Subnets: [ !Ref PublicSubnet, !Ref PrivateSubnet ]
+      NodeRole: !GetAtt NodeInstanceRole.Arn
+      DiskSize: 100
+
+  # Windows Node Group
+  WindowsNodeGroup:
+    Type: "AWS::EKS::Nodegroup"
+    Properties:
+      ClusterName: !Ref EKSCluster
+      NodegroupName: "windows-ng"
+      ScalingConfig:
+        MinSize: 1
+        MaxSize: 3
+        DesiredSize: 1
+      InstanceTypes: ["m5.xlarge"]
+      Subnets: [ !Ref PublicSubnet, !Ref PrivateSubnet ]
+      NodeRole: !GetAtt NodeInstanceRole.Arn
+      DiskSize: 100
+      AmiType: "WindowsServer2022FullContainer"
+
+  # Node Instance Role
+  NodeInstanceRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "ec2.amazonaws.com"
+            Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+        - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+        - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+
+  # ACM Certificate
+  ACMCertificate:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      DomainName: "yourdomain.com"  # Update as needed
+      ValidationMethod: "DNS"
+
+  # Ingress Controller Security Group
+  IngressControllerSetup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: "Security group for Nginx Ingress Controller"
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: "tcp"
+          FromPort: 443
+          ToPort: 443
+          CidrIp: "0.0.0.0/0"
+
+  # RDS SQL Server Instance
+  RDSInstance:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      Engine: "MySQL"
+      DBInstanceClass: "db.m5.large"
+      DBInstanceIdentifier: "profisee"
+      MasterUsername: "sqladmin"  # Update as necessary
+      MasterUserPassword: "YourStrongPassword!123"  # Update as necessary
+      AllocatedStorage: 20
+      PubliclyAccessible: true
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      VPCSecurityGroups:
+        - !Ref EKSSecurityGroup
+
+  # DB Subnet Group for RDS
+  DBSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties:
+      DBSubnetGroupDescription: "Subnet Group for RDS"
+      SubnetIds:
+        - !Ref PublicSubnet
+        - !Ref PrivateSubnet
+
+Outputs:
+  EKSClusterArn:
+    Description: "ARN of the EKS Cluster"
+    Value: !GetAtt EKSCluster.Arn
+
+  PublicSubnetId:
+    Description: "ID of the public subnet"
+    Value: !Ref PublicSubnet
+
+  PrivateSubnetId:
+    Description: "ID of the private subnet"
+    Value: !Ref PrivateSubnet
+
+  RDSInstanceEndpoint:
+    Description: "Endpoint of the RDS instance"
+    Value: !GetAtt RDSInstance.Endpoint.Address
