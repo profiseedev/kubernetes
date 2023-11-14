@@ -119,7 +119,7 @@ Resources:
   RDSInstance:
     Type: "AWS::RDS::DBInstance"
     Properties:
-      Engine: "MySQL"
+      Engine: "sqlserver-ex"
       DBInstanceClass: "db.m5.large"
       DBInstanceIdentifier: "profisee"
       MasterUsername: "sqladmin"  # Update as necessary
