@@ -56,7 +56,7 @@ Once you have determined the suitable instance size, replace the placeholders in
 ```sh
 aws rds create-db-instance \
     --engine sqlserver-ex \
-    --db-instance-class db.m5.large \
+    --db-instance-class db.t3.xlarge \
     --db-instance-identifier profiseedemo \
     --master-username sqladmin \
     --master-user-password YourStrongPassword!123 \

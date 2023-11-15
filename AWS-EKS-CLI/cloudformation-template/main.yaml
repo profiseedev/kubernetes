@@ -19,14 +19,23 @@ Resources:
       MapPublicIpOnLaunch: true
       AvailabilityZone: "us-east-1b"
 
-  # Private Subnet for Other Resources
+  # First Private Subnet for Other Resources
   PrivateSubnet:
     Type: "AWS::EC2::Subnet"
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: "10.0.1.0/24"
+      CidrBlock: "10.0.1.0/25"
       MapPublicIpOnLaunch: false
       AvailabilityZone: "us-east-1a"
+
+  # Second Private Subnet for Other Resources and DB Subnet Group
+  PrivateSubnet2:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: "10.0.1.128/25"
+      MapPublicIpOnLaunch: false
+      AvailabilityZone: "us-east-1c"
 
   # Security Group for EKS
   EKSSecurityGroup:
@@ -35,15 +44,31 @@ Resources:
       GroupDescription: "Security group for EKS cluster"
       VpcId: !Ref VPC
 
+  # IAM Role for EKS Cluster
+  EKSClusterRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "eks.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Path: "/"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+
   # EKS Cluster
   EKSCluster:
     Type: "AWS::EKS::Cluster"
     Properties:
       Name: "ProfiseeDemo"
       Version: "1.27"
+      RoleArn: !GetAtt EKSClusterRole.Arn
       ResourcesVpcConfig:
         SecurityGroupIds: [ !Ref EKSSecurityGroup ]
-        SubnetIds: [ !Ref PrivateSubnet ] # Using only the private subnet
+        SubnetIds: [ !Ref PrivateSubnet, !Ref PrivateSubnet2 ]
 
   # Linux Node Group
   LinuxNodeGroup:
@@ -54,9 +79,9 @@ Resources:
       ScalingConfig:
         MinSize: 2
         MaxSize: 3
-        DesiredSize: 1
+        DesiredSize: 2
       InstanceTypes: ["t2.medium"]
-      Subnets: [ !Ref PrivateSubnet ] # Using only the private subnet
+      Subnets: [ !Ref PrivateSubnet, !Ref PrivateSubnet2 ]
       NodeRole: !GetAtt NodeInstanceRole.Arn
       DiskSize: 100
 
@@ -69,9 +94,9 @@ Resources:
       ScalingConfig:
         MinSize: 1
         MaxSize: 3
-        DesiredSize: 1
+        DesiredSize: 2
       InstanceTypes: ["m5.xlarge"]
-      Subnets: [ !Ref PrivateSubnet ] # Using only the private subnet
+      Subnets: [ !Ref PrivateSubnet, !Ref PrivateSubnet2 ]
       NodeRole: !GetAtt NodeInstanceRole.Arn
       DiskSize: 100
       AmiType: "WindowsServer2022FullContainer"
@@ -87,6 +112,7 @@ Resources:
             Principal:
               Service: "ec2.amazonaws.com"
             Action: "sts:AssumeRole"
+      Path: "/"
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
         - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
@@ -120,12 +146,12 @@ Resources:
     Type: "AWS::RDS::DBInstance"
     Properties:
       Engine: "sqlserver-ex"
-      DBInstanceClass: "db.m5.large"
+      DBInstanceClass: "db.t3.xlarge"
       DBInstanceIdentifier: "profisee"
       MasterUsername: "sqladmin"
-      MasterUserPassword: "<YOURPASSWORD>"
+      MasterUserPassword: "YOURPASSWORD"  # Ensure this is secured
       AllocatedStorage: 20
-      PubliclyAccessible: false # Set to false to make it private
+      PubliclyAccessible: false
       DBSubnetGroupName: !Ref DBSubnetGroup
       VPCSecurityGroups:
         - !Ref EKSSecurityGroup
@@ -136,7 +162,8 @@ Resources:
     Properties:
       DBSubnetGroupDescription: "Subnet Group for RDS"
       SubnetIds:
-        - !Ref PrivateSubnet # Using only the private subnet
+        - !Ref PrivateSubnet
+        - !Ref PrivateSubnet2
 
 Outputs:
   EKSClusterArn:
@@ -148,8 +175,12 @@ Outputs:
     Value: !Ref PublicSubnet
 
   PrivateSubnetId:
-    Description: "ID of the private subnet"
+    Description: "ID of the first private subnet"
     Value: !Ref PrivateSubnet
+
+  PrivateSubnet2Id:
+    Description: "ID of the second private subnet"
+    Value: !Ref PrivateSubnet2
 
   RDSInstanceEndpoint:
     Description: "Endpoint of the RDS instance"
