@@ -10,7 +10,18 @@ Resources:
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
-  # Public Subnet for Nginx
+  # Internet Gateway for the VPC
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+
+  # Attachment to VPC
+  InternetGatewayAttachment:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Public Subnet for Nginx and NAT Gateway
   PublicSubnet:
     Type: "AWS::EC2::Subnet"
     Properties:
@@ -19,7 +30,56 @@ Resources:
       MapPublicIpOnLaunch: true
       AvailabilityZone: "us-east-1b"
 
-  # First Private Subnet for Other Resources
+  # Elastic IP for NAT Gateway
+  EIPForNATGateway:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: "vpc"
+
+  # NAT Gateway
+  NATGateway:
+    Type: "AWS::EC2::NatGateway"
+    Properties:
+      AllocationId: !GetAtt EIPForNATGateway.AllocationId
+      SubnetId: !Ref PublicSubnet
+
+  # Route Table for Public Subnet
+  PublicRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+
+  # Route for Internet traffic for Public Subnet
+  PublicRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref InternetGateway
+
+  # Associate Public Subnet with Route Table
+  PublicSubnetRouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
+  # Route Table for Private Subnets
+  PrivateRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+
+  # Route for internet traffic via NAT Gateway for Private Subnets
+  PrivateRoute:
+    Type: "AWS::EC2::Route"
+    DependsOn: "NATGateway"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NATGateway
+
+  # Private Subnet for Other Resources
   PrivateSubnet:
     Type: "AWS::EC2::Subnet"
     Properties:
@@ -27,6 +87,13 @@ Resources:
       CidrBlock: "10.0.2.0/24"
       MapPublicIpOnLaunch: false
       AvailabilityZone: "us-east-1a"
+
+  # Associate first Private Subnet with Route Table
+  PrivateSubnetRouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      RouteTableId: !Ref PrivateRouteTable
 
   # Second Private Subnet for Other Resources and DB Subnet Group
   PrivateSubnet2:
@@ -36,6 +103,13 @@ Resources:
       CidrBlock: "10.0.3.0/24"
       MapPublicIpOnLaunch: false
       AvailabilityZone: "us-east-1c"
+
+  # Associate second Private Subnet with Route Table
+  PrivateSubnet2RouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
 
   # Security Group for EKS
   EKSSecurityGroup:
