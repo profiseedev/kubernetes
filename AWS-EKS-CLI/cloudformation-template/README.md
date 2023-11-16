@@ -1,91 +1,58 @@
 # AWS Profisee EKS Deployment CloudFormation Template
 
-This README outlines the deployment process for the AWS CloudFormation template designed to create a fresh AWS environment for the Profisee platform with an Amazon EKS cluster and associated resources.
+This CloudFormation template is designed to create an AWS EKS (Elastic Kubernetes Service) Cluster along with the necessary supporting AWS infrastructure. This includes a VPC, subnets, NAT gateway, Internet Gateway, security groups, IAM roles, and an RDS SQL Server instance.
 
-## Overview
+## Description
 
-This CloudFormation template is designed to set up the following resources in a new AWS environment:
+The template sets up the following resources:
 
-- Amazon EKS Cluster
-- EKS Node Groups for both Linux and Windows
-- IAM Roles for EKS
-- Amazon RDS MySQL Instance
-- ACM Certificate for a domain
-- Security Groups, including one for the Ingress Controller
-- A new VPC with associated Subnets
+- **VPC**: A virtual private cloud configured with a CIDR block of `10.0.0.0/16`.
+- **Internet Gateway**: Attached to the VPC for internet access.
+- **Public and Private Subnets**: Used for organizing resources and controlling access.
+- **NAT Gateway**: Allows instances in the private subnet to initiate outbound traffic to the internet.
+- **Route Tables**: For public and private subnets to control network routing.
+- **EKS Cluster**: Kubernetes cluster managed by AWS EKS.
+- **EKS Node Groups**: Linux and Windows node groups for the EKS cluster.
+- **IAM Roles**: Roles with necessary policies for EKS and EC2 instances.
+- **RDS SQL Server Instance**: A relational database instance for data persistence.
+- **Security Groups**: For EKS cluster and Ingress controller.
 
-## Prerequisites
+## Usage
 
-Before you begin, make sure you have:
+To deploy this template:
 
-- An AWS account with appropriate permissions
-- AWS CLI installed and configured on your machine
-- Basic knowledge of AWS EKS, RDS, VPC, and other AWS services
+1. **Upload the template to AWS CloudFormation**:
+   You can upload this template to AWS CloudFormation through the AWS Management Console, AWS CLI, or AWS CloudFormation APIs.
 
-## Template Resource Details
+2. **Fill in the Parameters**:
+   Some resources, like the RDS SQL Server instance, require specific parameters (e.g., `MasterUsername`, `MasterUserPassword`). Ensure these values are set before deployment.
 
-### EKS Cluster (`EKSCluster`)
+3. **Execute the Stack**:
+   Once uploaded and parameters are set, execute the stack to create the resources.
 
-Configures a new EKS cluster named `ProfiseeDemo`. Ensure that the Kubernetes version and other settings meet your specific needs.
+4. **Monitor the Stack Creation**:
+   Monitor the progress in the AWS CloudFormation console. Upon successful completion, all resources will be deployed.
 
-### EKS Node Groups (`LinuxNodeGroup` & `WindowsNodeGroup`)
+## Customization
 
-Creates node groups for running Linux and Windows workloads, with configurable instance types, scaling settings, and disk sizes.
+- **Certificate Management**:
+  This template does not include an AWS Certificate Manager (ACM) resource. Users are free to integrate their preferred SSL/TLS certificate provider, such as Let's Encrypt, as per their requirements.
 
-### IAM Roles (`NodeInstanceRole` & `RBACRole`)
+- **Kubernetes Configuration**:
+  Further Kubernetes-specific configurations (like deploying workloads, setting up ingress controllers, etc.) are to be done post-deployment within the EKS cluster.
 
-Defines necessary IAM roles to grant EKS nodes and services the required permissions for interacting with other AWS services.
+## Outputs
 
-### RDS Instance (`RDSInstance`)
+The template provides several outputs for easy reference to created resources:
 
-Provisions a new RDS instance with MySQL, tailored for database needs of applications running on EKS.
+- `EKSClusterArn`: The ARN of the created EKS Cluster.
+- `PublicSubnetId`: The ID of the public subnet.
+- `PrivateSubnetId`: The ID of the first private subnet.
+- `PrivateSubnet2Id`: The ID of the second private subnet.
+- `RDSInstanceEndpoint`: The endpoint address of the RDS instance.
 
-### ACM Certificate (`ACMCertificate`)
+## Important Notes
 
-Generates an ACM certificate for your specified domain, crucial for secure communications.
-
-### Ingress Controller Security Group (`IngressControllerSetup`)
-
-Establishes a security group for the Ingress Controller, enabling traffic on ports 80 and 443.
-
-### VPC and Subnets (`VPC`, `PublicSubnet`, `PrivateSubnet`)
-
-Creates a new VPC and associated subnets, laying the foundation for network infrastructure.
-
-## Deployment Instructions
-
-1. **Prepare for Deployment**:
-   - Ensure all prerequisites are met.
-   - Update the template with your specific details, such as domain name for ACM Certificate, and database credentials for the RDS instance.
-
-2. **Upload and Deploy the Template**:
-   - Via AWS Management Console: 
-     - Navigate to the CloudFormation service.
-     - Choose 'Create Stack' and upload the template.
-   - Via AWS CLI: 
-     - Use the command: `aws cloudformation create-stack --stack-name ProfiseeEKS --template-body file://path_to_template/template.yaml`.
-
-3. **Monitor Stack Creation**:
-   - Track the progress in the AWS CloudFormation console.
-   - Wait for the status to change to `CREATE_COMPLETE`.
-
-4. **Post-Deployment Steps**:
-   - After successful creation, perform any additional configurations needed for your Kubernetes cluster, like setting up Ingress Controllers or deploying specific services.
-   - These Kubernetes-specific configurations are outside the scope of CloudFormation and must be done using `kubectl` or `helm`.
-
-5. **Validate the Deployment**:
-   - Ensure all resources are correctly created and configured.
-   - Check the AWS Management Console to confirm the setup.
-
-## Notes and Best Practices
-
-- **Customization**: Modify the template as needed to fit your specific AWS environment and requirements.
-- **Security**: Review and tighten security group rules and IAM policies as per your organizational standards.
-- **Updates**: Regularly check for updates in AWS services and adjust the template accordingly.
-- **Testing**: Before deploying in a production environment, it's recommended to test the template in a staging environment.
-
-## Troubleshooting
-
-- If the stack fails to create, review the events tab in the CloudFormation console for specific error messages.
-- Ensure that the AWS CLI is configured correctly with the necessary permissions.
-- Validate that the values provided in the template (like domain names and credentials) are accurate.
+- **Security**: Ensure that the `MasterUserPassword` for the RDS instance is secured and rotated regularly.
+- **Costs**: Deploying this template will create AWS resources that might incur costs. Please check the AWS pricing page for details.
+- **Region**: Before deployment, ensure that all services and resources are available in your AWS region.
