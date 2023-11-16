@@ -184,7 +184,7 @@ Resources:
       ScalingConfig:
         MinSize: 1
         MaxSize: 3
-        DesiredSize: 2
+        DesiredSize: 1
       InstanceTypes: ["m5.xlarge"]
       Subnets: [ !Ref PrivateSubnet, !Ref PrivateSubnet2 ]
       NodeRole: !GetAtt NodeInstanceRole.Arn
@@ -207,13 +207,6 @@ Resources:
         - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
         - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
         - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-
-  # ACM Certificate
-  ACMCertificate:
-    Type: "AWS::CertificateManager::Certificate"
-    Properties:
-      DomainName: "profiseeawsdemo.com"
-      ValidationMethod: "DNS"
 
   # Ingress Controller Security Group
   IngressControllerSetup:
