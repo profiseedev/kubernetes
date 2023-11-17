@@ -19,27 +19,6 @@ Resources:
       MapPublicIpOnLaunch: true
       AvailabilityZone: "us-east-1b"
 
-  # Route Table for Public Subnet
-  PublicRouteTable:
-    Type: "AWS::EC2::RouteTable"
-    Properties:
-      VpcId: !Ref VPC
-
-  # Route for Internet traffic for Public Subnet
-  PublicRoute:
-    Type: "AWS::EC2::Route"
-    Properties:
-      RouteTableId: !Ref PublicRouteTable
-      DestinationCidrBlock: "0.0.0.0/0"
-      GatewayId: !Ref InternetGateway
-
-  # Associate Public Subnet with Route Table
-  PublicSubnetRouteTableAssociation:
-    Type: "AWS::EC2::SubnetRouteTableAssociation"
-    Properties:
-      SubnetId: !Ref PublicSubnet
-      RouteTableId: !Ref PublicRouteTable
-
   # Private Subnet for EKS and RDS
   PrivateSubnet:
     Type: "AWS::EC2::Subnet"
