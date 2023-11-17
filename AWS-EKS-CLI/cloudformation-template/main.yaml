@@ -10,17 +10,6 @@ Resources:
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
-  # Internet Gateway for the VPC
-  InternetGateway:
-    Type: "AWS::EC2::InternetGateway"
-
-  # Attachment to VPC
-  InternetGatewayAttachment:
-    Type: "AWS::EC2::VPCGatewayAttachment"
-    Properties:
-      VpcId: !Ref VPC
-      InternetGatewayId: !Ref InternetGateway
-
   # Public Subnet for Ingress Controller
   PublicSubnet:
     Type: "AWS::EC2::Subnet"
