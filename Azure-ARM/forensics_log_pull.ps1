@@ -24,4 +24,4 @@ compress-archive -Path "$env:TEMP\all-Logs\$DT\" -DestinationPath "$env:TEMP\all
 copy "$env:TEMP\all-Logs-$DT.zip" "C:\fileshare\"
 
 #delete older zipped log files more than 30 days
-Get-ChildItem -Path C:\Fileshare\* -Include all-logs-*.zip -Recurse | Where-Object {$_.LastWriteTime -lt (Get-Date).AddDays(0)} | Remove-Item
+Get-ChildItem -Path C:\Fileshare\* -Include all-logs-*.zip -Recurse | Where-Object {$_.LastWriteTime -lt (Get-Date).AddDays(-30)} | Remove-Item
