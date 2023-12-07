@@ -22,3 +22,6 @@ Get-NetTCPConnection | Group-Object -Property State, OwningProcess | Select -Pro
 #Compress and copy to fileshare
 compress-archive -Path "$env:TEMP\all-Logs\$DT\" -DestinationPath "$env:TEMP\all-Logs-$DT.zip"
 copy "$env:TEMP\all-Logs-$DT.zip" "C:\fileshare\"
+
+#delete older zipped log files more than 30 days
+Get-ChildItem -Path C:\Fileshare\* -Include all-logs-*.zip -Recurse | Where-Object {$_.LastWriteTime -lt (Get-Date).AddDays(0)} | Remove-Item
