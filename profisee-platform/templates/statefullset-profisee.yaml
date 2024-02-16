@@ -31,7 +31,7 @@ spec:
       {{ end }}
       {{- end }}
       {{- if .Values.cloud.aws.isProvider }}
-        "kubernetes.io/os": windows"
+        "kubernetes.io/os": windows
       {{- end }}
       volumes:
       - name: data-volume
