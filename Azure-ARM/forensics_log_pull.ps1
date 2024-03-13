@@ -10,7 +10,6 @@ copy c:\profisee\gateway\logfiles\systemlog.log $env:TEMP\all-Logs\$DT\ProfiseeL
 copy c:\profisee\services\attachments\logfiles\systemlog.log $env:TEMP\all-Logs\$DT\ProfiseeLogs\attachments-log.log
 copy c:\profisee\services\auth\logfiles\systemlog.log $env:TEMP\all-Logs\$DT\ProfiseeLogs\auth-log.log
 copy c:\profisee\services\governance\logfiles\systemlog.log $env:TEMP\all-Logs\$DT\ProfiseeLogs\governance-log.log
-copy c:\profisee\services\machinelearning\logfiles\systemlog.log $env:TEMP\all-Logs\$DT\ProfiseeLogs\ml-log.log
 copy c:\profisee\services\monolith\logfiles\systemlog.log $env:TEMP\all-Logs\$DT\ProfiseeLogs\monolith-log.log
 copy c:\profisee\services\workflows\logfiles\systemlog.log $env:TEMP\all-Logs\$DT\ProfiseeLogs\workflows-log.log
 copy c:\profisee\web\logfiles\systemlog.log $env:TEMP\all-Logs\$DT\ProfiseeLogs\web-log.log
