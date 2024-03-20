@@ -33,14 +33,14 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       nodeSelector:
       {{- if .Values.cloud.azure.isProvider }}
-        {{ if hasSuffix "win22" .Values.image.tag }}
-          "kubernetes.azure.com/os-sku": Windows2022
-        {{ else }}
-          "kubernetes.azure.com/os-sku": Windows2019
-        {{ end }}
+          {{ if hasSuffix "win22" .Values.image.tag }}
+            "kubernetes.azure.com/os-sku": Windows2022
+          {{ else }}
+            "kubernetes.azure.com/os-sku": Windows2019
+          {{ end }}
       {{- end }}
       {{- if .Values.cloud.aws.isProvider }}
-        "kubernetes.io/os": windows
+          "kubernetes.io/os": windows
       {{- end }}
       volumes:
       - name: data-volume
