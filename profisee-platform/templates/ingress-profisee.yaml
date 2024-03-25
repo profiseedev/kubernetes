@@ -23,6 +23,7 @@ metadata:
     {{- end }}
 
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - {{.Values.profiseeRunTime.externalDnsName}}
