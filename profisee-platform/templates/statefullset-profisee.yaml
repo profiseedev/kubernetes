@@ -22,7 +22,6 @@ spec:
       terminationGracePeriodSeconds: 60
       serviceAccountName: profiseeserviceaccount
       automountServiceAccountToken: false
-    {{- if (gt (int .Values.profiseeRunTime.clusterNodeCount) 1) }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -32,7 +31,6 @@ spec:
                 matchLabels:
                   app: profisee
               topologyKey: "kubernetes.io/hostname"
-    {{- end}}
       nodeSelector:
       {{- if .Values.cloud.azure.isProvider }}
           {{ if hasSuffix "win22" .Values.image.tag }}

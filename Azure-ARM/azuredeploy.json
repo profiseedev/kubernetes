@@ -504,6 +504,14 @@
             "properties": {
                 "kubernetesVersion": "[variables('KubernetesVersion')]",
                 "dnsPrefix": "profisee",
+                "oidcIssuerProfile": {
+                  "enabled": true
+                },
+                "securityProfile": {
+                  "workloadIdentity": {
+                    "enabled": true
+                  }
+                },
                 "agentPoolProfiles": [
                     {
                         "name": "nplinux1",
