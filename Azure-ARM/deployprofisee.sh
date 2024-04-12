@@ -490,6 +490,34 @@ if [ "$WINDOWS_NODE_VERSION" = "Windows2019" ]; then
 	echo $"Azure File CSI Driver installation finished."
 fi
 
+#Add AzureAD Claims and Pod Count
+OIDCNAME="Azure Active Directory"
+OIDCCMUserName="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+OIDCCMUserID="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+OIDCCMFirstName="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+OIDCCMLastName="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
+OIDCCMEmailAddress="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+
+PodCount=1
+
+sed -i -e 's~$OIDCNAME~'"$OIDCNAME"'~g' Settings.yaml
+sed -i -e 's~$OIDCCMUserName~'"$OIDCCMUserName"'~g' Settings.yaml
+sed -i -e 's~$OIDCCMUserID~'"$OIDCCMUserID"'~g' Settings.yaml
+sed -i -e 's~$OIDCCMFirstName~'"$OIDCCMFirstName"'~g' Settings.yaml
+sed -i -e 's~$OIDCCMLastName~'"$OIDCCMLastName"'~g' Settings.yaml
+sed -i -e 's~$OIDCCMEmailAddress~'"$OIDCCMEmailAddress"'~g' Settings.yaml
+
+sed -i -e 's/$PodCount/'"$PodCount"'/g' Settings.yaml
+
+
+#pre,post init script and oidcfiledata
+preInitScriptData="Cg=="
+postInitScriptData="Cg=="
+OIDCFileData="{\n    }"
+echo $OIDCFileData
+sed -i -e 's/$preInitScriptData/'"$preInitScriptData"'/g' Settings.yaml
+sed -i -e 's/$postInitScriptData/'"$postInitScriptData"'/g' Settings.yaml
+sed -i -e 's/$OIDCFileData/'"$OIDCFileData"'/g' Settings.yaml
 
 #Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly.
 echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected."
