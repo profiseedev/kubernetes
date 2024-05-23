@@ -409,10 +409,6 @@
                 {
                   "label": "Standard tier",
                   "value": "Standard"
-                },
-                {
-                  "label": "Premium tier",
-                  "value": "Premium"
                 }
               ],
               "required": true
