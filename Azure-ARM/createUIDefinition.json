@@ -398,7 +398,7 @@
             "name": "PricingTier",
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Pricing tiers for Azure Kubernetes Service",
-            "defaultValue": "Local Accounts with Kubernetes RBAC",
+            "defaultValue": "Free tier",
             "toolTip": "AKS offers two pricing tiers for the managed Kubernetes control plane. Choose the pricing tier that best meets your needs.",
             "constraints": {
               "allowedValues": [
