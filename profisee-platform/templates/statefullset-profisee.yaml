@@ -92,6 +92,8 @@ spec:
           initialDelaySeconds: 600
           timeoutSeconds: 5
           periodSeconds: 60
+        {{- if not .Values.profiseeRunTime.isPaaS }}
+        {{- if eq .Values.profiseeRunTime.secondary "false" }}
         lifecycle:
           postStart:
             exec:
@@ -105,6 +107,23 @@ spec:
               command:
                 - powershell
                 - .\Fileshare\forensics_log_pull.ps1
+        {{- end }}
+        {{- end }}
+        {{- if .Values.profiseeRunTime.isPaaS }}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - powershell
+                - >-
+                  curl.exe -fsSL -o .\Fileshare\forensics_log_pull.ps1
+                  "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/forensics_log_pull.ps1"
+          preStop:
+            exec:
+              command:
+                - powershell
+                - .\Fileshare\forensics_log_pull.ps1
+        {{- end }}
         volumeMounts:
         - name: data-volume
           mountPath: C:\data
