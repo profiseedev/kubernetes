@@ -962,7 +962,7 @@
           "placeholder": "first.last@company.com",
           "toolTip": "Please specify an email address for the user, or group, that should receive email notifications for certificate expiration.",
           "constraints": {
-            "required": true,
+            "required": "[not(equals(steps('networking').HttpsConfigure, 'Yes'))]",
             "regex": "",
             "validationMessage": ""
           },
