@@ -146,7 +146,7 @@
             "name": "ProfiseeAdminUserAccount",
             "type": "Microsoft.Common.TextBox",
             "label": "Super Admin Account",
-            "defaultValue": "",
+            "defaultValue": "support@profisee.com",
             "placeholder": "first.last@company.com",
             "toolTip": "The first Super User, who will be able to log in and add other users.",
             "constraints": {
@@ -966,7 +966,7 @@
             "regex": "",
             "validationMessage": ""
           },
-          "visible": true
+          "visible": "[not(equals(steps('networking').HttpsConfigure, 'Yes'))]"
         },
           {
             "name": "UserDefinedHTTPS",
