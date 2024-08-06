@@ -557,7 +557,7 @@ sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$CLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$ADMINACCOUNTNAME/'"$ADMINACCOUNTNAME"'/g' Settings.yaml
-sed -i -e 's/$INFRAADMINACCOUNT/'"$INFRAADMINACCOUNT"'/g' Settings.yaml
+
 sed -i -e 's~$EXTERNALDNSURL~'"$EXTERNALDNSURL"'~g' Settings.yaml
 sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
 sed -i -e 's~$LICENSEDATA~'"$LICENSEDATA"'~g' Settings.yaml
@@ -601,6 +601,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	helm repo add jetstack https://charts.jetstack.io
 	# Update your local Helm chart repository cache
 	helm repo update
+
 	#If cert-manager is present, uninstall it.
         certmgrpresent=$(helm list -n profisee -f cert-manager -o table --short)
         if [ "$certmgrpresent" = "cert-manager" ]; then
@@ -614,6 +615,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Let's Encrypt is waiting for certificate manager to be ready, sleeping for 30 seconds.";
 	sleep 30;
 	sed -i -e 's/$USELETSENCRYPT/'true'/g' Settings.yaml
+	sed -i -e 's/$INFRAADMINACCOUNT/'"$INFRAADMINACCOUNT"'/g' Settings.yaml
 	echo "Let's Encrypt installation finshed";
 	#################################Lets Encrypt End #######################################
 else
