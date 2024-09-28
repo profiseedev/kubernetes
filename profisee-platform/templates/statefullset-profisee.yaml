@@ -80,34 +80,61 @@ spec:
       - name: profisee
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
+        {{- if .Values.image.tag | regexMatch "^(2[4-9]|[3-9][0-9])r[0-9]+\..*" }}
+        livenessProbe:
+          httpGet:
+            path: /$env:ProfiseeWebAppName/rest/health
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 20
+          timeoutSeconds: 10
+          periodSeconds: 20
+          SuccessThreshold: 1
+          failureThreshold: 4
+        {{- else }}
         livenessProbe:
           exec:
             command:
               - powershell
               - >-
-                if(((Get-Service profisee).Status -ne 'Stopped') -and
-                ($(Get-IISAppPool | Where-Object { $_.State -eq "Stopped"
-                }).State -ne 'Stopped')){return 0}else{throw 'Profisee is
-                down'}
+                if((Get-Service profisee).Status -ne 'Stopped'){return
+                0}else{throw 'Profisee service is down'}
           initialDelaySeconds: 600
           timeoutSeconds: 5
           periodSeconds: 60
+          SuccessThreshold: 1
+          failureThreshold: 3
+        {{- end }}
+        {{- if .Values.image.tag | regexMatch "^(2[4-9]|[3-9][0-9])r[0-9]+\..*" }}
+        startupProbe:
+          exec:
+            command:
+            - powershell
+            - .\Fileshare\startup-probe.ps1
+          initialDelaySeconds: 45
+          timeoutSeconds: 600
+          periodSeconds: 10
+          SuccessThreshold: 1
+          failureThreshold: 1
+        {{- end }}
         {{- if not .Values.profiseeRunTime.isPaaS }}
-        {{- if eq .Values.profiseeRunTime.secondary "false" }}
         lifecycle:
           postStart:
             exec:
               command:
                 - powershell
                 - >-
+                  curl.exe -fsSL -o .\Fileshare\startup-probe.ps1
+                  "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/startup-probe.ps1";
                   curl.exe -fsSL -o .\Fileshare\forensics_log_pull.ps1
                   "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/forensics_log_pull.ps1"
+          {{- if eq .Values.profiseeRunTime.secondary "false" }}
           preStop:
             exec:
               command:
                 - powershell
                 - .\Fileshare\forensics_log_pull.ps1
-        {{- end }}
+          {{- end }}
         {{- end }}
         {{- if .Values.profiseeRunTime.isPaaS }}
         lifecycle:
@@ -116,6 +143,8 @@ spec:
               command:
                 - powershell
                 - >-
+                  curl.exe -fsSL -o .\Fileshare\startup-probe.ps1
+                  "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/startup-probe.ps1";
                   curl.exe -fsSL -o .\Fileshare\forensics_log_pull.ps1
                   "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/forensics_log_pull.ps1"
           preStop:
