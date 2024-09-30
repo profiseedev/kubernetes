@@ -80,7 +80,7 @@ spec:
       - name: profisee
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
-        {{- if regexMatch "^(2[4-9]|[3-9][0-9])r[0-9]+\\..*" .Values.image.tag }}
+        {{- if regexMatch "^(202[4-9]|[3-9][0-9])r[0-9]+\\..*" .Values.image.tag }}
         livenessProbe:
           httpGet:
             path: /{{.Values.profiseeRunTime.webAppName}}/rest/health
@@ -105,7 +105,7 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         {{- end }}
-        {{- if regexMatch "^(2[4-9]|[3-9][0-9])r[0-9]+\\..*" .Values.image.tag }}
+        {{- if regexMatch "^(202[4-9]|[3-9][0-9])r[0-9]+\\..*" .Values.image.tag }}
         startupProbe:
           exec:
             command:
