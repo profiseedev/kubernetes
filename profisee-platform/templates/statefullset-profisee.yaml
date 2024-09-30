@@ -89,7 +89,7 @@ spec:
           initialDelaySeconds: 20
           timeoutSeconds: 10
           periodSeconds: 20
-          SuccessThreshold: 1
+          successThreshold: 1
           failureThreshold: 4
         {{- else }}
         livenessProbe:
@@ -102,7 +102,7 @@ spec:
           initialDelaySeconds: 600
           timeoutSeconds: 5
           periodSeconds: 60
-          SuccessThreshold: 1
+          successThreshold: 1
           failureThreshold: 3
         {{- end }}
         {{- if regexMatch "^(2[4-9]|[3-9][0-9])r[0-9]+\\..*" .Values.image.tag }}
@@ -114,7 +114,7 @@ spec:
           initialDelaySeconds: 45
           timeoutSeconds: 600
           periodSeconds: 10
-          SuccessThreshold: 1
+          successThreshold: 1
           failureThreshold: 1
         {{- end }}
         lifecycle:
