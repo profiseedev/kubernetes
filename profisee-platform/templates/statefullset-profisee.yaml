@@ -80,7 +80,7 @@ spec:
       - name: profisee
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
-        {{- if .Values.image.tag | regexMatch "^(2[4-9]|[3-9][0-9])r[0-9]+\..*" }}
+        {{- if regexMatch "^(2[4-9]|[3-9][0-9])r[0-9]+\..*" .Values.image.tag  }}
         livenessProbe:
           httpGet:
             path: /{{.Values.profiseeRunTime.webAppName}}/rest/health
