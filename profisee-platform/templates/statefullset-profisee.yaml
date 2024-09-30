@@ -83,7 +83,7 @@ spec:
         {{- if .Values.image.tag | regexMatch "^(2[4-9]|[3-9][0-9])r[0-9]+\..*" }}
         livenessProbe:
           httpGet:
-            path: /$env:ProfiseeWebAppName/rest/health
+            path: /{{.Values.profiseeRunTime.webAppName}}/rest/health
             port: 80
             scheme: HTTP
           initialDelaySeconds: 20
@@ -117,26 +117,6 @@ spec:
           SuccessThreshold: 1
           failureThreshold: 1
         {{- end }}
-        {{- if not .Values.profiseeRunTime.isPaaS }}
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - powershell
-                - >-
-                  curl.exe -fsSL -o .\Fileshare\startup-probe.ps1
-                  "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/startup-probe.ps1";
-                  curl.exe -fsSL -o .\Fileshare\forensics_log_pull.ps1
-                  "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/forensics_log_pull.ps1"
-          {{- if eq .Values.profiseeRunTime.secondary "false" }}
-          preStop:
-            exec:
-              command:
-                - powershell
-                - .\Fileshare\forensics_log_pull.ps1
-          {{- end }}
-        {{- end }}
-        {{- if .Values.profiseeRunTime.isPaaS }}
         lifecycle:
           postStart:
             exec:
@@ -152,7 +132,6 @@ spec:
               command:
                 - powershell
                 - .\Fileshare\forensics_log_pull.ps1
-        {{- end }}
         volumeMounts:
         - name: data-volume
           mountPath: C:\data
