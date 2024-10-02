@@ -18,5 +18,4 @@ FETCH NEXT FROM TableCursor INTO @TableName
 END
 CLOSE TableCursor
 DEALLOCATE TableCursor
-GO
 exec sp_updatestats
