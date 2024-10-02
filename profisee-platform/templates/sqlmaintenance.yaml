@@ -44,8 +44,8 @@ spec:
             - $SqlCmd = New-Object System.Data.SqlClient.SqlCommand;
             - $SqlCmd.CommandText = $sqlText;
             - $SqlCmd.Connection = $SqlConnection;
-            - $SqlCmd.ExecuteNonQuery();
             - $SqlCmd.CommandTimeout=0;
+            - $SqlCmd.ExecuteNonQuery();            
             - $SqlConnection.Close();
           restartPolicy: Never
           imagePullSecrets:
