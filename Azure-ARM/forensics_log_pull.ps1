@@ -7,7 +7,7 @@ $SqlCmd = New-Object System.Data.SqlClient.SqlCommand;
 $SqlCmd.CommandText = $sqlQuery;
 $SqlCmd.Connection = $SqlConnection;
 $result = $SqlCmd.ExecuteScalar();
-$SqlConnection.Close();
+#$SqlConnection.Close();
 
 # Function to check if the SQL Server starts with any of the specified values
 if ($result -eq 'READ_ONLY') {
@@ -16,9 +16,47 @@ if ($result -eq 'READ_ONLY') {
 } else {
     Write-Output "Database is not read-only. Continuing script execution."
 }
-
 # Rest of the script
 Write-Host "Executing the rest of the script..."
+$LogQuery = "SELECT TOP (100) [Id]
+      ,[Message]
+      ,[Level]
+      ,[TimeStamp]
+      ,[Exception]
+	  ,[LogEvent]
+      ,[AssemblyName]
+      ,[AssemblyVersion]
+      ,[SourceContext]
+      ,[EnvironmentUserName]
+      ,[MachineName]
+  FROM [logging].[tSystemLog]
+  order by id desc"
+$SqlCmd.CommandText = $LogQuery;
+$SqlDataReader = $SqlCmd.ExecuteReader();
+$results = @()
+while ($SqlDataReader.Read()) {
+    # Collect each row into a hashtable for easy export
+    $row = @{
+        Id                  = $SqlDataReader["Id"]
+        Message             = $SqlDataReader["Message"]
+        Level               = $SqlDataReader["Level"]
+        TimeStamp           = $SqlDataReader["TimeStamp"]
+		Exception           = if ($SqlDataReader["Exception"] -ne $null) { $SqlDataReader["Exception"] } else { "NULL" }
+        LogEvent            = if ($SqlDataReader["LogEvent"] -ne $null) { $SqlDataReader["LogEvent"].ToString() } else { "NULL" }
+        AssemblyName        = $SqlDataReader["AssemblyName"]
+        AssemblyVersion     = $SqlDataReader["AssemblyVersion"]
+        SourceContext       = if ($SqlDataReader["LogEvent"] -ne $null) { $SqlDataReader["SourceContext"].ToString() } else { "NULL" }
+        EnvironmentUserName = $SqlDataReader["EnvironmentUserName"]
+        MachineName         = $SqlDataReader["MachineName"]
+    }
+    $results += [PSCustomObject]$row
+}
+$SqlDataReader.Close();
+$SqlConnection.Close();
+
+
+# Rest of the script
+#Write-Host "Executing the rest of the script..."
 
 # Get hostname of pod to know which pod the logs are from
 $hostname = hostname
@@ -61,7 +99,8 @@ robocopy "c:\profisee\webportal\logfiles" "$env:TEMP\all-Logs\$logsFolder\Profis
 robocopy "c:\inetpub\logs\LogFiles\W3SVC1" "$env:TEMP\all-Logs\$logsFolder\IISLogs" /E /COPYALL /DCOPY:T
 netstat -anobq > $env:TEMP\all-Logs\$logsFolder\TCPLogs\netstat.txt
 Get-NetTCPConnection | Group-Object -Property State, OwningProcess | Select -Property Count, Name, @{Name="ProcessName";Expression={(Get-Process -PID ($_.Name.Split(',')[-1].Trim(' '))).Name}}, Group | Sort Count -Descending | out-file $env:TEMP\all-Logs\$logsFolder\TCPLogs\TCPconnections.txt
-
+$outputCsvPath = "C:\fileshare\alllogs\$logsFolder.csv"
+$results | Select-Object Id, Message, Level, TimeStamp, Exception, LogEvent, AssemblyName, AssemblyVersion, SourceContext, EnvironmentUserName, MachineName | Export-Csv -Path $outputCsvPath -NoTypeInformation -Encoding UTF8
 # Compress and copy to fileshare
 compress-archive -Path "$env:TEMP\all-Logs\$logsFolder\" -DestinationPath "$env:TEMP\$WebAppName-$hostname-All-Logs-$DT.zip"
 copy "$env:TEMP\$WebAppName-$hostname-All-Logs-$DT.zip" "C:\fileshare\alllogs\"
