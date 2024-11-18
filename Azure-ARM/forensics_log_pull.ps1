@@ -40,11 +40,11 @@ while ($SqlDataReader.Read()) {
         Message             = $SqlDataReader["Message"]
         Level               = $SqlDataReader["Level"]
         TimeStamp           = $SqlDataReader["TimeStamp"]
-	Exception           = if ($SqlDataReader["Exception"] -ne $null) { $SqlDataReader["Exception"] } else { "NULL" }
+	    Exception           = $SqlDataReader["Exception"]
         LogEvent            = $SqlDataReader["LogEvent"]
         AssemblyName        = $SqlDataReader["AssemblyName"]
         AssemblyVersion     = $SqlDataReader["AssemblyVersion"]
-        SourceContext       = if ($SqlDataReader["LogEvent"] -ne $null) { $SqlDataReader["SourceContext"].ToString() } else { "NULL" }
+        SourceContext       = $SqlDataReader["SourceContext"]
         EnvironmentUserName = $SqlDataReader["EnvironmentUserName"]
         MachineName         = $SqlDataReader["MachineName"]
     }
