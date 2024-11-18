@@ -40,7 +40,7 @@ while ($SqlDataReader.Read()) {
         Message             = $SqlDataReader["Message"]
         Level               = $SqlDataReader["Level"]
         TimeStamp           = $SqlDataReader["TimeStamp"]
-	    Exception           = $SqlDataReader["Exception"]
+        Exception           = $SqlDataReader["Exception"]
         LogEvent            = $SqlDataReader["LogEvent"]
         AssemblyName        = $SqlDataReader["AssemblyName"]
         AssemblyVersion     = $SqlDataReader["AssemblyVersion"]
