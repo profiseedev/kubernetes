@@ -398,7 +398,7 @@
                         "name": "[tolower(parameters('SQLServerName'))]",
                         "type": "Microsoft.Sql/servers",
                         "location": "[resourceGroup().location]",
-                        "apiVersion": "2023-05-01-preview",
+                        "apiVersion": "2024-05-01-preview",
                         "dependsOn": [],
                         "tags": {
                             "displayName": "SQLServer"
