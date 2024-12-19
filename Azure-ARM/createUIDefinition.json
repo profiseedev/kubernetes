@@ -668,6 +668,15 @@
             },
             "visible": "[equals(steps('sql').SQLServerCreateNew,'No')]"
           },
+          // {
+          //   "name": "CheckSqlNameRestApiResponse",
+          //   "type": "Microsoft.Solutions.ArmApiControl",
+          //   "request": {
+          //     "method": "POST",
+          //     "path": "[concat(subscription().id,'/providers/Microsoft.Sql/checkNameAvailability?api-version=2024-05-01-preview')]",
+          //     "body": "[parse(concat('{\"name\":\"',steps('sql').SQLServerName,'\",\"type\":\"Microsoft.Sql/servers\"}'))]"
+          //   }
+          // },
           {
             "name": "SQLServerName",
             "type": "Microsoft.Common.TextBox",
