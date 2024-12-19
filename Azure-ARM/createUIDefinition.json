@@ -687,7 +687,8 @@
               "validations": [
                 {
                   "isValid": "[equals(steps('sql').CheckSqlNameRestApiResponse.available,true)]",
-                  "message": "[steps('sql').CheckSqlNameRestApiResponse.message]"
+                  "message": "[if(not(empty(steps('sql').CheckSqlNameRestApiResponse.message)),steps('sql').CheckSqlNameRestApiResponse.message, 'SQL Server name is not available.')]"
+                }
                 }
               ]
             },
