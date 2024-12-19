@@ -687,7 +687,7 @@
               "validations": [
                 {
                   "isValid": "[equals(steps('sql').CheckSqlNameRestApiResponse.available,true)]",
-                  "message": "[steps('sql').CheckSqlNameRestApiResponse.message]"
+                  // "message": "[steps('sql').CheckSqlNameRestApiResponse.message]"
                 }
               ]
             },
