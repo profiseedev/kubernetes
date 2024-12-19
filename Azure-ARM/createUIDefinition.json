@@ -673,7 +673,7 @@
             "type": "Microsoft.Solutions.ArmApiControl",
             "request": {
               "method": "POST",
-              "path": "[concat(subscription().id,'/providers/Microsoft.Sql/checkNameAvailability?api-version=2023-05-01-preview')]",
+              "path": "[concat(subscription().id,'/providers/Microsoft.Sql/checkNameAvailability?api-version=2021-11-01')]",
               "body": "[parse(concat('{\"name\":\"',steps('sql').SQLServerName,'\",\"type\":\"Microsoft.Sql/servers\"}'))]"
             }
           },
