@@ -1,5 +1,6 @@
 controller:
   admissionWebhooks:
+    enabled: false
     patch:
       nodeSelector:
         kubernetes.io/os: linux
