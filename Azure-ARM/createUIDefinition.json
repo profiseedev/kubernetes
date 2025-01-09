@@ -411,7 +411,7 @@
                   "value": "Standard"
                 }
               ],
-              "required": true
+              "required": false
             },
             "visible": true
           },
