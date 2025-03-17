@@ -15,7 +15,7 @@ spec:
       name: profisee
       labels:
         app: profisee
-        {{- if .Values.profiseeRunTime.isPaaS}}
+        {{- if .Values.cloud.azure.useManagedIdentity}}
         aadpodidbinding: {{.Values.cloud.azure.managedIdentity.name | lower}}
         {{- end}}
     spec:
@@ -80,18 +80,6 @@ spec:
       - name: profisee
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
-        {{- if regexMatch "^(202[4-9]|[3-9][0-9])r[0-9]+\\..*" .Values.image.tag }}
-        livenessProbe:
-          httpGet:
-            path: /{{.Values.profiseeRunTime.webAppName}}/rest/health
-            port: 80
-            scheme: HTTP
-          initialDelaySeconds: 20
-          timeoutSeconds: 10
-          periodSeconds: 20
-          successThreshold: 1
-          failureThreshold: 4
-        {{- else }}
         livenessProbe:
           exec:
             command:
@@ -102,29 +90,12 @@ spec:
           initialDelaySeconds: 600
           timeoutSeconds: 5
           periodSeconds: 60
-          successThreshold: 1
-          failureThreshold: 3
-        {{- end }}
-        {{- if regexMatch "^(202[4-9]|[3-9][0-9])r[0-9]+\\..*" .Values.image.tag }}
-        startupProbe:
-          exec:
-            command:
-            - powershell
-            - .\Fileshare\startup-probe.ps1
-          initialDelaySeconds: 45
-          timeoutSeconds: 600
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 1
-        {{- end }}
         lifecycle:
           postStart:
             exec:
               command:
                 - powershell
                 - >-
-                  curl.exe -fsSL -o .\Fileshare\startup-probe.ps1
-                  "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/startup-probe.ps1";
                   curl.exe -fsSL -o .\Fileshare\forensics_log_pull.ps1
                   "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/forensics_log_pull.ps1"
           preStop:
