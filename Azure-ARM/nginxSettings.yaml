@@ -1,4 +1,6 @@
 controller:
+  deployment:
+    progressDeadlineSeconds: 600
   admissionWebhooks:
     patch:
       nodeSelector:
