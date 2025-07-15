@@ -543,6 +543,7 @@
                         "vmSize": "[variables('KubernetesWindowsNodeSize')]",
                         "osDiskSizeGB": 100,
                         "maxPods": 15,
+                        "enableAutoScaling": true,
                         "type": "VirtualMachineScaleSets",
                         "orchestratorVersion": "[variables('KubernetesVersion')]",
                         "enableNodePublicIP": false,
@@ -831,7 +832,7 @@
                     {
                       "name": "PRICINGTIER",
                       "value": "[variables('PricingTier')]"
-                    },                    
+                    },
                     {
                       "name": "INFRAADMINACCOUNT",
                       "value": "[variables('InfraAdminAccount')]"
