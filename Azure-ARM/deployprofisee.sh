@@ -204,7 +204,7 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"keyVaultName is $keyVaultName"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
 	echo $"principalId is $principalId"
-
+    az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $KEYVAULT
     #Check if Key Vault is RBAC or policy based.
     echo $"Checking if Key Vauls is RBAC based or policy based"
 	rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
