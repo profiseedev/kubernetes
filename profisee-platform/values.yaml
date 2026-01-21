@@ -3,6 +3,11 @@ sqlServer:
     databaseName: "$SQLDBNAME"
     userName: "$SQLUSERNAME"
     password: "$SQLUSERPASSWORD"
+ingress:
+    className: "traefik"  # Options: "nginx", "traefik"
+    # Traefik middleware for path rewriting (required for PaaS mode with traefik)
+    # Format: "namespace-middlewarename@kubernetescrd"
+    traefikMiddleware: ""
 profiseeRunTime:
     useLetsEncrypt: $USELETSENCRYPT
     adminAccount: "$ADMINACCOUNTNAME"
