@@ -34,7 +34,9 @@ spec:
   tls:
   - hosts:
     - {{.Values.profiseeRunTime.externalDnsName}}
+    {{- if ne .Values.ingress.className "traefik" }}
     secretName: profisee-tls-ingress
+    {{- end }}
   rules:
   - host: {{.Values.profiseeRunTime.externalDnsName}}
     http:
