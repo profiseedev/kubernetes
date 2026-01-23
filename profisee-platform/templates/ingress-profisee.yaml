@@ -20,12 +20,8 @@ metadata:
 
     {{- if eq .Values.ingress.className "traefik" }}
     # Traefik Ingress Controller annotations
-    {{- if .Values.profiseeRunTime.isPaaS }}
-    {{- if .Values.ingress.traefikMiddleware }}
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.ingress.traefikMiddleware }}
-    {{- end }}
-    {{- else }}
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Values.profiseeRunTime.webAppName }}-stripprefix@kubernetescrd
+    {{- if not .Values.profiseeRunTime.isPaaS }}
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-strip-tenant-prefix@kubernetescrd
     {{- end }}
     {{- end }}
 
@@ -67,19 +63,4 @@ spec:
             name: profisee-service
             port:
               number: 80
-{{- end }}
----
-{{- if .Values.profiseeRunTime.deployIngressRule }}
-{{- if eq .Values.ingress.className "traefik" }}
-{{- if not .Values.profiseeRunTime.isPaaS }}
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: {{ .Values.profiseeRunTime.webAppName }}-stripprefix
-spec:
-  stripPrefix:
-    prefixes:
-      - /{{ .Values.profiseeRunTime.webAppName }}
-{{- end }}
-{{- end }}
 {{- end }}
