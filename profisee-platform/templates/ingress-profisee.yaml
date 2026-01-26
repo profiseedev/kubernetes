@@ -20,6 +20,9 @@ metadata:
 
     {{- if eq .Values.ingress.className "traefik" }}
     # Traefik Ingress Controller annotations
+    {{- if and .Values.profiseeRunTime.isPaaS .Values.ingress.traefikMiddleware }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.ingress.traefikMiddleware }}
+    {{- end }}
     {{- end }}
 
     {{- if .Values.profiseeRunTime.useLetsEncrypt }}
