@@ -106,7 +106,7 @@ echo $"Installation of Helm finished.";
 #Install kubectl
 echo $"Installation of kubectl started.";
 
-version=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+version=$(curl -sSL https://dl.k8s.io/release/stable.txt)
 echo $version
 curl -fSLO https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl
 #curl -LO https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl
