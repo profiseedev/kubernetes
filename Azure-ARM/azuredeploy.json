@@ -505,7 +505,6 @@
             "apiVersion": "2024-01-01",
             "name": "[variables('KubernetesClusterName')]",
             "location": "[resourceGroup().location]",
-            "tags": "[parameters('tags')]",
             "dependsOn": ["[resourceId('Microsoft.Resources/deploymentScripts', 'PreReqChecks')]"],
             "sku": {
                 "name": "Base",
