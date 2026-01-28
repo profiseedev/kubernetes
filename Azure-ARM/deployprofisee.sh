@@ -111,6 +111,13 @@ echo $version
 curl -fSLO https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 echo $"Installation of kubectl finished.";
+
+if [ "$version" = "" ]; then
+	echo $"Unable to get the kubectl version, installing the v1.35.0 Version"
+	curl -fSLO https://dl.k8s.io/release/v1.35.0/bin/linux/amd64/kubectl
+	install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+fi
+
 sleep 60
 
 
