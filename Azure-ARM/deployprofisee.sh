@@ -113,7 +113,7 @@ install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version --client --output=yaml
 
 echo $"Installation of kubectl finished.";
-
+kubectl version --client
 if [ -z "$version" ]; then
 	echo $"Unable to get the kubectl version, installing the v1.35.0 Version"
 	curl -fSLO https://dl.k8s.io/release/v1.35.0/bin/linux/amd64/kubectl
