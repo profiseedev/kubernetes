@@ -34,9 +34,9 @@ spec:
   tls:
   - hosts:
     - {{.Values.profiseeRunTime.externalDnsName}}
-    {{- if ne .Values.ingress.className "traefik" }}
-    secretName: profisee-tls-ingress
-    {{- end }}
+    # Both nginx and traefik use their controller's default certificate
+    # nginx: configured via --default-ssl-certificate flag
+    # traefik: configured via TLSStore default certificate
   rules:
   - host: {{.Values.profiseeRunTime.externalDnsName}}
     http:
