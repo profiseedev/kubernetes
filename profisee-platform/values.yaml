@@ -4,7 +4,7 @@ sqlServer:
     userName: "$SQLUSERNAME"
     password: "$SQLUSERPASSWORD"
 ingress:
-    className: "traefik"  # Options: "nginx", "traefik"
+    className: "nginx"  # Options: "nginx", "traefik"
     # Traefik middleware for path rewriting (required for PaaS mode with traefik)
     # Format: "namespace-middlewarename@kubernetescrd"
     traefikMiddleware: ""
