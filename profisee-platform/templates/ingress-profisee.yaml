@@ -5,7 +5,7 @@ metadata:
   name: profisee-ingress
   annotations:
     {{- if eq .Values.ingress.className "nginx" }}
-    # NGINX Ingress Controller annotations
+    # NGINX Ingress Controller annotations (buffer settings)
     nginx.ingress.kubernetes.io/client_body_buffer_size: "512k"
     nginx.ingress.kubernetes.io/client-header-buffer-size: "512k"
     nginx.ingress.kubernetes.io/large-client-header-buffers: "32 512k"
@@ -13,16 +13,12 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffers: "32 512k"
     nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
     nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "512k"
-    {{- if .Values.profiseeRunTime.isPaaS }}
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-    {{- end }}
     {{- end }}
 
-    {{- if eq .Values.ingress.className "traefik" }}
-    # Traefik Ingress Controller annotations
+    # Traefik middleware annotation (applied to ALL ingresses for migration support)
+    # When Traefik watches nginx-class ingresses, it needs this to handle path routing
     {{- if and .Values.profiseeRunTime.isPaaS .Values.ingress.traefikMiddleware }}
     traefik.ingress.kubernetes.io/router.middlewares: {{ .Values.ingress.traefikMiddleware }}
-    {{- end }}
     {{- end }}
 
     {{- if .Values.profiseeRunTime.useLetsEncrypt }}
@@ -42,21 +38,13 @@ spec:
     http:
       paths:
       {{- if .Values.profiseeRunTime.isPaaS }}
-      {{- if eq .Values.ingress.className "traefik" }}
+      # PaaS mode: use Prefix path that works for both nginx and traefik
       - path: /
         pathType: Prefix
       {{- else }}
-      - path: /(.*)
-        pathType: ImplementationSpecific
-      {{- end }}
-      {{- else }}
-      {{- if eq .Values.ingress.className "traefik" }}
+      # Non-PaaS mode: route based on webAppName
       - path: /{{.Values.profiseeRunTime.webAppName}}
         pathType: Prefix
-      {{- else }}
-      - path: /{{.Values.profiseeRunTime.webAppName}}/?(.*)$
-        pathType: ImplementationSpecific
-      {{- end }}
       {{- end }}
         backend:
           service:
