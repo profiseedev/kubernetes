@@ -1,3 +1,6 @@
+ingress:
+    controller: "community-nginx"
+    className: "nginx"
 sqlServer:
     name: "$SQLNAME"
     databaseName: "$SQLDBNAME"
