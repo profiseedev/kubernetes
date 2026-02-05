@@ -106,19 +106,37 @@ echo $"Installation of Helm finished.";
 #Install kubectl
 echo $"Installation of kubectl started.";
 
-version=$(curl -sSL https://dl.k8s.io/release/stable.txt)
-echo $version
-curl -fSLO https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl
+# version=$(curl -sSL https://dl.k8s.io/release/stable.txt)
+# echo $version
+# curl -fSLO https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl
+# install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+# kubectl version --client --output=yaml
+
+# echo $"Installation of kubectl finished.";
+# kubectl version --client
+# if [ -z "$version" ]; then
+# 	echo $"Unable to get the kubectl version, installing the v1.35.0 Version"
+# 	curl -fSLO https://dl.k8s.io/release/v1.35.0/bin/linux/amd64/kubectl
+# 	install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+# fi
+
+version="$(curl -fsSL https://dl.k8s.io/release/stable.txt || true)"
+echo $"kubectl version from url is $version"
+
+if [[ -z "$version" ]]; then
+  version="v1.35.0"
+  echo "Failed to fetch latest kubectl version. Falling back to $version"
+else
+  echo "Latest kubectl version is $version"
+fi
+
+curl -fsSLo kubectl "https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl"
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+echo "Installation of kubectl finished."
 kubectl version --client --output=yaml
 
-echo $"Installation of kubectl finished.";
-kubectl version --client
-if [ -z "$version" ]; then
-	echo $"Unable to get the kubectl version, installing the v1.35.0 Version"
-	curl -fSLO https://dl.k8s.io/release/v1.35.0/bin/linux/amd64/kubectl
-	install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-fi
+
 
 sleep 60
 
