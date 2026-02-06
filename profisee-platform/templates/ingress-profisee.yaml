@@ -17,6 +17,7 @@ metadata:
     {{- end }}
     {{- end }}
     {{- if eq .Values.ingress.controller "f5-nginx" }}
+    nginx.org/mergeable-ingress-type: "minion"
     nginx.org/client-max-body-size: "0"
     nginx.org/proxy-buffer-size: "512k"
     nginx.org/proxy-buffers: "32 512k"
@@ -35,10 +36,12 @@ metadata:
 
 spec:
   ingressClassName: {{ .Values.ingress.className }}
+  {{- if ne .Values.ingress.controller "f5-nginx" }}
   tls:
   - hosts:
     - {{.Values.profiseeRunTime.externalDnsName}}
     secretName: profisee-tls-ingress
+  {{- end }}
   rules:
   - host: {{.Values.profiseeRunTime.externalDnsName}}
     http:
