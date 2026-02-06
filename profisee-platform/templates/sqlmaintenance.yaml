@@ -55,4 +55,3 @@ spec:
       backoffLimit: 0
 {{- end }}
 {{- end }}
-{{- end }}
