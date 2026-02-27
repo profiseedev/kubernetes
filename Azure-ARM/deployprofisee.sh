@@ -105,9 +105,41 @@ echo $"Installation of Helm finished.";
 
 #Install kubectl
 echo $"Installation of kubectl started.";
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+# version=$(curl -sSL https://dl.k8s.io/release/stable.txt)
+# echo $version
+# curl -fSLO https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl
+# install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+# kubectl version --client --output=yaml
+
+# echo $"Installation of kubectl finished.";
+# kubectl version --client
+# if [ -z "$version" ]; then
+# 	echo $"Unable to get the kubectl version, installing the v1.35.0 Version"
+# 	curl -fSLO https://dl.k8s.io/release/v1.35.0/bin/linux/amd64/kubectl
+# 	install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+# fi
+
+version="$(curl -fsSL https://dl.k8s.io/release/stable.txt || true)"
+echo $"kubectl version from url is $version"
+
+if [[ -z "$version" ]]; then
+  version="v1.35.0"
+  echo "Failed to fetch latest kubectl version. Falling back to $version"
+else
+  echo "Latest kubectl version is $version"
+fi
+
+curl -fsSLo kubectl "https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl"
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-echo $"Installation of kubectl finished.";
+
+echo "Installation of kubectl finished."
+kubectl version --client --output=yaml
+
+
+
+sleep 60
+
 
 #Create profisee namespace in AKS cluster.
 echo $"Creation of profisee namespace in cluster started. If present, we skip creation and use it.";
@@ -202,12 +234,14 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	keyVaultSubscriptionId=${kv[2]}
 	echo $"KEYVAULT is $KEYVAULT"
 	echo $"keyVaultName is $keyVaultName"
+	echo $"keyVaultResourceGroup is $keyVaultResourceGroup"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
 	echo $"principalId is $principalId"
-
+    #az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $KEYVAULT
     #Check if Key Vault is RBAC or policy based.
-    echo $"Checking if Key Vauls is RBAC based or policy based"
-	rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --query "properties.enableRbacAuthorization")
+    echo $"Checking if Key Vault is RBAC based or policy based"
+	rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --resource-group $keyVaultResourceGroup --query "properties.enableRbacAuthorization")
+	echo $"rbacenabled is $rbacEnabled"
 
     #If Key Vault is RBAC based, assign Key Vault Secrets User role to the Key Vault Specific Managed Identity, otherwise assign Get policies for Keys, Secrets and Certificates.
     if [ "$rbacEnabled" = true ]; then
@@ -259,10 +293,10 @@ fi
 echo $"Installation of nginx started.";
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Install nginx ready to integrate with Let's Encrypt's automatic certificate provisioning and renewal, and set the DNS FQDN to the load balancer's ingress public IP address."
-	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip --set controller.service.appProtocol=false --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml  --version="4.12.1" --set controller.service.loadBalancerIP=$nginxip --set controller.service.appProtocol=false --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 else
 	echo $"Install nginx without integration with Let's Encrypt's automatic certificate provisioning and renewal, also do not set the DNS FQDN to the load balancer's ingress public IP address."
-	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --set controller.service.loadBalancerIP=$nginxip --set controller.service.appProtocol=false
+	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --version="4.12.1"  --set controller.service.loadBalancerIP=$nginxip --set controller.service.appProtocol=false
 fi
 
 echo $"Installation of nginx finished, sleeping for 30 seconds to wait for the load balancer's public IP to become available.";
@@ -610,7 +644,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	        sleep 20;
         fi
 	# Install the cert-manager Helm chart
-	helm install cert-manager jetstack/cert-manager -n profisee --set crds.enabled=true --set nodeSelector."kubernetes\.io/os"=linux --set webhook.nodeSelector."kubernetes\.io/os"=linux --set cainjector.nodeSelector."kubernetes\.io/os"=linux --set startupapicheck.nodeSelector."kubernetes\.io/os"=linux
+	helm install cert-manager jetstack/cert-manager -n profisee --set crds.enabled=true  --set config.featureGates.ACMEHTTP01IngressPathTypeExact=false --set nodeSelector."kubernetes\.io/os"=linux --set webhook.nodeSelector."kubernetes\.io/os"=linux --set cainjector.nodeSelector."kubernetes\.io/os"=linux --set startupapicheck.nodeSelector."kubernetes\.io/os"=linux
 	# Wait for the cert manager to be ready
 	echo $"Let's Encrypt is waiting for certificate manager to be ready, sleeping for 30 seconds.";
 	sleep 30;
