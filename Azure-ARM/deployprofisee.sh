@@ -33,11 +33,7 @@ printenv;
 
 #Get AKS credentials, this allows us to use kubectl commands, if needed.
 az aks get-credentials --resource-group $RESOURCEGROUPNAME --name $CLUSTERNAME --overwrite-existing;
-# az extension add --name aks-preview
-# az extension update --name aks-preview
-# az feature register --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
-# az feature show --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
-# az provider register --namespace Microsoft.ContainerService
+
 
 #Install dotnet core.
 echo $"Installation of dotnet core started.";
@@ -51,14 +47,7 @@ echo $"Installation of dotnet core finished.";
 #Downloadind and extracting Proisee license reader.
 echo $"Download of Profisee license reader started.";
 curl -fsSL -o LicenseReader "$REPOURL/Utilities/LicenseReader/LicenseReader"
-#curl -fsSL -o LicenseReader.tar.002 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.002"
-#curl -fsSL -o LicenseReader.tar.003 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.003"
-#curl -fsSL -o LicenseReader.tar.004 "$REPOURL/Utilities/LicenseReader/LicenseReader.tar.004"
-#cat LicenseReader.tar.* | tar xf -
-#rm LicenseReader.tar.001
-#rm LicenseReader.tar.002
-#rm LicenseReader.tar.003
-#rm LicenseReader.tar.004
+
 echo $"Download of Profisee license reader finished.";
 
 echo $"Clean Profisee license string of any unwanted characters such as linebreaks, spaces, etc...";
@@ -105,21 +94,6 @@ echo $"Installation of Helm finished.";
 
 #Install kubectl
 echo $"Installation of kubectl started.";
-
-# version=$(curl -sSL https://dl.k8s.io/release/stable.txt)
-# echo $version
-# curl -fSLO https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl
-# install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-# kubectl version --client --output=yaml
-
-# echo $"Installation of kubectl finished.";
-# kubectl version --client
-# if [ -z "$version" ]; then
-# 	echo $"Unable to get the kubectl version, installing the v1.35.0 Version"
-# 	curl -fSLO https://dl.k8s.io/release/v1.35.0/bin/linux/amd64/kubectl
-# 	install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-# fi
-
 version="$(curl -fsSL https://dl.k8s.io/release/stable.txt || true)"
 echo $"kubectl version from url is $version"
 
@@ -131,15 +105,10 @@ else
 fi
 
 curl -fsSLo kubectl "https://dl.k8s.io/release/$version/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-echo "Installation of kubectl finished."
-kubectl version --client --output=yaml
-
-
-
 sleep 60
-
+echo $"Installation of kubectl finished.";
 
 #Create profisee namespace in AKS cluster.
 echo $"Creation of profisee namespace in cluster started. If present, we skip creation and use it.";
@@ -237,12 +206,11 @@ if [ "$USEKEYVAULT" = "Yes" ]; then
 	echo $"keyVaultResourceGroup is $keyVaultResourceGroup"
 	echo $"akskvidentityClientId is $akskvidentityClientId"
 	echo $"principalId is $principalId"
-    #az role assignment create --role "Key Vault Secrets User" --assignee $principalId --scope $KEYVAULT
-    #Check if Key Vault is RBAC or policy based.
-    echo $"Checking if Key Vault is RBAC based or policy based"
-	rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --resource-group $keyVaultResourceGroup --query "properties.enableRbacAuthorization")
-	echo $"rbacenabled is $rbacEnabled"
 
+    #Check if Key Vault is RBAC or policy based.
+    echo $"Checking if Key Vault is RBAC based or policy based."
+	rbacEnabled=$(az keyvault show --name $keyVaultName --subscription $keyVaultSubscriptionId --resource-group $keyVaultResourceGroup --query "properties.enableRbacAuthorization")
+	echo $"Is RBAC enabled: $rbacEnabled"
     #If Key Vault is RBAC based, assign Key Vault Secrets User role to the Key Vault Specific Managed Identity, otherwise assign Get policies for Keys, Secrets and Certificates.
     if [ "$rbacEnabled" = true ]; then
 		echo $"Setting Key Vault Secrets User RBAC role to the Key Vault Specific Managed Identity."
@@ -273,12 +241,33 @@ fi
 
 #Installation of nginx
 echo $"Installation of nginx ingress started.";
-echo $"Adding ingress-nginx repo."
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+echo $"Adding NGINX OSS repo."
+helm repo add nginx-stable https://helm.nginx.com/stable
+helm repo update
 
 #Get profisee nginx settings
 echo $"Acquiring nginxSettings.yaml file from Profisee repo."
 curl -fsSL -o nginxSettings.yaml "$REPOURL/Azure-ARM/nginxSettings.yaml";
+
+#Read existing ingress helm values before uninstalling; either Azure LB DNS name or private IP
+# (i.e. don't read current public IP as that will be removed and replaced by nginx uninstall/reinstall).
+echo "Checking for existing ingress helm values..."
+existingIngressRelease=$(helm list -n profisee -o json | jq -r '.[] | select(.name|test("nginx")) | [.name] | @tsv')
+
+existingDnsLabel=""
+if [ -n "$existingIngressRelease" ]; then
+	echo $"Found existing ingress release: $existingIngressRelease";
+	ingressValues=$(helm get values -n profisee "$existingIngressRelease" -o json 2>/dev/null || echo "{}")
+	existingDnsLabel=$(echo "$ingressValues" | jq -r '.controller.service.annotations["service.beta.kubernetes.io/azure-dns-label-name"] // empty')
+
+	# DNS label annotation indicates public cluster style; keep DNS host label.
+	if [ -n "$existingDnsLabel" ]; then
+		DNSHOSTNAME="$existingDnsLabel"
+		echo $"Detected public ingress DNS label in values: $DNSHOSTNAME";
+	fi
+else
+	echo $"No existing ingress release found.";
+fi
 
 #If nginx is present, uninstall it.
 echo "If nginx is installed, we'll uninstall it first."
@@ -293,30 +282,36 @@ fi
 echo $"Installation of nginx started.";
 if [ "$USELETSENCRYPT" = "Yes" ]; then
 	echo $"Install nginx ready to integrate with Let's Encrypt's automatic certificate provisioning and renewal, and set the DNS FQDN to the load balancer's ingress public IP address."
-	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml  --version="4.12.1" --set controller.service.loadBalancerIP=$nginxip --set controller.service.appProtocol=false --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
+	helm install -n profisee nginx nginx-stable/nginx-ingress --values nginxSettings.yaml --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$DNSHOSTNAME;
 else
 	echo $"Install nginx without integration with Let's Encrypt's automatic certificate provisioning and renewal, also do not set the DNS FQDN to the load balancer's ingress public IP address."
-	helm install -n profisee nginx ingress-nginx/ingress-nginx --values nginxSettings.yaml --version="4.12.1"  --set controller.service.loadBalancerIP=$nginxip --set controller.service.appProtocol=false
+	helm install -n profisee nginx nginx-stable/nginx-ingress --values nginxSettings.yaml
 fi
 
 echo $"Installation of nginx finished, sleeping for 30 seconds to wait for the load balancer's public IP to become available.";
 sleep 30;
 
 #Get the load balancer's public IP so it can be used later on.
-echo $"Let's see if the the load balancer's IP address is available."
-nginxip=$(kubectl -n profisee get services nginx-ingress-nginx-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
-#
+echo $"Let's see if the load balancer's IP address is available."
+nginxservice=$(kubectl -n profisee get service -o wide | grep nginx | awk '{print $1}' | head -n 1)
+if [ -z "$nginxservice" ]; then
+	echo $"Nginx is not configured properly because no ingress service was found. Exiting with error.";
+	exit 1
+fi
+nginxip=$(kubectl -n profisee get services "$nginxservice" --output="jsonpath={.status.loadBalancer.ingress[0].ip}" 2>/dev/null || true);
 if [ -z "$nginxip" ]; then
 	#try again
 	echo $"Nginx is not configured properly because the load balancer's public IP is null, will wait for another minute.";
     sleep 60;
-	nginxip=$(kubectl -n profisee get services nginx-ingress-nginx-controller --output="jsonpath={.status.loadBalancer.ingress[0].ip}");
+	nginxip=$(kubectl -n profisee get services "$nginxservice" --output="jsonpath={.status.loadBalancer.ingress[0].ip}" 2>/dev/null || true);
 	if [ -z "$nginxip" ]; then
     	echo $"Nginx is not configured properly because the load balancer's public IP is null. Exiting with error.";
 		exit 1
 	fi
 fi
 echo $"The load balancer's public IP is $nginxip";
+INGRESSSERVICEFQDN="$nginxservice.profisee.svc.cluster.local"
+echo $"The ingress service FQDN is $INGRESSSERVICEFQDN";
 
 #Fix the TLS variables
 echo $"Correction of TLS variables started.";
@@ -553,6 +548,7 @@ sed -i -e 's/$preInitScriptData/'"$preInitScriptData"'/g' Settings.yaml
 sed -i -e 's/$postInitScriptData/'"$postInitScriptData"'/g' Settings.yaml
 sed -i -e 's/$OIDCFileData/'"$OIDCFileData"'/g' Settings.yaml
 
+
 #Get the vCPU and RAM so we can change the stateful set CPU and RAM limits on the fly.
 echo "Let's see how many vCPUs and how much RAM we can allocate to Profisee's pod on the Windows node size you've selected."
 findwinnodename=$(kubectl get nodes -l kubernetes.io/os=windows -o 'jsonpath={.items[0].metadata.name}')
@@ -573,9 +569,10 @@ echo $"The safe RAM value to assign to Profisee pod is $saferamvalueinkibibytes.
 # echo $"Profisee's stateful set has been patched to use $safecpuvalueinmilicores for CPU."
 # kubectl patch statefulsets -n profisee profisee --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":'"$saferamvalueinkibibytes"'}]'
 # echo $"Profisee's stateful set has been patched to use $saferamvalueinkibibytes for RAM."
-#settings DNSName value to custom coredns-configmap
+# Setting DNSName value to custom coredns-configmap
 curl -fsSL -o coredns-custom.yaml "$REPOURL/Azure-ARM/coredns-custom.yaml";
 sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' coredns-custom.yaml
+sed -i -e 's/$INGRESSSERVICEFQDN/'"$INGRESSSERVICEFQDN"'/g' coredns-custom.yaml
 
 #Setting values in the Settings.yaml
 sed -i -e 's/$SQLNAME/'"$SQLNAME"'/g' Settings.yaml
@@ -591,7 +588,6 @@ sed -i -e 's~$OIDCURL~'"$OIDCURL"'~g' Settings.yaml
 sed -i -e 's/$CLIENTID/'"$CLIENTID"'/g' Settings.yaml
 sed -i -e 's/$OIDCCLIENTSECRET/'"$CLIENTSECRET"'/g' Settings.yaml
 sed -i -e 's/$ADMINACCOUNTNAME/'"$ADMINACCOUNTNAME"'/g' Settings.yaml
-
 sed -i -e 's~$EXTERNALDNSURL~'"$EXTERNALDNSURL"'~g' Settings.yaml
 sed -i -e 's/$EXTERNALDNSNAME/'"$EXTERNALDNSNAME"'/g' Settings.yaml
 sed -i -e 's~$LICENSEDATA~'"$LICENSEDATA"'~g' Settings.yaml
@@ -631,7 +627,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	#################################Lets Encrypt Start #####################################
 	# Label the namespace to disable resource validation
 	echo "Let's Encrypt installation started";
-	kubectl label namespace profisee cert-manager.io/disable-validation=true
+	# kubectl label namespace profisee cert-manager.io/disable-validation=true
 	helm repo add jetstack https://charts.jetstack.io
 	# Update your local Helm chart repository cache
 	helm repo update
@@ -644,7 +640,7 @@ if [ "$USELETSENCRYPT" = "Yes" ]; then
 	        sleep 20;
         fi
 	# Install the cert-manager Helm chart
-	helm install cert-manager jetstack/cert-manager -n profisee --set crds.enabled=true  --set config.featureGates.ACMEHTTP01IngressPathTypeExact=false --set nodeSelector."kubernetes\.io/os"=linux --set webhook.nodeSelector."kubernetes\.io/os"=linux --set cainjector.nodeSelector."kubernetes\.io/os"=linux --set startupapicheck.nodeSelector."kubernetes\.io/os"=linux
+	helm install cert-manager jetstack/cert-manager -n profisee --set crds.enabled=true --set nodeSelector."kubernetes\.io/os"=linux --set webhook.nodeSelector."kubernetes\.io/os"=linux --set cainjector.nodeSelector."kubernetes\.io/os"=linux --set startupapicheck.nodeSelector."kubernetes\.io/os"=linux
 	# Wait for the cert manager to be ready
 	echo $"Let's Encrypt is waiting for certificate manager to be ready, sleeping for 30 seconds.";
 	sleep 30;
@@ -735,3 +731,4 @@ if [ "$AUTHENTICATIONTYPE" = "AzureRBAC" ]; then
 fi;
 
 echo $result > $AZ_SCRIPTS_OUTPUT_PATH
+

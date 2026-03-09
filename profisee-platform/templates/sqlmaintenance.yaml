@@ -14,7 +14,13 @@ spec:
       template:
         spec:
           nodeSelector:
-            maintenance: sqlcronjob
+          {{ if hasSuffix "win22" .Values.image.tag }}
+            "kubernetes.azure.com/os-sku": Windows2022
+            "maintenance": sqlcronjobwin22
+          {{ else }}
+            "kubernetes.azure.com/os-sku": Windows2019
+            "maintenance": sqlcronjob
+          {{ end }}
           containers:
           - name: profisee
             image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -47,11 +53,11 @@ spec:
             - $SqlCmd.CommandText = $sqlText;
             - $SqlCmd.Connection = $SqlConnection;
             - $SqlCmd.CommandTimeout=0;
-            - $SqlCmd.ExecuteNonQuery();            
+            - $SqlCmd.ExecuteNonQuery();
             - $SqlConnection.Close();
           restartPolicy: Never
           imagePullSecrets:
             - name: profisee-containerregistry
       backoffLimit: 0
 {{- end }}
-{{- end }}
+

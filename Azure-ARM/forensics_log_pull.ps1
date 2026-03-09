@@ -7,7 +7,6 @@ $SqlCmd = New-Object System.Data.SqlClient.SqlCommand;
 $SqlCmd.CommandText = $sqlQuery;
 $SqlCmd.Connection = $SqlConnection;
 $result = $SqlCmd.ExecuteScalar();
-#$SqlConnection.Close();
 
 # Function to check if the SQL Server starts with any of the specified values
 if ($result -eq 'READ_ONLY') {
@@ -16,6 +15,7 @@ if ($result -eq 'READ_ONLY') {
 } else {
     Write-Output "Database is not read-only. Continuing script execution."
 }
+
 # Rest of the script
 Write-Host "Executing the rest of the script..."
 $LogQuery = "SELECT TOP (1000) [Id]
@@ -113,7 +113,7 @@ robocopy "c:\profisee\Mcp\LogFiles\" "$env:TEMP\all-Logs\$logsFolder\ProfiseeLog
 robocopy "c:\inetpub\logs\LogFiles\W3SVC1" "$env:TEMP\all-Logs\$logsFolder\IISLogs" /E /COPYALL /DCOPY:T
 netstat -anobq > $env:TEMP\all-Logs\$logsFolder\TCPLogs\netstat.txt
 Get-NetTCPConnection | Group-Object -Property State, OwningProcess | Select -Property Count, Name, @{Name="ProcessName";Expression={(Get-Process -PID ($_.Name.Split(',')[-1].Trim(' '))).Name}}, Group | Sort Count -Descending | out-file $env:TEMP\all-Logs\$logsFolder\TCPLogs\TCPconnections.txt
-$outputCsvPath = "$env:TEMP\all-logs\$logsFolder\DatabaseLogs\$logsFolder.csv"
+$outputCsvPath = "$env:TEMP\all-logs\$logsFolder\DatabaseLogs\db-log.csv"
 $results | Select-Object Id, Message, Level, TimeStamp, Exception, LogEvent, AssemblyName, AssemblyVersion, SourceContext, EnvironmentUserName, MachineName | Export-Csv -Path $outputCsvPath -NoTypeInformation -Encoding UTF8
 # Compress and copy to fileshare
 compress-archive -Path "$env:TEMP\all-Logs\$logsFolder\" -DestinationPath "$env:TEMP\$WebAppName-$hostname-All-Logs-$DT.zip"
