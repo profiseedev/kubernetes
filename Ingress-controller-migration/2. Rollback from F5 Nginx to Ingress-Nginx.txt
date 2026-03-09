@@ -38,9 +38,9 @@ cloud:
     clientSecret: "$(yaml_escape "$PURVIEW_CLIENT_SECRET")"
 EOF
 
-# Add profisee repo
+# Add profisee dev repo
 helm repo remove profisee
-helm repo add profisee https://profisee.github.io/kubernetes
+helm repo add profisee https://profiseedev.github.io/kubernetes
 
 # Add ingress-nginx repo
 helm repo remove nginx-stable
@@ -50,7 +50,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
 # Grab ingress-nginx settings 
-curl -fsSL -o nginxSettings.yaml "https://raw.githubusercontent.com/profisee/kubernetes/master/Azure-ARM/nginxSettings_old.yaml"
+curl -fsSL -o nginxSettings.yaml "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/nginxSettings_old.yaml"
 
 # Determine public or private cluster
 # Read existing ingress helm values before uninstalling; either Azure LB DNS name or private IP
@@ -135,7 +135,7 @@ kubectl -n kube-system get cm coredns-custom -o yaml | grep -E "rewrite name|ngi
 
 
 # Reinstall profisee using stored values
-helm upgrade --install  -n profisee profiseeplatform profisee/profisee-platform --values profisee-values.yaml --values purview-from-secret.yaml
+helm upgrade --install  -n profisee profiseeplatform profisee/profisee-platform --version 0.1.37 --values profisee-values.yaml --values purview-from-secret.yaml
 kubectl delete pod -n profisee profisee-0
 
 # Remove install files
