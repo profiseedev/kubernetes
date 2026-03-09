@@ -40,7 +40,7 @@ EOF
 
 # Add profisee repo
 helm repo remove profisee
-helm repo add profisee https://profiseeadmin.github.io/kubernetes
+helm repo add profisee https://profiseedev.github.io/kubernetes
 
 # Add ingress-nginx repo
 helm repo remove ingress-nginx
@@ -50,7 +50,7 @@ helm repo add nginx-stable https://helm.nginx.com/stable
 helm repo update
 
 # Grab ingress-nginx settings 
-curl -fsSL -o nginxSettings.yaml "https://raw.githubusercontent.com/profiseeadmin/kubernetes/master/Azure-ARM/nginxSettings.yaml"
+curl -fsSL -o nginxSettings.yaml "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/nginxSettings.yaml"
 
 # Determine public or private cluster
 # Read existing ingress helm values before uninstalling; either Azure LB DNS name or private IP
