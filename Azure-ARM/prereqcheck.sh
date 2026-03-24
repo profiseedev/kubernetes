@@ -80,7 +80,7 @@ fi
 #If updating DNS, check to make sure you have effective contributor access to the DNS zone itself.
 if [ "$UPDATEDNS" = "Yes" ]; then
 	echo "Is the Deployment Managed Identity assigned the DNS Zone Contributor role to the DNS zone itself?"
-	dnsznContributor=$(az role assignment list --all --assignee $currentIdentityId --output json --include-inherited --query "[?roleDefinitionName=='DNS Zone Contributor' && scope=='/subscriptions/$SUBSCRIPTIONID/resourceGroups/$DOMAINNAMERESOURCEGROUP/providers/Microsoft.Network/dnszones/$DNSDOMAINNAME'].roleDefinitionName" --output tsv)
+	dnsznContributor=$(az role assignment list --assignee $currentIdentityId --include-inherited --query "[?roleDefinitionName=='DNS Zone Contributor'].roleDefinitionName" --scope /subscriptions/$SUBSCRIPTIONID/resourceGroups/$DOMAINNAMERESOURCEGROUP/providers/Microsoft.Network/dnszones/$DNSDOMAINNAME --output tsv)
 	if [ -z "$dnsznContributor" ]; then
 		err="Role is NOT assigned. Exiting with error. Please assign the DNS Zone Contributor role to the Deployment Managed Identity for the DNS zone you want updated. Please visit https://support.profisee.com/wikis/profiseeplatform/planning_your_managed_identity_configuration for more information."
 		echo $err
