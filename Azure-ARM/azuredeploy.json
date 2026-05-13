@@ -25,10 +25,6 @@
       "defaultValue": "",
       "type": "String"
     },
-    "FirstUserClientID": {
-      "defaultValue": "",
-      "type": "String"
-    },
     "UseGovernance": {
       "defaultValue": "none",
       "type": "String"
@@ -217,7 +213,6 @@
     "UPDATEAAD":"[parameters('ActiveDirectoryCreateApp')]",
     "CLIENTID":"[parameters('ActiveDirectoryClientId')]",
     "CLIENTSECRET":"[parameters('ActiveDirectoryClientSecret')]",
-    "FIRSTUSERCLIENTID":"[parameters('FirstUserClientID')]",
     "OIDCURL":"[concat('https://login.microsoftonline.com/',subscription().tenantId)]",
 
     "KubernetesVersion":"[parameters('KubernetesVersion')]",
@@ -776,10 +771,6 @@
                     {
                         "name": "CLIENTSECRET",
                         "value": "[variables('CLIENTSECRET')]"
-                    },
-                    {
-                        "name": "FIRSTUSERCLIENTID",
-                        "value": "[variables('FIRSTUSERCLIENTID')]"
                     },
                     {
                         "name": "CONFIGUREHTTPS",

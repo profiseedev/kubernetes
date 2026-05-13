@@ -12,9 +12,6 @@ UPDATEAAD=Yes
 #If UPDATEAAD=No, then set this
 CLIENTID=
 
-#Optional. Client ID of the first user to register with Profisee. Leave blank to have Profisee auto-create it on first launch (PaaS default).
-FIRSTUSERCLIENTID=
-
 #Name of AKS Cluster
 CLUSTERNAME=ProfiseeAKSCluster
 
