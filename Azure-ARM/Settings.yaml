@@ -7,6 +7,7 @@ profiseeRunTime:
     useLetsEncrypt: $USELETSENCRYPT
     adminAccount: "$ADMINACCOUNTNAME"
     InfraAdminAccount: "$INFRAADMINACCOUNT"
+    firstUserClientID: "$FIRSTUSERCLIENTID"
     fileRepository:
         accountName: "$FILEREPOACCOUNTNAME"
         userName: "$FILEREPOUSERNAME"

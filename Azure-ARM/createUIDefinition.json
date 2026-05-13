@@ -261,6 +261,20 @@
             "visible": "[equals(steps('profisee').ActiveDirectoryCreateApp,'No')]"
           },
           {
+            "name": "FirstUserClientID",
+            "type": "Microsoft.Common.TextBox",
+            "label": "First User Client ID",
+            "defaultValue": "",
+            "placeholder": "",
+            "toolTip": "Optional. Client ID of the first user to register with Profisee. Leave blank to have Profisee auto-create it on first launch (PaaS default).",
+            "constraints": {
+              "required": false,
+              "regex": "",
+              "validationMessage": ""
+            },
+            "visible": true
+          },
+          {
             "name": "UseGovernance",
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Select governance integration",
@@ -1080,6 +1094,7 @@
       "ActiveDirectoryCreateApp": "[steps('profisee').ActiveDirectoryCreateApp]",
       "ActiveDirectoryClientId": "[steps('profisee').UserSuppliedClientId.ActiveDirectoryClientId]",
       "ActiveDirectoryClientSecret": "[steps('profisee').UserSuppliedClientSecret.ActiveDirectoryClientSecret]",
+      "FirstUserClientID": "[steps('profisee').FirstUserClientID]",
       "WindowsNodeVersion": "[if(contains(steps('profisee').ProfiseeVersion, '-win22'), 'Windows2022', 'Windows2019')]",
       "KubernetesClusterName": "[steps('kubernetes').KubernetesClusterName]",
       "KubernetesVersion": "[steps('kubernetes').KubernetesVersion]",
