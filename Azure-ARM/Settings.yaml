@@ -30,6 +30,7 @@ profiseeRunTime:
         lastNameClaim: "$OIDCCMLastName"
         emailClaim: "$OIDCCMEmailAddress"
         groupsClaim: "groups"
+    firstUserClientId: "$FirstUserClientID"
     clusterNodeCount: "$PodCount"
 clusterNode:
     limits:
