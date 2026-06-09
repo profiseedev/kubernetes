@@ -359,6 +359,20 @@
             "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
           },
           {
+            "name": "PurviewTenantID",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Purview Tenant ID",
+            "defaultValue": "",
+            "placeholder": "",
+            "toolTip": "Please Provide Tenant ID for Purview specific application and paste its value here.",
+            "constraints": {
+              "required": true,
+              "regex": "",
+              "validationMessage": ""
+            },
+            "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
+          },          
+          {
             "name": "AlationUrl",
             "type": "Microsoft.Common.TextBox",
             "label": "Alation URL",

@@ -617,7 +617,7 @@ sed -i -e 's/$ACRREPONAME/'"$ACRREPONAME"'/g' Settings.yaml
 sed -i -e 's/$ACRREPOLABEL/'"$ACRREPOLABEL"'/g' Settings.yaml
 sed -i -e 's/$GOVERNANCEPROVIDER/'"$GOVERNANCEPROVIDER"'/g' Settings.yaml
 sed -i -e 's~$PURVIEWURL~'"$PURVIEWURL"'~g' Settings.yaml
-sed -i -e 's/$PURVIEWTENANTID/'"$TENANTID"'/g' Settings.yaml
+sed -i -e 's/$PURVIEWTENANTID/'"$PURVIEWTENANTID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCOLLECTIONID/'"$COLLECTIONTRUEID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTID/'"$PURVIEWCLIENTID"'/g' Settings.yaml
 sed -i -e 's/$PURVIEWCLIENTSECRET/'"$PURVIEWCLIENTSECRET"'/g' Settings.yaml

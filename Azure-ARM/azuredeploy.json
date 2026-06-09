@@ -45,6 +45,10 @@
       "defaultValue": "",
       "type": "String"
     },
+    "PurviewTenantID": {
+      "defaultValue": "",
+      "type": "String"
+    },    
     "PurviewAccountResourceGroup": {
       "defaultValue": "",
       "type": "String"
@@ -267,6 +271,7 @@
     "PurviewCollectionId":"[parameters('PurviewCollectionFriendlyName')]",
     "PurviewClientId":"[parameters('PurviewClientId')]",
     "PurviewClientSecret":"[parameters('PurviewClientSecret')]",
+    "PurviewTenantID":"[parameters('PurviewTenantID')]",
     "PurviewAccountResourceGroup":"[parameters('PurviewAccountResourceGroup')]",
     "AlationUrl":"[parameters('AlationUrl')]",
     "AlationUsername":"[parameters('AlationUsername')]",
@@ -344,7 +349,11 @@
                     {
                         "name": "PURVIEWCLIENTSECRET",
                         "value": "[variables('PurviewClientSecret')]"
-                    }
+                    },
+                    {
+                        "name": "PURVIEWTENANTID",
+                        "value": "[variables('PurviewTenantID')]"
+                    }                    
                 ]
             }
         },
