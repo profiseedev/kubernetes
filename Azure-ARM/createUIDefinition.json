@@ -294,16 +294,25 @@
             "visible": true
           },
           {
-            "name": "PurviewAccountURL",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Purview Account URL",
-            "defaultValue": "",
-            "placeholder": "THiS iS CaSe SenSiTiVe!",
-            "toolTip": "Provide the Profisee URL for the Purview instance Profisee should integrate with",
-            "constraints": {
-              "required": true,
-              "regex": "",
-              "validationMessage": ""
+            "name": "PurviewAccountName",
+            "type": "Microsoft.Solutions.ResourceSelector",
+            "label": "Select Purview Account",
+            "resourceType": "Microsoft.Purview/accounts",
+            "options": {
+              "filter": {
+                "subscription": "All",
+                "location": "All"
+              }
+            },
+            "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
+          },
+          {
+            "name": "GetPurviewUrlRestApiResponse",
+            "type": "Microsoft.Solutions.ArmApiControl",
+            "request": {
+              "method": "GET",
+              "path": "[concat(subscription().id,'/resourceGroups/',last(take(split(steps('profisee').PurviewAccountName.id, '/'), 5)),'/providers/Microsoft.Purview/accounts/',steps('profisee').PurviewAccountName.name,'?api-version=2021-12-01')]",
+              "body": ""
             },
             "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
           },
