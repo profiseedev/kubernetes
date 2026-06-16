@@ -151,7 +151,7 @@ if [ "$USEGOVERNANCE" = "azurePurview" ]; then
 		else
 			echo $"The "$PURVIEWCOLLECTIONID" collection name provided was found. Continuing checks."
 		fi
-	else
+	fi
 		echo "Checking if provided Purview collection friendly name exists."
 		purviewtoken=$(curl --location --no-progress-meter --request GET "https://login.microsoftonline.com/$PURVIEWTENANTID/oauth2/token" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "client_id=$PURVIEWCLIENTID" --data-urlencode "client_secret=$PURVIEWCLIENTSECRET" --data-urlencode 'grant_type=client_credentials' --data-urlencode 'resource=https://purview.azure.net' | jq --raw-output '.access_token');
 		#Strip /catalog from end of Purview URL
