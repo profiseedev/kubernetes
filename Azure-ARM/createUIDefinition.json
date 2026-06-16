@@ -296,10 +296,10 @@
           {
             "name": "PurviewAccountName",
             "type": "Microsoft.Common.TextBox",
-            "label": "Select Purview Account URL",
+            "label": "Purview Account Atlas endpoint",
             "defaultValue": "",
             "placeholder": "THiS iS CaSe SenSiTiVe!",
-            "toolTip": "Please provide the Purview Collection URL that you see in your Purview account. Profisee will deploy to that collection. If you would like to deploy in the root collection, please specify its friendly name.",
+            "toolTip": "Please provide the Purview Atlas endpoint. it can be found under Properties",
             "constraints": {
               "required": true,
               "regex": "",
@@ -322,6 +322,20 @@
             "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
           },
           {
+            "name": "PurviewTenantID",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Purview Tenant ID",
+            "defaultValue": "",
+            "placeholder": "",
+            "toolTip": "Please Provide Tenant ID for Purview specific application and paste its value here.",
+            "constraints": {
+              "required": true,
+              "regex": "",
+              "validationMessage": ""
+            },
+            "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
+          },          
+          {
             "name": "PurviewClientID",
             "type": "Microsoft.Common.TextBox",
             "label": "Purview application client ID",
@@ -342,20 +356,6 @@
             "defaultValue": "",
             "placeholder": "",
             "toolTip": "Please generate a secret in the Purview specific application and paste its value here.",
-            "constraints": {
-              "required": true,
-              "regex": "",
-              "validationMessage": ""
-            },
-            "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
-          },
-          {
-            "name": "PurviewTenantID",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Purview Tenant ID",
-            "defaultValue": "",
-            "placeholder": "",
-            "toolTip": "Please Provide Tenant ID for Purview specific application and paste its value here.",
             "constraints": {
               "required": true,
               "regex": "",
