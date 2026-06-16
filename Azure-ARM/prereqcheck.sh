@@ -163,8 +163,9 @@ if [ "$USEGOVERNANCE" = "azurePurview" ]; then
 			set_resultAndReturn;
 		else
 			echo $"The "$PURVIEWCOLLECTIONID" collection name provided was found. Continuing checks."
+			echo $"CollectionID is $collectionnamenotfound"
 		fi
-		echo $"CollectionName is $collectionnamenotfound"		
+
 fi
 
 #If using Key Vault, checks to make sure that the Deployment Managed Identity has been assigned the Managed Identity Contributor role AND User Access Administrator as Subscription level.
