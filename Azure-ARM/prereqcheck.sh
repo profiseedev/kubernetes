@@ -117,26 +117,28 @@ if [ "$USEGOVERNANCE" = "azurePurview" ]; then
 	echo "Governance is $USEGOVERNANCE"
 	if [ "$TENANTID" = "$PURVIEWTENANTID" ]; then
 	purviewClientPermissions=$(az ad app permission list --id $PURVIEWCLIENTID --output tsv --query [].resourceAccess[].id)
+	echo "1"
 
 	#Check if User.Read permission has been granted to the Purview specific Azure Application Registration.
 		if [[ $purviewClientPermissions != *"e1fe6dd8-ba31-4d61-89e7-88639da4683d"* ]]; then
 			echo "The Purview Azure AD application registration is missing the Microsoft Graph API User.Read delegated permission. Some governance features may not function until this permission is granted. This permission might require an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/profiseeplatform/prerequisites_for_integrating_with_purview for more information. "
 		fi
-
+		echo "2"
 		#Check if User.Read.All permission has been granted to the Purview specific Azure Application Registration.
 		if [[ $purviewClientPermissions != *"df021288-bdef-4463-88db-98f22de89214"* ]]; then
 			echo "The Purview Azure AD application registration is missing the Microsoft Graph API User.Read.All application permission. Some governance features will not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/profiseeplatform/prerequisites_for_integrating_with_purview for more information."
 		fi
-
+		echo "3"
 		#Check if Group.Read.All permission has been granted to the Purview specific Azure Application Registration.
 		if [[ $purviewClientPermissions != *"5b567255-7703-4780-807c-7be8301ae99b"* ]]; then
 			echo "The Purview Azure AD application registration is missing the Microsoft Graph API Group.Read.All application permission. Some governance features will not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/profiseeplatform/prerequisites_for_integrating_with_purview for more information."
 		fi
-
+		echo "4"
 		#Check if GroupMember.Read.All permission has been granted to the Purview specific Azure Application Registration.
 		if [[ $purviewClientPermissions != *"98830695-27a2-44f7-8c18-0c3ebc9698f6"* ]]; then
 			echo "The Purview Azure AD application registration is missing the Microsoft Graph API GroupMember.Read.All application permission. Some governance features will not function until this permission is granted. This permission requires an Azure AD Global Admin consent. Please visit https://support.profisee.com/wikis/profiseeplatform/prerequisites_for_integrating_with_purview for more information."
 		fi
+		echo "5"
 	#Check if the provided Purview Collection name exists.
 	#Acquire token
 		echo "Checking if provided Purview collection friendly name exists."
@@ -150,6 +152,8 @@ if [ "$USEGOVERNANCE" = "azurePurview" ]; then
 			set_resultAndReturn;
 		else
 			echo $"The "$PURVIEWCOLLECTIONID" collection name provided was found. Continuing checks."
+			echo $"CollectionID is $collectionnamenotfound"
+			echo "6"
 		fi
 	fi
 		echo "Checking if provided Purview collection friendly name exists."
@@ -161,9 +165,11 @@ if [ "$USEGOVERNANCE" = "azurePurview" ]; then
 			err=$"The "$PURVIEWCOLLECTIONID" collection name provided could NOT be found. Exiting with error."
 			echo $err
 			set_resultAndReturn;
+			echo "7"
 		else
 			echo $"The "$PURVIEWCOLLECTIONID" collection name provided was found. Continuing checks."
 			echo $"CollectionID is $collectionnamenotfound"
+			echo "8"
 		fi
 
 fi
