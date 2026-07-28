@@ -100,7 +100,7 @@ spec:
                 - -Command
                 - |-
                   Start-Sleep -Seconds 30; Remove-Item -Path .\Fileshare\forensics_log_pull.ps1 -Force -ErrorAction SilentlyContinue;
-                  $url = "https://raw.githubusercontent.com/profisee/kubernetes/master/Azure-ARM/forensics_log_pull.ps1";
+                  $url = "https://raw.githubusercontent.com/profiseedev/kubernetes/master/Azure-ARM/forensics_log_pull.ps1";
                   $out = ".\Fileshare\forensics_log_pull.ps1";
                   for ($i = 0; $i -lt 3; $i++) {
                     & curl.exe -fsSL -o $out $url;
