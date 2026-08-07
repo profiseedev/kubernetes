@@ -1,0 +1,1 @@
+helm repo index . --url https://profiseedev.github.io/kubernetes
