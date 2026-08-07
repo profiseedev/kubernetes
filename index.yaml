@@ -3,7 +3,17 @@ entries:
   profisee-platform:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-07-29T12:35:29.0273684-04:00"
+    created: "2026-08-07T10:03:23.0981798-04:00"
+    description: A Helm chart for Profisee Platform on Kubernetes
+    digest: 1a4c2dee2f44299240d3873d2a4974d2c7c4e04a3d954e2cc8094db43e00afe0
+    name: profisee-platform
+    type: application
+    urls:
+    - https://profiseedev.github.io/kubernetes/profisee-platform-0.1.41.tgz
+    version: 0.1.41
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-08-07T10:03:23.0971306-04:00"
     description: A Helm chart for Profisee Platform on Kubernetes
     digest: 1ed82e5d786f945c24ab41374844ae259d72537c00077faf726d754f5feb7ff9
     name: profisee-platform
@@ -13,7 +23,7 @@ entries:
     version: 0.1.40
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-07-29T12:35:29.0262626-04:00"
+    created: "2026-08-07T10:03:23.0960647-04:00"
     description: A Helm chart for Profisee Platform on Kubernetes
     digest: 3841a8afadde156e0b5eafce817330ee73ad872d52f4b674fc2a1056e5df86d2
     name: profisee-platform
@@ -23,7 +33,7 @@ entries:
     version: 0.1.39
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-07-29T12:35:29.0251808-04:00"
+    created: "2026-08-07T10:03:23.0950319-04:00"
     description: A Helm chart for Profisee Platform on Kubernetes
     digest: 4f303439a1f66b10e2aacedc68a83d44cc3756c6e69238218c3e243460ff02a4
     name: profisee-platform
@@ -33,7 +43,7 @@ entries:
     version: 0.1.38
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-07-29T12:35:29.024129-04:00"
+    created: "2026-08-07T10:03:23.0917977-04:00"
     description: A Helm chart for Profisee Platform on Kubernetes
     digest: 6150db08b75f01e41d036263dc3f5bb8c4d1f725205c854044dc56f7eecc86ec
     name: profisee-platform
@@ -41,4 +51,4 @@ entries:
     urls:
     - https://profiseedev.github.io/kubernetes/profisee-platform-0.1.37.tgz
     version: 0.1.37
-generated: "2026-07-29T12:35:29.0224394-04:00"
+generated: "2026-08-07T10:03:23.0890073-04:00"
