@@ -374,11 +374,7 @@ IFS=':' read -r -a repostring <<< "$PROFISEEVERSION"
 ACRREPONAME="${repostring[0],,}";
 ACRREPOLABEL="${repostring[1],,}"
 
-if [[ "$ACRREPOLABEL" == *"2026r2"* ]]; then
-    azureAppReplyUrl="${EXTERNALDNSURL}/${WEBAPPNAME}/auth/federation/Azure%20Active%20Directory/signin"
-else
-    azureAppReplyUrl="${EXTERNALDNSURL}/${WEBAPPNAME}/auth/signin-microsoft"
-fi
+azureAppReplyUrl="${EXTERNALDNSURL}/${WEBAPPNAME}/auth/federation/Azure%20Active%20Directory/signin"
 
 echo $azureAppReplyUrl
 
