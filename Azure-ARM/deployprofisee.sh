@@ -545,9 +545,12 @@ OIDCCMUserID="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifi
 OIDCCMFirstName="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
 OIDCCMLastName="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
 OIDCCMEmailAddress="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+#ARM deployments use the Azure AD OIDC provider, so keep it enabled
+OIDCENABLED=true
 
 PodCount=1
 
+sed -i -e 's~$OIDCENABLED~'"$OIDCENABLED"'~g' Settings.yaml
 sed -i -e 's~$OIDCNAME~'"$OIDCNAME"'~g' Settings.yaml
 sed -i -e 's~$OIDCCMUserName~'"$OIDCCMUserName"'~g' Settings.yaml
 sed -i -e 's~$OIDCCMUserID~'"$OIDCCMUserID"'~g' Settings.yaml

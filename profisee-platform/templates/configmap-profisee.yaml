@@ -18,6 +18,8 @@ data:
     ProfiseeWebAppName: {{.Values.profiseeRunTime.webAppName|quote}}
     ProfiseeMetadataProvider: {{.Values.integrations.governance.provider|quote}}
     ProfiseeAdditionalOpenIdConnectProvidersFile: 'c:\data\oidc.json'
+    #'false' unless profiseeRunTime.oidc.enabled is explicitly true; when false the default OIDC provider is not created
+    ProfiseeAuthOidcEnabled: {{ if eq (toString .Values.profiseeRunTime.oidc.enabled | lower) "true" }}'true'{{ else }}'false'{{ end }}
     ProfiseeOidcName: {{.Values.profiseeRunTime.oidc.name|quote}}
     ProfiseeOidcAuthority: {{.Values.profiseeRunTime.oidc.authority|quote}}
     #ProfiseeOidcClientId: {{.Values.profiseeRunTime.oidc.clientId|quote}} #in literal-secrets
