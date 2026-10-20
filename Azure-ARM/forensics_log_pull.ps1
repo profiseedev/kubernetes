@@ -172,16 +172,15 @@ $ErrorActionPreference = 'Stop'
 if ($PreStop) {
     if (-not $PSBoundParameters.ContainsKey('TimeBudgetSeconds')) { $TimeBudgetSeconds = 45 }
     if (-not $PSBoundParameters.ContainsKey('HealthTimeoutMs'))   { $HealthTimeoutMs   = 3000 }
+}   # <-- CHANGED: PreStop block now ends here
 
-    # Daily cap per pod: bundle names carry the hostname, so count only this
-    # host's ZIPs written since local midnight.
-    if ($MaxPerDay -gt 0) {
-        $today = @(Get-ChildItem -Path $OutputPath -Filter "*-$env:COMPUTERNAME-All-Logs-*.zip" -File -ErrorAction SilentlyContinue |
-                   Where-Object { $_.LastWriteTime -ge (Get-Date).Date }).Count
-        if ($today -ge $MaxPerDay) {
-            Write-Host ("Skipping collection: {0} already has {1} bundle(s) today in {2} (limit {3})" -f $env:COMPUTERNAME, $today, $OutputPath, $MaxPerDay)
-            exit 0
-        }
+# <-- CHANGED: daily cap moved out of the PreStop block, so it applies to every run
+if ($MaxPerDay -gt 0) {
+    $today = @(Get-ChildItem -Path $OutputPath -Filter "*-$env:COMPUTERNAME-All-Logs-*.zip" -File -ErrorAction SilentlyContinue |
+               Where-Object { $_.LastWriteTime -ge (Get-Date).Date }).Count
+    if ($today -ge $MaxPerDay) {
+        Write-Host ("Skipping collection: {0} already has {1} bundle(s) today in {2} (limit {3})" -f $env:COMPUTERNAME, $today, $OutputPath, $MaxPerDay)
+        exit 0
     }
 }
 
