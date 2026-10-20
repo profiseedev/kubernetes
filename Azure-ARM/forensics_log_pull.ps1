@@ -143,7 +143,7 @@ param(
     [string] $InstallRoot   = $PSScriptRoot,
     [int]    $HoursBack     = 24,
     [int]    $MaxLogAgeDays = 3,
-    [int]    $RetentionDays = 2,
+    [int]    $RetentionDays = 30,
     [ValidateSet('InstallRoot','Host')]
     [string] $ProcessScope  = 'InstallRoot',
     [string] $SqlServer,
@@ -159,7 +159,7 @@ param(
     [switch] $PreStop,
     [int]    $TimeBudgetSeconds = 0,
     [int]    $HealthTimeoutMs   = 10000,
-    [int]    $MaxPerDay         = 3
+    [int]    $MaxPerDay         = 20
 )
 
 $ScriptVersion = '1.1'
