@@ -1,0 +1,13 @@
+{{- if .Values.trustedRootCertificates }}
+# Root certificates for the container to trust, one file each: the image's
+# Setup.ps1 imports C:\trustedroots\*.crt before it connects anywhere.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: profisee-trustedroots
+data:
+{{- range $i, $pem := .Values.trustedRootCertificates }}
+  root-{{ $i }}.crt: |
+{{ $pem | trim | indent 4 }}
+{{- end }}
+{{- end }}
