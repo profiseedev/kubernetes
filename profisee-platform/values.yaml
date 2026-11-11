@@ -20,6 +20,7 @@ profiseeRunTime:
     deployIngressRule: true
     isPaaS: true
     oidc:
+        enabled: true   # false: the container configures without OIDC (Setup.ps1 reads ProfiseeOidcEnabled)
         name: "Azure Active Directory"
         authority: "$OIDCURL"
         clientId: "$CLIENTID"
@@ -55,6 +56,8 @@ image:
         }
 licenseFileData: $LICENSEDATA
 preInitScriptData: Cg==
+# PEM root certificates the container trusts, mounted one per file at C:\trustedroots.
+trustedRootCertificates: []
 postInitScriptData: Cg==
 oidcFileData: |
     {
@@ -87,7 +90,13 @@ cloud:
         clientId: ""
     aws:
       isProvider: false
-      ebsVolumeId: ""
+      ebsVolumeId: ""            # inline EBS volume, as before; ignored when fileShare.volumeHandle is set
+      fileShare:                 # PVC mode: used when volumeHandle is set
+        driver: ebs.csi.aws.com  # or efs.csi.aws.com
+        volumeHandle: ""         # vol-0abc... (EBS) or fs-0abc...::fsap-0abc... (EFS, through an access point)
+        zone: ""                 # EBS only: the volume's zone, e.g. us-east-2a. The pod is scheduled there
+        fsType: ntfs             # EBS only
+        size: 2Gi                # the volume's size. EFS ignores it, but Kubernetes requires one
     google:
       isProvider: false
       gceVolumeName: ""

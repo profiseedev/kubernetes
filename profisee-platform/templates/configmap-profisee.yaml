@@ -18,6 +18,7 @@ data:
     ProfiseeWebAppName: {{.Values.profiseeRunTime.webAppName|quote}}
     ProfiseeMetadataProvider: {{.Values.integrations.governance.provider|quote}}
     ProfiseeAdditionalOpenIdConnectProvidersFile: 'c:\data\oidc.json'
+    ProfiseeOidcEnabled: {{.Values.profiseeRunTime.oidc.enabled|quote}}
     ProfiseeOidcName: {{.Values.profiseeRunTime.oidc.name|quote}}
     ProfiseeOidcAuthority: {{.Values.profiseeRunTime.oidc.authority|quote}}
     #ProfiseeOidcClientId: {{.Values.profiseeRunTime.oidc.clientId|quote}} #in literal-secrets

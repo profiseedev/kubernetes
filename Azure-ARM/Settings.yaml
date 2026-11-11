@@ -20,6 +20,7 @@ profiseeRunTime:
     deployIngressRule: true
     isPaaS: true
     oidc:
+        enabled: true
         name: "$OIDCNAME"
         authority: "$OIDCURL"
         clientId: "$CLIENTID"
@@ -56,6 +57,7 @@ image:
 licenseFileData: $LICENSEDATA
 preInitScriptData: $preInitScriptData
 postInitScriptData: $postInitScriptData
+trustedRootCertificates: []
 oidcFileData: |
     $OIDCFileData
 tlsCert: |
@@ -88,6 +90,12 @@ cloud:
     aws:
       isProvider: false
       ebsVolumeId: ""
+      fileShare:
+        driver: ebs.csi.aws.com
+        volumeHandle: ""
+        zone: ""
+        fsType: ntfs
+        size: 2Gi
     google:
       isProvider: false
       gceVolumeName: ""

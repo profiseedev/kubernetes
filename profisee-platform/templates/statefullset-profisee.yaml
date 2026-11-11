@@ -13,6 +13,10 @@ spec:
   template:
     metadata:
       name: profisee
+      {{- if .Values.trustedRootCertificates }}
+      annotations:
+        checksum/trustedroots: {{ toJson .Values.trustedRootCertificates | sha256sum | quote }}
+      {{- end }}
       labels:
         app: profisee
         {{- if .Values.cloud.azure.useManagedIdentity}}
@@ -65,9 +69,19 @@ spec:
       {{- end }}
       {{- if .Values.cloud.aws.isProvider }}
       - name: fileshare
+        {{- if .Values.cloud.aws.fileShare.volumeHandle }}
+        persistentVolumeClaim:
+          claimName: profisee-fileshare
+        {{- else }}
         awsElasticBlockStore:
           volumeID: {{.Values.cloud.aws.ebsVolumeId}}
           fsType: ntfs
+        {{- end }}
+      {{- end }}
+      {{- if .Values.trustedRootCertificates }}
+      - name: trustedroots
+        configMap:
+          name: profisee-trustedroots
       {{- end }}
       {{- if .Values.cloud.google.isProvider }}
       - name: fileshare
@@ -152,6 +166,11 @@ spec:
           readOnly: true
         - name: initscripts
           mountPath: C:\scripts
+        {{- if .Values.trustedRootCertificates }}
+        - name: trustedroots
+          mountPath: C:\trustedroots
+          readOnly: true
+        {{- end }}
         {{- if .Values.cloud.azure.isProvider }}
         - name: fileshare
           mountPath: c:\Fileshare

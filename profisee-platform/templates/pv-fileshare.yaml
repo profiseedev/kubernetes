@@ -1,0 +1,52 @@
+{{- $fs := .Values.cloud.aws.fileShare }}
+{{- if and .Values.cloud.aws.isProvider $fs.volumeHandle }}
+{{- $ebs := eq $fs.driver "ebs.csi.aws.com" }}
+{{- $mode := ternary "ReadWriteOnce" "ReadWriteMany" $ebs }}
+# An existing volume, not a new one: no storage class, and Retain, so deleting
+# the release never deletes the volume. Cluster-wide, so named per namespace.
+# A different volume (ID or zone) can't be patched in: delete the PV and PVC
+# first; the volume itself stays.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: profisee-fileshare-{{ .Release.Namespace }}
+spec:
+  capacity:
+    storage: {{ $fs.size | default "2Gi" }}
+  accessModes:
+    - {{ $mode }}
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  claimRef:
+    namespace: {{ .Release.Namespace }}
+    name: profisee-fileshare
+  csi:
+    driver: {{ $fs.driver }}
+    volumeHandle: {{ $fs.volumeHandle }}
+    {{- if $ebs }}
+    fsType: {{ $fs.fsType | default "ntfs" }}
+    {{- end }}
+  {{- if and $ebs $fs.zone }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: topology.kubernetes.io/zone
+              operator: In
+              values:
+                - {{ $fs.zone }}
+  {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: profisee-fileshare
+spec:
+  accessModes:
+    - {{ $mode }}
+  storageClassName: ""
+  volumeName: profisee-fileshare-{{ .Release.Namespace }}
+  resources:
+    requests:
+      storage: {{ $fs.size | default "2Gi" }}
+{{- end }}
