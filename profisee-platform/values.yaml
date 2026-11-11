@@ -20,8 +20,8 @@ profiseeRunTime:
     deployIngressRule: true
     isPaaS: true
     oidc:
-        enabled: true   # false: the container configures without OIDC (Setup.ps1 reads ProfiseeOidcEnabled)
-        name: "Azure Active Directory"
+        enabled: ""     # true or false forces OIDC on or off (Setup.ps1 reads ProfiseeOidcEnabled); empty: on only when a client secret is set
+        name: "entra"
         authority: "$OIDCURL"
         clientId: "$CLIENTID"
         clientSecret: "$OIDCCLIENTSECRET"

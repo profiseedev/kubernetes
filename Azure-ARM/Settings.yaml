@@ -20,7 +20,7 @@ profiseeRunTime:
     deployIngressRule: true
     isPaaS: true
     oidc:
-        enabled: true
+        enabled: ""
         name: "$OIDCNAME"
         authority: "$OIDCURL"
         clientId: "$CLIENTID"
