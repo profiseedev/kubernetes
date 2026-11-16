@@ -97,47 +97,27 @@
             "name": "ProfiseeVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Profisee version",
-            "defaultValue": "2026r2.0-win25",
+            "defaultValue": "2026r4.0-win25",
             "toolTip": "Which release of the Profisee Platform to deploy.",
             "constraints": {
               "required": true,
               "allowedValues": [
                 {
-                  "label": "2024R2.0-win22",
-                  "value": "profiseeplatform:2024r2.0-win22"
-                },
-                {
-                  "label": "2025r0.0-win22",
-                  "value": "profiseeplatform:2025r0.0-win22"
-                },
-                {
-                  "label": "2025r1.0-win22",
-                  "value": "profiseeplatform:2025r1.0-win22"
-                },
-                {
-                  "label": "2025r2.0-win22",
-                  "value": "profiseeplatform:2025r2.0-win22"
-                },
-                {
-                  "label": "2025r3.0-win22",
-                  "value": "profiseeplatform:2025r3.0-win22"
-                },
-                {
-                  "label": "2025r4.0-win22",
-                  "value": "profiseeplatform:2025r4.0-win22"
-                },
-                {
                   "label": "2026r1.0-win22",
-                  "value": "profiseeplatform:2026r1.0-win22"                  
-                },
-                {
-                  "label": "2026r2.0-win22",
-                  "value": "profiseeplatformdev:2026r2.0-win22"                  
+                  "value": "profiseeplatform:2026r1.0-win22"
                 },
                 {
                   "label": "2026r2.0-win25",
-                  "value": "profiseeplatformdev:2026r2.0-win25"                  
-                }                               
+                  "value": "profiseeplatform:2026r2.0-win25"
+                },
+                {
+                  "label": "2026r3.0-win25",
+                  "value": "profiseeplatform:2026r3.0-win25"
+                },
+                {
+                  "label": "2026r4.0-win25",
+                  "value": "profiseeplatformdev:2026r4.0-win25"
+                }
               ]
             },
             "visible": true
@@ -292,10 +272,10 @@
           {
             "name": "PurviewAccountName",
             "type": "Microsoft.Common.TextBox",
-            "label": "Purview Account Atlas endpoint",
+            "label": "Select Purview Account URL",
             "defaultValue": "",
             "placeholder": "THiS iS CaSe SenSiTiVe!",
-            "toolTip": "Please provide the Purview Atlas endpoint. it can be found under Properties",
+            "toolTip": "Please provide the Purview Collection URL that you see in your Purview account. Profisee will deploy to that collection. If you would like to deploy in the root collection, please specify its friendly name.",
             "constraints": {
               "required": true,
               "regex": "",
@@ -317,20 +297,6 @@
             },
             "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
           },
-          {
-            "name": "PurviewTenantID",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Purview Tenant ID",
-            "defaultValue": "",
-            "placeholder": "",
-            "toolTip": "Please Provide Tenant ID for Purview specific application and paste its value here.",
-            "constraints": {
-              "required": true,
-              "regex": "",
-              "validationMessage": ""
-            },
-            "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
-          },          
           {
             "name": "PurviewClientID",
             "type": "Microsoft.Common.TextBox",
@@ -358,7 +324,21 @@
               "validationMessage": ""
             },
             "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
-          },          
+          },
+          {
+            "name": "PurviewTenantID",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Purview Tenant ID",
+            "defaultValue": "",
+            "placeholder": "",
+            "toolTip": "Please Provide Tenant ID for Purview specific application and paste its value here.",
+            "constraints": {
+              "required": true,
+              "regex": "",
+              "validationMessage": ""
+            },
+            "visible": "[equals(steps('profisee').UseGovernance,'azurePurview')]"
+          },
           {
             "name": "AlationUrl",
             "type": "Microsoft.Common.TextBox",
@@ -817,7 +797,20 @@
               "validationMessage": ""
             },
             "visible": true
-          }
+          },
+          {
+          "name": "RDSConnectionString",
+          "type": "Microsoft.Common.TextBox",
+          "label": "RDS Connection String",
+          "defaultValue": "",
+          "toolTip": "RDS Connection String",
+          "constraints": {
+            "required": false,
+            "regex": "",
+            "validationMessage": ""
+          },
+          "visible": true
+         }
         ]
       },
       {
@@ -1110,6 +1103,7 @@
       "SQLServerUser": "[if(equals(steps('profisee').UseKeyVault, 'Yes'), steps('sql').SQLServerUserSecret, steps('sql').SQLServerUser)]",
       "SQLServerPassword": "[if(equals(steps('profisee').UseKeyVault, 'Yes'), steps('sql').SQLServerPasswordSecret, steps('sql').SQLServerPassword)]",
       "SQLServerDatabaseName": "[steps('sql').SQLServerDatabaseName]",
+      "RDSConnectionString": "[steps('sql').RDSConnectionString]",
       "StorageAccountCreateNew": "[if(equals(steps('storage').StorageAccountNameSection.StorageAccountName.newOrExisting, 'new'), 'Yes', 'No')]",
       "StorageAccountName": "[steps('storage').StorageAccountNameSection.StorageAccountName.name]",
       "StorageAccountResourceGroupName": "[coalesce(steps('storage').StorageAccountNameSection.StorageAccountName.resourceGroup,resourceGroup().name)]",
