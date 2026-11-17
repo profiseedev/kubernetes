@@ -198,7 +198,11 @@
     "NewGuid": {
       "defaultValue": "[newGuid()]",
       "type": "String"
-    }
+    },
+    "ProfiseeAnywhereConnectionString":{
+      "defaultValue": "",
+      "type": "string"
+    }    
   },
   "variables":
   {
@@ -248,6 +252,7 @@
     "SQLServerDatabaseName":"[parameters('SQLServerDatabaseName')]",
     "SQLUSERPASSWORD":"[parameters('SQLServerPassword')]",
     "SQLUSERNAME":"[parameters('SQLServerUser')]",
+    "ProfiseeAnywhereConnectionString":"[parameters('ProfiseeAnywhereConnectionString')]",
 
     "StorageAccountCreateNew" : "[parameters('StorageAccountCreateNew')]",
     "StorageAccountName":"[parameters('StorageAccountName')]",
@@ -879,6 +884,10 @@
                       "name": "INFRAADMINACCOUNT",
                       "value": "[variables('InfraAdminAccount')]"
                     },
+                    {
+                      "name": "PROFISEEANYWHERECONNECTIONSTRING",
+                      "value": "[variables('ProfiseeAnywhereConnectionString')]"
+                    },                    
                     {
                       "name": "WINDOWSNODEVERSION",
                       "value": "[variables('WindowsNodeVersion')]"

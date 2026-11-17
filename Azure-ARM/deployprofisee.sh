@@ -379,6 +379,7 @@ azureAppReplyUrl="${EXTERNALDNSURL}/${WEBAPPNAME}/auth/federation/Azure%20Active
 echo $azureAppReplyUrl
 
 #Create the Azure app id (clientid)
+
 if [ "$UPDATEAAD" = "Yes" ]; then
 	echo "Update of Azure Active Directory started. Now we will create the Azure AD Application registration.";
 	azureClientName="${RESOURCEGROUPNAME}_${CLUSTERNAME}";
@@ -632,6 +633,12 @@ sed -i -e 's~$ALATIONPASSWORD~'"$ALATIONPASSWORD_ESCAPED"'~g' Settings.yaml
 sed -i -e 's/$WEBAPPNAME/'"$WEBAPPNAME"'/g' Settings.yaml
 sed -i -e 's/$CPULIMITSVALUE/'"$safecpuvalueinmilicores"'/g' Settings.yaml
 sed -i -e 's/$MEMORYLIMITSVALUE/'"$saferamvalueinkibibytes"'/g' Settings.yaml
+
+
+echo $"ProfiseeAnywhereConnectionString is $PROFISEEANYWHERECONNECTIONSTRING";
+echo "11"
+sed -i -e 's/$DBDataConnectionString/'"$PROFISEEANYWHERECONNECTIONSTRING"'/g' Settings.yaml
+
 if [ "$USEKEYVAULT" = "Yes" ]; then
 	sed -i -e 's/$USEKEYVAULT/'true'/g' Settings.yaml
 
