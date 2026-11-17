@@ -635,7 +635,7 @@ sed -i -e 's/$CPULIMITSVALUE/'"$safecpuvalueinmilicores"'/g' Settings.yaml
 sed -i -e 's/$MEMORYLIMITSVALUE/'"$saferamvalueinkibibytes"'/g' Settings.yaml
 
 
-echo $"ProfiseeanywhereConnectionString is $PROFISEEANYWHERECONNECTIONSTRING";
+echo $"ProfiseeAnywhereConnectionString is $PROFISEEANYWHERECONNECTIONSTRING";
 echo "11"
 sed -i -e 's/$DBDataConnectionString/'"$PROFISEEANYWHERECONNECTIONSTRING"'/g' Settings.yaml
 
